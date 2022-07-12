@@ -10,6 +10,10 @@ export type OTTReqOptions = {
   state: string,
 }
 
+export interface OTTReqNotionOptions extends Omit<OTTReqOptions, 'scope'> {
+  owner: "user";
+}
+
 // Access Token request configuration
 export interface AccessTokenReqConfig {
   url: string,
@@ -22,7 +26,7 @@ export interface AccessTokenReqConfig {
     headers: {
       Accept?: string,
       Authorization?: string,
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded' | 'application/json',
     },
     auth?: {
       username: string,
