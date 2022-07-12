@@ -48,7 +48,7 @@ const logged = async (req: Request, res: Response) => {
   const error = (req.query.error as string) || null;
 
   if (error) {
-    res.status(404).send(error);
+    res.status(404).send({ error });
   } else if (state === null) {
     // res.redirect('/#' + new URLSearchParams({ error: 'state_missing' }));
     res.status(404).send({ error: 'State missing' });
@@ -70,12 +70,12 @@ const logged = async (req: Request, res: Response) => {
       }
     };
 
-    await Axios.post<AccessTokenResponse>(
+    await Axios.post(
       authOptions.url,
       encodeURIOptions(authOptions.form),
       authOptions.axiosConfig,
     )
-      .then((response: AxiosResponse) => {
+      .then((response: AxiosResponse<AccessTokenResponse>) => {
         res.send({ access_token: response.data.access_token });
       })
       .catch((error: AxiosError) => {
