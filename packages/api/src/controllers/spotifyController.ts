@@ -53,7 +53,7 @@ const logged = async (req: Request, res: Response) => {
     const authOptions: AccessTokenReqConfig = {
       url: 'https://accounts.spotify.com/api/token',
       form: {
-        code: code + "alkan",
+        code,
         redirect_uri: SPOTIFY_REDIRECT_URI,
         grant_type: 'authorization_code'
       },
