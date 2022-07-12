@@ -3,8 +3,13 @@ dotenv.config();
 import axios, { AxiosResponse, AxiosError } from 'axios';
 const Axios = axios.default;
 import { Request, Response } from 'express';
-import { encodeURIOptions } from '../lib/index.js';
-import { AccessTokenReqConfig, AccessTokenResponse, OTTReqOptions, ScopeVariables } from './types.js';
+import { concatWithEmptySpace, encodeURIOptions } from '../lib/index.js';
+import { 
+  AccessTokenReqConfig,
+  AccessTokenResponse,
+  OTTReqOptions,
+  ScopeVariables,
+} from './types.js';
 
 const scopeVariables: ScopeVariables = [
   'playlist-read-collaborative',
@@ -25,7 +30,7 @@ const {
 const options: OTTReqOptions = {
   client_id: SPOTIFY_CLIENT_ID,
   redirect_uri: SPOTIFY_REDIRECT_URI,
-  scope: scopeVariables.reduce((prev, cur) => prev + ' ' + cur),
+  scope: scopeVariables.reduce(concatWithEmptySpace),
   response_type: 'code',
   show_dialog: 'true',
   state: SPOTIFY_STATE,
@@ -57,15 +62,19 @@ const logged = async (req: Request, res: Response) => {
         redirect_uri: SPOTIFY_REDIRECT_URI,
         grant_type: 'authorization_code'
       },
-      headers: {
-        'Authorization': 'Basic ' + (Buffer.from(SPOTIFY_CLIENT_ID + ':' + SPOTIFY_SECRET).toString('base64')),
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
+      axiosConfig: {
+        headers: {
+          'Authorization': 'Basic ' + (Buffer.from(SPOTIFY_CLIENT_ID + ':' + SPOTIFY_SECRET).toString('base64')),
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
     };
 
-    await Axios.post<AccessTokenResponse>(authOptions.url, encodeURIOptions(authOptions.form), {
-      headers: authOptions.headers,
-    })
+    await Axios.post<AccessTokenResponse>(
+      authOptions.url,
+      encodeURIOptions(authOptions.form),
+      authOptions.axiosConfig,
+    )
       .then((response: AxiosResponse) => {
         res.send({ access_token: response.data.access_token });
       })

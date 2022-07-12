@@ -1,4 +1,4 @@
-import { encodeURIOptions } from '../../src/lib/index.js';
+import { concatWithEmptySpace, encodeURIOptions } from '../../src/lib/index.js';
 
 describe('lib', () => {
   test('encodeURIOptions', () => {
@@ -16,5 +16,11 @@ describe('lib', () => {
       'client_id=123&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&scope=playlist-read-collaborative%20playlist-modify-public%20playlist-read-private%20playlist-modify-private%20user-library-modify%20user-library-read&response_type=code&show_dialog=true&state=my%20state';
 
     expect(encodeURIOptions(options)).toBe(expected);
+  });
+
+  test('concatWithEmptySpace', () => {
+    const arr = ['a', 'b', 'c'];
+    const expected = 'a b c';
+    expect(arr.reduce(concatWithEmptySpace)).toBe(expected);
   });
 });

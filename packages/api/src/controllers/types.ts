@@ -18,14 +18,16 @@ export interface AccessTokenReqConfig {
     redirect_uri: string,
     grant_type: 'authorization_code',
   },
-  headers: {
-    Accept?: string,
-    Authorization?: string,
-    'Content-Type': 'application/x-www-form-urlencoded',
-  },
-  auth?: {
-    username: string,
-    password: string,
+  axiosConfig: {
+    headers: {
+      Accept?: string,
+      Authorization?: string,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    auth?: {
+      username: string,
+      password: string,
+    }
   }
 }
 

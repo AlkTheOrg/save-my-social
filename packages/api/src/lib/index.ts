@@ -5,3 +5,5 @@ export const encodeURIOptions = (options: Record<string, string>): string => {
     )
     .join("&");
 };
+
+export const concatWithEmptySpace = (prev: string, cur: string) => prev + ' ' + cur;
