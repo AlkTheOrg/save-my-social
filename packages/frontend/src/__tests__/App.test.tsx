@@ -7,8 +7,8 @@ test('renders homepage', () => {
   const { getByText } = render(
     <Provider store={store}>
       <App />
-    </Provider>
+    </Provider>,
   );
 
-  // expect(getByText(/learn/i)).not.toBeInTheDocument();
+  expect(getByText(/hello/i)).toBeInTheDocument();
 });
