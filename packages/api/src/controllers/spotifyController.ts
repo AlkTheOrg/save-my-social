@@ -53,7 +53,7 @@ const logged = async (req: Request, res: Response) => {
     const authOptions: AccessTokenReqConfig = {
       url: 'https://accounts.spotify.com/api/token',
       form: {
-        code,
+        code: code + "alkan",
         redirect_uri: SPOTIFY_REDIRECT_URI,
         grant_type: 'authorization_code'
       },
@@ -67,12 +67,11 @@ const logged = async (req: Request, res: Response) => {
       headers: authOptions.headers,
     })
       .then((response: AxiosResponse) => {
-        const res = response.data.access_token;
         res.send({ access_token: response.data.access_token });
       })
       .catch((error: AxiosError) => {
-        // console.log(error);
-        res.redirect('/#' + new URLSearchParams({ error: 'invalid request' }));
+        console.log(error);
+        res.status(404).send({ error: 'Invalid request' });
       });
   }
 };
