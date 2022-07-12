@@ -31,13 +31,14 @@
     "build:watch": "tsc -w -p tsconfig.json",
     "build:release": "npm run clean && tsc -p tsconfig.release.json",
     "lint": "eslint . --ext .ts --ext .mts",
-    "test": "jest --coverage",
+    "test": "jest",
     "prettier": "prettier --config .prettierrc --write .",
     "test:watch": "jest --watch"
   },
   "author": "AlkTheOrg",
   "license": "Apache-2.0",
   "dependencies": {
+    "axios": "^0.27.2",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "tslib": "~2.4"
