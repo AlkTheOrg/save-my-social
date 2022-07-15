@@ -42,7 +42,8 @@
     "import/prefer-default-export": "off",
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
-    "react/self-closing-comp": "off"
+    "react/self-closing-comp": "off",
+    "quotes": [1, "double", { "avoidEscape": true }]
   },
   "settings": {
     "import/resolver": {
