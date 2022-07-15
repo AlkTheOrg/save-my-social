@@ -65,8 +65,8 @@ const logged = async (req: Request, res: Response) => {
       .then((response: AxiosResponse<AccessTokenResponse> )=> {
         res.send({ access_token: response.data.access_token });
       }
-      ).catch((error: AxiosError) => {
-        console.log(error);
+      ).catch((err: AxiosError) => {
+        console.log(err);
         res.status(404).send({ error: 'Invalid request' });
       })
   }
