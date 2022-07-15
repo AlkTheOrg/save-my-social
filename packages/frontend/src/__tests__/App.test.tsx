@@ -1,14 +1,14 @@
-import { render } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { store } from '../app/store';
-import App from '../App';
+import { render, screen } from "@testing-library/react";
+import { Provider } from "react-redux";
+import { store } from "../app/store";
+import App from "../App";
 
-test('renders homepage', () => {
-  const { getByText } = render(
+test("renders homepage", () => {
+  render(
     <Provider store={store}>
       <App />
     </Provider>,
   );
 
-  expect(getByText(/hello/i)).toBeInTheDocument();
+  expect(screen.getByText(/hello/i)).toBeInTheDocument();
 });

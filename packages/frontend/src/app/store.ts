@@ -1,7 +1,9 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from "@reduxjs/toolkit";
+import smsReducer from "./smsSlice";
 
 export const store = configureStore({
   reducer: {
+    sms: smsReducer,
   },
 });
 
