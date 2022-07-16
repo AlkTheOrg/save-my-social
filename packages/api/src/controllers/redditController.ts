@@ -8,6 +8,7 @@ import { AccessTokenReqConfig, AccessTokenResponse, OTTReqOptions, ScopeVariable
 
 const scopeVariables: ScopeVariables = [
   "save",
+  "history",
   "identity"
 ]; // https://www.reddit.com/dev/api/oauth
 
@@ -71,6 +72,8 @@ const logged = async (req: Request, res: Response) => {
       })
   }
 }
+
+// endpoint: https://oauth.reddit.com/api/v1/
 
 export default {
   login,
