@@ -28,7 +28,6 @@ export interface SmsState {
   curStep: number;
   numOfSteps: number;
   apps: string[];
-  apiUrl: string;
 }
 
 const initialState: SmsState = {
@@ -38,7 +37,6 @@ const initialState: SmsState = {
   curStep: 0,
   numOfSteps: 5,
   apps: ["reddit", "spotify", "twitter", "youtube", "sheets", "drive"],
-  apiUrl: "http://localhost:5000",
 };
 
 export const smsSlice = createSlice({
