@@ -44,7 +44,8 @@
     "react/react-in-jsx-scope": "off",
     "react/self-closing-comp": "off",
     "quotes": [1, "double", { "avoidEscape": true }],
-    "no-param-reassign": "off"
+    "no-param-reassign": "off",
+    "implicit-arrow-linebreak": "off"
   },
   "settings": {
     "import/resolver": {
