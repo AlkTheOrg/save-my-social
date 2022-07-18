@@ -36,6 +36,13 @@
         "allowExpressions": true
       }
     ],
+    "react/function-component-definition": [
+      "error",
+      {
+        "namedComponents": ["function-declaration", "arrow-function"],
+        "unnamedComponents": "arrow-function"
+      }
+    ],
     "max-len": ["warn", { "code": 90 }],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
@@ -45,7 +52,8 @@
     "react/self-closing-comp": "off",
     "quotes": [1, "double", { "avoidEscape": true }],
     "no-param-reassign": "off",
-    "implicit-arrow-linebreak": "off"
+    "implicit-arrow-linebreak": "off",
+    "arrow-body-style": "off"
   },
   "settings": {
     "import/resolver": {
