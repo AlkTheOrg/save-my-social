@@ -28,6 +28,11 @@ const options: OTTReqOptions = {
   state: REDDIT_STATE,
 };
 
+const redirectUrl = (_: Request, res: Response) => {
+  const url = `https://www.reddit.com/api/v1/authorize?${encodeURIOptions(options)}`;
+  res.send({ url });
+}
+
 const login = (_: Request, res: Response) => {
   const url =
     'https://www.reddit.com/api/v1/authorize?' + encodeURIOptions(options);
@@ -64,7 +69,8 @@ const logged = async (req: Request, res: Response) => {
 
     await Axios.post(authOptions.url, encodeURIOptions(authOptions.form), authOptions.axiosConfig)
       .then((response: AxiosResponse<AccessTokenResponse> )=> {
-        res.send({ access_token: response.data.access_token });
+        // res.send({ access_token: response.data.access_token });
+        res.send("<div id='access-token'>" + response.data.access_token + "</div>");
       }
       ).catch((err: AxiosError) => {
         console.log(err);
@@ -76,6 +82,7 @@ const logged = async (req: Request, res: Response) => {
 // endpoint: https://oauth.reddit.com/api/v1/
 
 export default {
+  redirectUrl,
   login,
   logged
 }
