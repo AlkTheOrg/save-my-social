@@ -1,10 +1,17 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import AuthRoutes from './routes/authRoutes.js';
+import cors from 'cors';
 
 dotenv.config();
 
 const app: Express = express();
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    optionsSuccessStatus: 200,
+  }),
+);
 const port = process.env.PORT || 5000;
 
 app.use(AuthRoutes);
