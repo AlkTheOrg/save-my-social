@@ -1,9 +1,41 @@
 export const encodeURIOptions = (options: Record<string, string>): string => {
   return Object.keys(options)
     .map(
-      (key) => encodeURIComponent(key) + "=" + encodeURIComponent(options[key])
+      (key) => encodeURIComponent(key) + '=' + encodeURIComponent(options[key]),
     )
-    .join("&");
+    .join('&');
 };
 
-export const concatWithEmptySpace = (prev: string, cur: string) => prev + ' ' + cur;
+export const concatWithEmptySpace = (prev: string, cur: string) =>
+  prev + ' ' + cur;
+
+export const getWindowMessagePosterHTML = (
+  message: Record<string, string>,
+  targetOrigin = '*',
+) => `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authorization</title>
+</head>
+<body>
+  <script>
+    window.opener.postMessage(${JSON.stringify(message)}, '${targetOrigin}');
+    // window.opener.postMessage(${message}, '${targetOrigin}');
+    window.close();
+  </script>
+</body>
+</html>
+`;
+
+export const getWindowAccessTokenPosterHTML = (
+  accessToken: string,
+  targetOrigin = '*',
+) => getWindowMessagePosterHTML({
+  access_token: accessToken,
+  source: 'save-my-social',
+  type: 'accessToken',
+}, targetOrigin);

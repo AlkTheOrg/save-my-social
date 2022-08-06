@@ -3,7 +3,7 @@ dotenv.config();
 import axios, { AxiosResponse, AxiosError } from 'axios';
 const Axios = axios.default;
 import { Request, Response } from 'express';
-import { concatWithEmptySpace, encodeURIOptions } from '../lib/index.js';
+import { concatWithEmptySpace, encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowMessagePosterHTML } from '../lib/index.js';
 import { AccessTokenReqConfig, AccessTokenResponse, OTTReqOptions, ScopeVariables } from './types.js';
 
 const scopeVariables: ScopeVariables = [
@@ -69,12 +69,15 @@ const logged = async (req: Request, res: Response) => {
 
     await Axios.post(authOptions.url, encodeURIOptions(authOptions.form), authOptions.axiosConfig)
       .then((response: AxiosResponse<AccessTokenResponse> )=> {
-        // res.send({ access_token: response.data.access_token });
-        res.send("<div id='access-token'>" + response.data.access_token + "</div>");
+        res.send(getWindowAccessTokenPosterHTML(response.data.access_token));
       }
       ).catch((err: AxiosError) => {
         console.log(err);
-        res.status(404).send({ error: 'Invalid request' });
+        res.send(getWindowMessagePosterHTML({
+          error: 'Error while getting access token',
+          source: 'save-my-social',
+          type: 'error',
+        }));
       })
   }
 }
