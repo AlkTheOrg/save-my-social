@@ -24,8 +24,7 @@ export const getWindowMessagePosterHTML = (
 <body>
   <script>
     window.opener.postMessage(${JSON.stringify(message)}, '${targetOrigin}');
-    // window.opener.postMessage(${message}, '${targetOrigin}');
-    window.close();
+    window.opener.postMessage({ source: 'save-my-social', type: 'closeOrder' }, '${targetOrigin}');
   </script>
 </body>
 </html>
@@ -34,8 +33,12 @@ export const getWindowMessagePosterHTML = (
 export const getWindowAccessTokenPosterHTML = (
   accessToken: string,
   targetOrigin = '*',
-) => getWindowMessagePosterHTML({
-  access_token: accessToken,
-  source: 'save-my-social',
-  type: 'accessToken',
-}, targetOrigin);
+) =>
+  getWindowMessagePosterHTML(
+    {
+      access_token: accessToken,
+      source: 'save-my-social',
+      type: 'accessToken',
+    },
+    targetOrigin,
+  );
