@@ -4,7 +4,7 @@ import { fetchAuthURL } from "./redditApiService";
 
 export interface RedditState {
   name: string;
-  tokens: [exportFrom: string, exportTo: string];
+  tokens: [exporter: string, importer: string];
   selections: string[]; // todo
   importableTo: string[]; // todo
   authURL: string;
@@ -24,7 +24,7 @@ const initialState: RedditState = {
 
 export const getAuthURL = createAsyncThunk("reddit/fetchOtt", async () => {
   const response = await fetchAuthURL();
-  console.log("response:", response.data);
+  console.log("fetchAuthUrl:", response.data);
   return response.data.url;
 });
 
@@ -32,10 +32,10 @@ export const redditSlice = createSlice({
   name: "reddit",
   initialState,
   reducers: {
-    setExportFromToken: (state, action: PayloadAction<string>) => {
+    setExporterToken: (state, action: PayloadAction<string>) => {
       state.tokens[0] = action.payload;
     },
-    setExportToToken: (state, action: PayloadAction<string>) => {
+    setImporterToken: (state, action: PayloadAction<string>) => {
       state.tokens[1] = action.payload;
     },
   },
@@ -58,4 +58,4 @@ export const redditSlice = createSlice({
 });
 
 export default redditSlice.reducer;
-export const { setExportFromToken, setExportToToken } = redditSlice.actions;
+export const { setExporterToken, setImporterToken } = redditSlice.actions;
