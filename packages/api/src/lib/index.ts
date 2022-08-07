@@ -42,3 +42,13 @@ export const getWindowAccessTokenPosterHTML = (
     },
     targetOrigin,
   );
+
+export const getWindowErrorPosterHTML = (error: string, targetOrigin = '*') =>
+  getWindowMessagePosterHTML(
+    {
+      error,
+      source: 'save-my-social',
+      type: 'error',
+    },
+    targetOrigin,
+  );

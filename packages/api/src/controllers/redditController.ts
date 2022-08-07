@@ -3,7 +3,7 @@ dotenv.config();
 import axios, { AxiosResponse, AxiosError } from 'axios';
 const Axios = axios.default;
 import { Request, Response } from 'express';
-import { concatWithEmptySpace, encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowMessagePosterHTML } from '../lib/index.js';
+import { concatWithEmptySpace, encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowMessagePosterHTML, getWindowErrorPosterHTML } from '../lib/index.js';
 import { AccessTokenReqConfig, AccessTokenResponse, OTTReqOptions, ScopeVariables } from './types.js';
 
 const scopeVariables: ScopeVariables = [
@@ -45,11 +45,14 @@ const logged = async (req: Request, res: Response) => {
   const error = (req.query.error as string) || null;
 
   if (error) {
-    res.status(404).send({ error });
+    console.log(error);
+    res.send(getWindowErrorPosterHTML(error));
   } else if (state === null) {
-    res.status(404).send({ error: 'State missing' });
+    console.log('State missing');
+    res.send(getWindowErrorPosterHTML('State missing'));
   } else if (state !== REDDIT_STATE) {
-    res.status(404).send({ error: 'Invalid state' });
+    console.log('Invalid state');
+    res.send(getWindowErrorPosterHTML('Invalid state'));
   } else {
     const authOptions: AccessTokenReqConfig = {
       url: 'https://www.reddit.com/api/v1/access_token',
