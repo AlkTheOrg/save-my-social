@@ -36,7 +36,7 @@ export const getWindowAccessTokenPosterHTML = (
 ) =>
   getWindowMessagePosterHTML(
     {
-      access_token: accessToken,
+      accessToken,
       source: 'save-my-social',
       type: 'accessToken',
     },
