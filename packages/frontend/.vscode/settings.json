@@ -5,9 +5,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
   "peacock.color": "#61dafb",
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#93e6fc",
