@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { getAuthURL as getRedditAuthURL } from "../features/reddit/redditSlice";
 
 export type SmsApp =
   | ""
@@ -12,31 +13,28 @@ export type SmsApp =
 
 export type ExportFrom = Exclude<SmsApp, "notion" | "sheets" | "drive">;
 export type ExportTo = SmsApp | "download";
-export type AppPhase =
-  | "idle"
-  | "exportFromSelected"
-  | "actionsSelected"
-  | "exportToSelected"
-  | "exportStarted"
-  | "exportFinished"
-  | "exportFailed";
-
 export interface SmsState {
   exportFrom: ExportFrom;
   exportTo: ExportTo;
-  curPhase: AppPhase;
   curStep: number;
   numOfSteps: number;
   apps: string[];
+  authURLs: [toExport: string, toImport: string]; // i.e. [redditURL, sheetsURL].
+  tokens: [toExport: string, toImport: string];
+  isLoading: boolean;
+  message: string;
 }
 
 const initialState: SmsState = {
   exportFrom: "",
   exportTo: "",
-  curPhase: "idle",
   curStep: 0,
   numOfSteps: 5,
   apps: ["reddit", "spotify", "twitter", "youtube", "sheets", "drive"],
+  authURLs: ["", ""],
+  tokens: ["", ""],
+  isLoading: false,
+  message: "",
 };
 
 export const smsSlice = createSlice({
@@ -49,9 +47,6 @@ export const smsSlice = createSlice({
     setExportTo: (state, action: PayloadAction<ExportTo>) => {
       state.exportTo = action.payload;
     },
-    setCurState: (state, action: PayloadAction<AppPhase>) => {
-      state.curPhase = action.payload;
-    },
     incrementCurStep: (state) => {
       state.curStep += 1;
     },
@@ -61,16 +56,35 @@ export const smsSlice = createSlice({
     resetCurStep: (state) => {
       state.curStep = 0;
     },
+    setToken(state, action: PayloadAction<string>) {
+      const index = state.curStep >= 1 ? 1 : 0;
+      state.tokens[index] = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getRedditAuthURL.fulfilled, (state, action) => {
+        if (!state.authURLs[0]) {
+          state.authURLs[0] = action.payload;
+        } else {
+          state.authURLs[1] = action.payload;
+        }
+        state.isLoading = false;
+        state.message = "";
+        state.curStep += 1;
+      })
+      .addCase(getRedditAuthURL.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getRedditAuthURL.rejected, (state) => {
+        state.isLoading = false;
+        state.message = "Error on getting the Auth URL for Reddit";
+      });
   },
 });
 
 export const {
-  setExportFrom,
-  setExportTo,
-  setCurState,
-  incrementCurStep,
-  decrementCurStep,
-  resetCurStep,
+  setExportFrom, setExportTo, incrementCurStep, decrementCurStep, resetCurStep, setToken,
 } = smsSlice.actions;
 
 export default smsSlice.reducer;

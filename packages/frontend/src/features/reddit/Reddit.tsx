@@ -1,25 +1,19 @@
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { RootState } from "../../app/store";
-// import WindowOpener from "../../components/WindowOpener";
+import { useAppDispatch } from "../../app/hooks";
+import { setExportFrom } from "../../app/smsSlice";
+import { getAuthURL as getRedditAuthURL } from "./redditSlice";
 
 function Reddit(): JSX.Element {
   const dispatch = useAppDispatch();
-  const {
-    tokens, selections, importableTo, authURL, isLoading, message,
-  } = useAppSelector((state: RootState) => state.reddit);
 
-  useEffect(() => {
-    if (authURL) {
-      console.log("window should be opned");
-    }
-  }, [authURL]);
+  const handleClick = (): void => {
+    dispatch(getRedditAuthURL());
+    dispatch(setExportFrom("reddit"));
+  };
 
   return (
-    <div>
-      {/* {authURL && <WindowOpener target={authURL} />} */}
+    <button type="button" onClick={handleClick}>
       Reddit
-    </div>
+    </button>
   );
 }
 
