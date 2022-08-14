@@ -59,6 +59,7 @@ export const smsSlice = createSlice({
     setToken(state, action: PayloadAction<string>) {
       const index = state.curStep >= 1 ? 1 : 0;
       state.tokens[index] = action.payload;
+      state.curStep += 1;
     },
   },
   extraReducers: (builder) => {
@@ -71,7 +72,6 @@ export const smsSlice = createSlice({
         }
         state.isLoading = false;
         state.message = "";
-        state.curStep += 1;
       })
       .addCase(getRedditAuthURL.pending, (state) => {
         state.isLoading = true;
