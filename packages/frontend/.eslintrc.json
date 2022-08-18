@@ -55,7 +55,8 @@
     "implicit-arrow-linebreak": "off",
     "arrow-body-style": "off",
     "no-empty-function": "off",
-    "@typescript-eslint/no-empty-function": ["off"]
+    "@typescript-eslint/no-empty-function": ["off"],
+    "react/jsx-props-no-spreading": "off"
   },
   "settings": {
     "import/resolver": {
