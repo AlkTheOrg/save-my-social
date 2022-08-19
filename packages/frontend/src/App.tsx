@@ -10,15 +10,15 @@ function App(): JSX.Element {
   const { target, isOpened } = useAppSelector((state) => state.windowOpener);
   const dispatch = useAppDispatch();
 
-  const onOpen = (): void => {
+  const onWindowOpen = (): void => {
     dispatch(opened(target));
   };
 
-  const onClose = (): void => {
+  const onWindowClose = (): void => {
     dispatch(closed());
   };
 
-  const onMessage = (e: MessageEvent): void => {
+  const onWindowMessage = (e: MessageEvent): void => {
     const message = e.data;
     if (message.source !== "save-my-social") return;
 
@@ -27,7 +27,7 @@ function App(): JSX.Element {
       dispatch(setToken(message.accessToken));
     } else if (message.type === "closeOrder") {
       console.log("close order");
-      onClose();
+      onWindowClose();
     } else if (message.type === "error") {
       // TODO handle error
     }
@@ -39,9 +39,9 @@ function App(): JSX.Element {
       <SocialApps />
       <WindowOpener
         target={target}
-        onOpen={onOpen}
-        onClose={onClose}
-        onMessage={onMessage}
+        onOpen={onWindowOpen}
+        onClose={onWindowClose}
+        onMessage={onWindowMessage}
         shouldBeOpened={isOpened}
       />
     </div>
