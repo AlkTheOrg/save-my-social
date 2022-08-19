@@ -1,8 +1,10 @@
 import { useAppSelector, useAppDispatch } from "./app/hooks";
-import Reddit from "./features/reddit/Reddit";
 import WindowOpener from "./components/WindowOpener";
 import { opened, closed } from "./features/windowOpener";
 import { setToken } from "./app/smsSlice";
+import SocialApps from "./components/SocialApps";
+import "./styles/reset.css";
+import Header from "./components/Header";
 
 function App(): JSX.Element {
   const { target, isOpened } = useAppSelector((state) => state.windowOpener);
@@ -33,8 +35,8 @@ function App(): JSX.Element {
 
   return (
     <div className="App">
-      <h1>APP</h1>
-      <Reddit />
+      <Header />
+      <SocialApps />
       <WindowOpener
         target={target}
         onOpen={onOpen}

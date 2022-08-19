@@ -1,0 +1,51 @@
+.social-app {
+  &-container {
+    max-width: 810px;
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: repeat(3, 250px);
+    gap: 30px;
+    justify-content: center;
+  }
+
+  border: 1px solid rgba(51, 51, 51, 0.048);
+  border-radius: 5px;
+  background-color: #fbfbfb;
+  color: #333;
+  cursor: pointer;
+  font-size: 28px;
+  height: 250px;
+  padding: 0;
+  position: relative;
+  transition: background-color .5s ease;
+
+  img, h3 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  img {
+    top: 46px;
+  }
+  h3 {
+    top: 169px;
+    text-transform: capitalize;
+  }
+  &:hover {
+    background-color: #f4f4f4;
+  }
+
+  @media screen and (max-width: 830px) {
+    &-container {
+      grid-template-columns: repeat(2, minmax(200px, 300px));
+      gap: 7.5px;
+    }
+  }
+
+  @media screen and (max-width: 520px) {
+    &-container {
+      grid-template-columns: minmax(200px, .9fr);
+    }
+  }
+}

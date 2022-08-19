@@ -1,5 +1,6 @@
 import { useAppDispatch } from "../../app/hooks";
 import { setExportFrom } from "../../app/smsSlice";
+import SocialAppBtn from "../../components/SocialAppBtn";
 import { getAuthURL as getRedditAuthURL } from "./redditSlice";
 
 function Reddit(): JSX.Element {
@@ -11,9 +12,12 @@ function Reddit(): JSX.Element {
   };
 
   return (
-    <button type="button" onClick={handleClick}>
-      Reddit
-    </button>
+    <SocialAppBtn
+      buttonClass="social-app"
+      onClick={handleClick}
+      name="reddit"
+      logoPath="logos/reddit.svg"
+    />
   );
 }
 
