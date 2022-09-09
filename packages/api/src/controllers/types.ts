@@ -14,6 +14,11 @@ export interface OTTReqNotionOptions extends Omit<OTTReqOptions, 'scope'> {
   owner: "user";
 }
 
+export interface OTTReqTwitterOptions extends Omit<OTTReqOptions, 'scope'> {
+  code_challenge: 'challenge',
+  code_challenge_method: 'plain' | 's256',
+}
+
 // Access Token request configuration
 export interface AccessTokenReqConfig {
   url: string,
