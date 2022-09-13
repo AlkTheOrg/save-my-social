@@ -10,5 +10,5 @@ test("renders homepage", () => {
     </Provider>,
   );
 
-  expect(screen.getByText(/hello/i)).toBeInTheDocument();
+  expect(screen.getByText(/Header/i)).toBeInTheDocument();
 });
