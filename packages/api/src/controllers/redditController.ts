@@ -71,7 +71,6 @@ const logged = async (req: Request, res: Response) => {
 
     await Axios.post(authOptions.url, encodeURIOptions(authOptions.form), authOptions.axiosConfig)
       .then((response: AxiosResponse<AccessTokenResponse> )=> {
-        console.log('code:', response.data.access_token);
         res.send(getWindowAccessTokenPosterHTML(response.data.access_token));
       }
       ).catch((err: AxiosError) => {
