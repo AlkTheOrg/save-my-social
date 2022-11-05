@@ -59,7 +59,9 @@ export async function getSavedModelsRecursive(
   headers: AuthHeaders,
   lastQueried: string | undefined | null = undefined,
   resultArr: ProcessedSavedChildren[] = [],
+  // maxNumOfRecursions = 2
 ) {
+  // if (!maxNumOfRecursions) return resultArr;
   const params = {
     limit: 100,
     after: lastQueried,

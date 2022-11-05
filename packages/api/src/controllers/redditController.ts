@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { concatWithEmptySpace, encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowErrorPosterHTML, getWindowMessagePosterHTML } from '../lib/index.js';
-import { getAuthHeaders, processSavedChildren, getSavedModelsRecursive } from '../lib/reddit.js';
+import { getAuthHeaders, processSavedChildren } from '../lib/reddit.js';
 import { AccessTokenReqConfig, AccessTokenResponse, OTTReqOptions, ScopeVariables } from './types.js';
 dotenv.config();
 const Axios = axios.default;
@@ -71,7 +71,7 @@ const logged = async (req: Request, res: Response) => {
 
     await Axios.post(authOptions.url, encodeURIOptions(authOptions.form), authOptions.axiosConfig)
       .then((response: AxiosResponse<AccessTokenResponse> )=> {
-        // console.log('code:', response.data.access_token);
+        console.log('code:', response.data.access_token);
         res.send(getWindowAccessTokenPosterHTML(response.data.access_token));
       }
       ).catch((err: AxiosError) => {
@@ -111,15 +111,17 @@ const getSavedModels = async (req: Request, res: Response) => {
     const { children } = savedResponse.data.data;
 
     result.items.push(...processSavedChildren(children));
-    if (result.items.length) {
-      const { id, kind } = result.items[result.items.length - 1].id;
-      await getSavedModelsRecursive(
-        savedEndpoint,
-        headers,
-        `${kind}_${id}`,
-        result.items,
-      );
-    }
+
+    // handling this on frontend for a better UX
+    // if (result.items.length) {
+    //   const { id, kind } = result.items[result.items.length - 1].id;
+    //   await getSavedModelsRecursive(
+    //     savedEndpoint,
+    //     headers,
+    //     `${kind}_${id}`,
+    //     result.items,
+    //   );
+    // }
 
     const lastItem = result.items[result.items.length - 1] || {};
     if (lastItem.id) {
