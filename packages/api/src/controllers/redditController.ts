@@ -1,16 +1,13 @@
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
-dotenv.config();
-import axios, { AxiosResponse, AxiosError } from 'axios';
-const Axios = axios.default;
 import { Request, Response } from 'express';
-import { concatWithEmptySpace, encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowMessagePosterHTML, getWindowErrorPosterHTML } from '../lib/index.js';
+import { concatWithEmptySpace, encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowErrorPosterHTML, getWindowMessagePosterHTML } from '../lib/index.js';
+import { getAuthHeaders, processSavedChildren, getSavedModelsRecursive } from '../lib/reddit.js';
 import { AccessTokenReqConfig, AccessTokenResponse, OTTReqOptions, ScopeVariables } from './types.js';
+dotenv.config();
+const Axios = axios.default;
 
-const scopeVariables: ScopeVariables = [
-  "save",
-  "history",
-  "identity"
-]; // https://www.reddit.com/dev/api/oauth
+const scopeVariables: ScopeVariables = ["save", "history", "identity"]; // https://www.reddit.com/dev/api/oauth
 
 const {
   REDDIT_CLIENT_ID,
@@ -28,14 +25,16 @@ const options: OTTReqOptions = {
   state: REDDIT_STATE,
 };
 
+const uriEncodedOptions = encodeURIOptions(options);
+
 const redirectUrl = (_: Request, res: Response) => {
-  const url = `https://www.reddit.com/api/v1/authorize?${encodeURIOptions(options)}`;
+  const url = `https://www.reddit.com/api/v1/authorize?${uriEncodedOptions}`;
   res.send({ url });
 }
 
 const login = (_: Request, res: Response) => {
   const url =
-    'https://www.reddit.com/api/v1/authorize?' + encodeURIOptions(options);
+    'https://www.reddit.com/api/v1/authorize?' + uriEncodedOptions;
   res.redirect(url);
 }
 
@@ -72,6 +71,7 @@ const logged = async (req: Request, res: Response) => {
 
     await Axios.post(authOptions.url, encodeURIOptions(authOptions.form), authOptions.axiosConfig)
       .then((response: AxiosResponse<AccessTokenResponse> )=> {
+        // console.log('code:', response.data.access_token);
         res.send(getWindowAccessTokenPosterHTML(response.data.access_token));
       }
       ).catch((err: AxiosError) => {
@@ -85,10 +85,58 @@ const logged = async (req: Request, res: Response) => {
   }
 }
 
+const getMe = async (headers) => {
+  const {
+    data: {
+      subreddit: { url }, // can also return display_name, display_name_prefixed, name
+    },
+  } = await Axios.get('https://oauth.reddit.com/api/v1/me', { headers });
+  return url;
+}
+
+const getSavedModels = async (req: Request, res: Response) => {
+  const accessToken = req.query.access_token as string;
+  const after = req.query.after as string | undefined; // last queried item
+  const headers = getAuthHeaders(accessToken);
+  const result = {
+    items: [],
+    lastQueried: '',
+  };
+
+  try {
+    const userURL = await getMe(headers); // /user/<username>/
+    const savedEndpoint = `https://oauth.reddit.com${userURL}saved`;
+    const params = { limit: 100, after }; // can also be added to the endpoint url as a query string
+    const savedResponse = await Axios.get(savedEndpoint, { headers, params });
+    const { children } = savedResponse.data.data;
+
+    result.items.push(...processSavedChildren(children));
+    if (result.items.length) {
+      const { id, kind } = result.items[result.items.length - 1].id;
+      await getSavedModelsRecursive(
+        savedEndpoint,
+        headers,
+        `${kind}_${id}`,
+        result.items,
+      );
+    }
+
+    const lastItem = result.items[result.items.length - 1] || {};
+    if (lastItem.id) {
+      result.lastQueried = lastItem.kindID;
+    }
+    res.send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(404).send(err);
+  }
+};
+
 // endpoint: https://oauth.reddit.com/api/v1/
 
 export default {
   redirectUrl,
   login,
-  logged
+  logged,
+  getSavedModels
 }
