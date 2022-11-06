@@ -1,8 +1,7 @@
 import axios from "axios";
 import { REDDIT_BACKEND } from "../../constants/apiEndpoints";
 
-export const fetchAuthURL = (): Promise<{ data: { url: string } }> =>
-  axios.get(`${REDDIT_BACKEND}/auth-url`);
+export const fetchAuthURL = () => axios.get<{ url: string }>(`${REDDIT_BACKEND}/auth-url`);
 
 //* Corresponds to ProcessedSavedChildren in api
 export type SavedModel = {
