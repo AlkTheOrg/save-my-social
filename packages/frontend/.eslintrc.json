@@ -57,7 +57,8 @@
     "no-empty-function": "off",
     "@typescript-eslint/no-empty-function": ["off"],
     "react/jsx-props-no-spreading": "off",
-    "react/jsx-one-expression-per-line": ["off"]
+    "react/jsx-one-expression-per-line": ["off"],
+    "comma-dangle": ["warning", "always-multiline"] // for cleaner diffs
   },
   "settings": {
     "import/resolver": {
