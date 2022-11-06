@@ -9,28 +9,53 @@ export type SmsApp =
   | "youtube"
   | "notion"
   | "sheets"
-  | "drive";
+  | "drive"
+  | "download";
 
-export type ExportFrom = Exclude<SmsApp, "notion" | "sheets" | "drive">;
-export type ExportTo = SmsApp | "download";
+export type ExportFrom = Exclude<
+  SmsApp,
+  "notion" | "sheets" | "drive" | "download"
+>;
+export type ExportTo = SmsApp;
+
 export interface SmsState {
   exportFrom: ExportFrom;
   exportTo: ExportTo;
   curStep: number;
   numOfSteps: number;
-  apps: string[];
-  authURLs: [toExport: string, toImport: string]; // i.e. [redditURL, sheetsURL].
+  apps: SmsApp[];
+  activeApps: SmsApp[];
+  authURLs: [toExport: string, toImport: string]; // i.e. [<redditURL>, <sheetsURL>].
   tokens: [toExport: string, toImport: string];
   isLoading: boolean;
   message: string;
 }
+
+export const appsToExportFrom = [
+  "reddit",
+  "spotify",
+  "twitter",
+  "youtube",
+] as ExportFrom[];
+export const appsToImportTo = [
+  "reddit",
+  "spotify",
+  "twitter",
+  "youtube",
+  "notion",
+  "sheets",
+  "drive",
+  "download",
+] as ExportTo[];
+export const allApps = [...appsToExportFrom, ...appsToImportTo] as SmsApp[];
 
 const initialState: SmsState = {
   exportFrom: "",
   exportTo: "",
   curStep: 0,
   numOfSteps: 5,
-  apps: ["reddit", "spotify", "twitter", "youtube", "sheets", "drive"],
+  apps: allApps,
+  activeApps: appsToExportFrom,
   authURLs: ["", ""],
   tokens: ["", ""],
   isLoading: false,
@@ -61,6 +86,9 @@ export const smsSlice = createSlice({
       state.tokens[index] = action.payload;
       state.curStep += 1;
     },
+    resetMessage: (state) => {
+      state.message = "";
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -71,10 +99,11 @@ export const smsSlice = createSlice({
           state.authURLs[1] = action.payload;
         }
         state.isLoading = false;
-        state.message = "";
+        smsSlice.caseReducers.resetMessage(state);
       })
       .addCase(getRedditAuthURL.pending, (state) => {
         state.isLoading = true;
+        state.message = "Getting Reddit redirection URL.";
       })
       .addCase(getRedditAuthURL.rejected, (state) => {
         state.isLoading = false;
@@ -84,7 +113,13 @@ export const smsSlice = createSlice({
 });
 
 export const {
-  setExportFrom, setExportTo, incrementCurStep, decrementCurStep, resetCurStep, setToken,
+  setExportFrom,
+  setExportTo,
+  incrementCurStep,
+  decrementCurStep,
+  resetCurStep,
+  setToken,
+  resetMessage
 } = smsSlice.actions;
 
 export default smsSlice.reducer;
