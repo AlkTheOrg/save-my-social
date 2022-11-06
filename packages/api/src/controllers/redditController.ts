@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { concatWithEmptySpace, encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowErrorPosterHTML, getWindowMessagePosterHTML } from '../lib/index.js';
-import { getAuthHeaders, processSavedChildren } from '../lib/reddit.js';
+import { getAuthHeaders, ProcessedSavedChildren, processSavedChildren } from '../lib/reddit.js';
 import { AccessTokenReqConfig, AccessTokenResponse, OTTReqOptions, ScopeVariables } from './types.js';
 dotenv.config();
 const Axios = axios.default;
@@ -98,7 +98,7 @@ const getSavedModels = async (req: Request, res: Response) => {
   const after = req.query.after as string | undefined; // last queried item
   const headers = getAuthHeaders(accessToken);
   const result = {
-    items: [],
+    models: [] as ProcessedSavedChildren[],
     lastQueried: '',
   };
 
@@ -109,7 +109,7 @@ const getSavedModels = async (req: Request, res: Response) => {
     const savedResponse = await Axios.get(savedEndpoint, { headers, params });
     const { children } = savedResponse.data.data;
 
-    result.items.push(...processSavedChildren(children));
+    result.models.push(...processSavedChildren(children));
 
     // handling this on frontend for a better UX
     // if (result.items.length) {
@@ -122,9 +122,9 @@ const getSavedModels = async (req: Request, res: Response) => {
     //   );
     // }
 
-    const lastItem = result.items[result.items.length - 1] || {};
-    if (lastItem.id) {
-      result.lastQueried = lastItem.kindID;
+    const lastModel = result.models[result.models.length - 1] || null;
+    if (lastModel && lastModel.id) {
+      result.lastQueried = lastModel.kindID;
     }
     res.send(result);
   } catch (err) {
