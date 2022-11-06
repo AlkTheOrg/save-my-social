@@ -119,7 +119,7 @@ export const {
   decrementCurStep,
   resetCurStep,
   setToken,
-  resetMessage
+  resetMessage,
 } = smsSlice.actions;
 
 export default smsSlice.reducer;
