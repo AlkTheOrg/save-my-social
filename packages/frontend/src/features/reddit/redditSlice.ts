@@ -1,15 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchAuthURL } from "./redditApiService";
-
-export interface RedditState {
-  name: string;
-  selections: string[]; // todo
-  importableTo: string[]; // todo
-}
+import { fetchAuthURL, fetchSavedModels } from "./redditApiService";
+import { RedditState } from "./types";
 
 const initialState: RedditState = {
   name: "reddit",
-  selections: [],
+  selections: ["saved"],
   importableTo: ["download", "reddit", "drive", "sheets"],
 };
 
