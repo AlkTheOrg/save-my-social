@@ -4,6 +4,7 @@ specifiers:
   '@googleapis/drive': ^3.0.1
   '@googleapis/sheets': ^3.0.2
   '@googleapis/youtube': ^6.0.0
+  '@notionhq/client': ^2.2.2
   '@types/express': ^4.17.13
   '@types/jest': ~27.5
   '@types/node': ~16
@@ -31,6 +32,7 @@ dependencies:
   '@googleapis/drive': 3.0.1
   '@googleapis/sheets': 3.0.2
   '@googleapis/youtube': 6.0.0
+  '@notionhq/client': 2.2.2
   axios: 0.27.2
   cors: 2.8.5
   dotenv: 16.0.2
@@ -738,6 +740,16 @@ packages:
       fastq: 1.13.0
     dev: true
 
+  /@notionhq/client/2.2.2:
+    resolution: {integrity: sha512-L7TB+UyhnWTSv1ek7xzGr9+mS9o76qMKnZ8Ag8H2q6QgvywAiPOFcE3ulWI/1AnMewGVRqwb30agPHMVRY/K/w==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@types/node-fetch': 2.6.2
+      node-fetch: 2.6.7
+    transitivePeerDependencies:
+      - encoding
+    dev: false
+
   /@sinclair/typebox/0.24.39:
     resolution: {integrity: sha512-GqtkxoAjhTzoMwFg/JYRl+1+miOoyvp6mkLpbMSd2fIQak2KvY00ndlXxxkDBpuCPYkorZeEZf0LEQn9V9NRVQ==}
     dev: true
@@ -850,9 +862,15 @@ packages:
     resolution: {integrity: sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==}
     dev: true
 
+  /@types/node-fetch/2.6.2:
+    resolution: {integrity: sha512-DHqhlq5jeESLy19TYhLakJ07kNumXWjcDdxXsLUMJZ6ue8VZJj4kLPQVE/2mdHh3xZziNF1xppu5lwmS53HR+A==}
+    dependencies:
+      '@types/node': 16.11.58
+      form-data: 3.0.1
+    dev: false
+
   /@types/node/16.11.58:
     resolution: {integrity: sha512-uMVxJ111wpHzkx/vshZFb6Qni3BOMnlWLq7q9jrwej7Yw/KvjsEbpxCCxw+hLKxexFMc8YmpG8J9tnEe/rKsIg==}
-    dev: true
 
   /@types/prettier/2.7.0:
     resolution: {integrity: sha512-RI1L7N4JnW5gQw2spvL7Sllfuf1SaHdrZpCHiBlCXjIlufi1SMNnbu2teze3/QE67Fg2tBlH7W+mi4hVNk4p0A==}
@@ -2034,6 +2052,15 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+    dev: false
+
+  /form-data/3.0.1:
+    resolution: {integrity: sha512-RHkBKtLWUVwd7SqRIvCZMEvAMoGUp0XU+seQiZejj0COz3RI3hWP4sCv3gZWWLjJTd7rGwcsF5eKZGii0r/hbg==}
+    engines: {node: '>= 6'}
+    dependencies:
+      asynckit: 0.4.0
+      combined-stream: 1.0.8
+      mime-types: 2.1.35
     dev: false
 
   /form-data/4.0.0:
