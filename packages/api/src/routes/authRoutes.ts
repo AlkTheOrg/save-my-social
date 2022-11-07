@@ -3,7 +3,7 @@ import SpotifyRoutes from '../routes/spotifyRoutes.js';
 import RedditRoutes from '../routes/redditRoutes.js';
 import NotionRoutes from '../routes/notionRoutes.js';
 import GoogleRoutes from '../routes/googleRoutes.js';
-import TwitterRoutes from '../routes/twitterRoutes.js';
+// import TwitterRoutes from '../routes/twitterRoutes.js';
 const router = Router();
 
 router.use('/spotify', SpotifyRoutes);
