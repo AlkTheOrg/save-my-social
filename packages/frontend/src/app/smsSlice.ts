@@ -80,10 +80,21 @@ export const smsSlice = createSlice({
     setExportTo: (state, action: PayloadAction<ExportTo>) => {
       state.exportTo = action.payload;
     },
-    setToken(state, action: PayloadAction<string>) {
+    setToken: (state, action: PayloadAction<string>) => {
       const index = state.curStep >= 1 ? 1 : 0;
       state.tokens[index] = action.payload;
+      if (index < 1) { // if token belongs to the first app
+        const exportableTargetsOfCurApp = getExportableTargetsOfCurApp(state.exportFrom);
+        state.activeApps = exportableTargetsOfCurApp;
+      } else {
+        // TODO: either reset active apps if second app is set
+        // or do reset operations as a whole at the end of the export process
+        // state.activeApps = initialState.activeApps;
+      }
       smsSlice.caseReducers.incrementCurStep(state);
+    },
+    setActiveApps: (state, action: PayloadAction<SmsApp[]>) => {
+      state.activeApps = action.payload;
     },
     resetMessage: (state) => {
       state.message = "";
@@ -121,6 +132,7 @@ export const {
   setExportFrom,
   setExportTo,
   setToken,
+  setActiveApps,
   resetMessage,
   incrementCurStep,
   resetSteps,
