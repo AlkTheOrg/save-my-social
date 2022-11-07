@@ -2,9 +2,9 @@ import { Router } from 'express';
 import redditController from '../controllers/redditController.js';
 
 const router = Router();
-router.use('/auth-url', redditController.redirectUrl);
-router.use('/login', redditController.login);
-router.use('/logged', redditController.logged);
-router.use('/savedModels', redditController.getSavedModels);
+router.get('/auth-url', redditController.redirectUrl);
+router.get('/login', redditController.login);
+router.get('/logged', redditController.logged);
+router.get('/savedModels', redditController.getSavedModels);
 
 export default router;
