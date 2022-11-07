@@ -28,8 +28,7 @@ const SocialApp: (props: Props) => JSX.Element = ({ appName }) => {
     twitter: getRedditAuthURL,
     youtube: getRedditAuthURL,
     notion: getRedditAuthURL,
-    sheets: getRedditAuthURL,
-    drive: getRedditAuthURL, // TODO: Update these when implemented
+    sheets: getRedditAuthURL, // TODO: Update these when implemented
   };
 
   const handleClick = (): void => {

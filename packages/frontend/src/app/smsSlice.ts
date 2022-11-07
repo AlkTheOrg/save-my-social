@@ -16,12 +16,11 @@ export type SmsApp =
   | "youtube"
   | "notion"
   | "sheets"
-  | "drive"
   | "download";
 
 export type ExportFrom = Exclude<
   SmsApp,
-    "notion" | "sheets" | "drive" | "download"
+    "notion" | "sheets" | "download"
 >;
 export type ExportTo = SmsApp;
 
@@ -53,7 +52,6 @@ export const appsToImportTo = [
   "youtube",
   "notion",
   "sheets",
-  "drive",
   "download",
 ] as ExportTo[];
 export const allApps = [...appsToExportFrom, ...appsToImportTo] as SmsApp[];
