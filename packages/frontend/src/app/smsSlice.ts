@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getAuthURL as getRedditAuthURL } from "../features/reddit/redditSlice";
+import { getExportableTargetsOfCurApp } from "../features/socialApp/socialAppConstants";
 import {
   Steps,
   stepsByOrder,
