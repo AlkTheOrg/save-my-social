@@ -1,5 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getAuthURL as getRedditAuthURL } from "../features/reddit/redditSlice";
+import {
+  Steps,
+  stepsByOrder,
+  numOfSteps,
+  getNextStep,
+} from "./steps";
 
 export type SmsApp =
   | ""
@@ -14,21 +20,23 @@ export type SmsApp =
 
 export type ExportFrom = Exclude<
   SmsApp,
-  "notion" | "sheets" | "drive" | "download"
+    "notion" | "sheets" | "drive" | "download"
 >;
 export type ExportTo = SmsApp;
 
 export interface SmsState {
   exportFrom: ExportFrom;
   exportTo: ExportTo;
-  curStep: number;
-  numOfSteps: number;
   apps: SmsApp[];
   activeApps: SmsApp[];
   authURLs: [toExport: string, toImport: string]; // i.e. [<redditURL>, <sheetsURL>].
   tokens: [toExport: string, toImport: string];
   isLoading: boolean;
   message: string;
+  // -- steps --
+  steps: Steps,
+  curStep: number,
+  numOfSteps: number,
 }
 
 export const appsToExportFrom = [
@@ -52,14 +60,15 @@ export const allApps = [...appsToExportFrom, ...appsToImportTo] as SmsApp[];
 const initialState: SmsState = {
   exportFrom: "",
   exportTo: "",
-  curStep: 0,
-  numOfSteps: 5,
   apps: allApps,
   activeApps: appsToExportFrom,
   authURLs: ["", ""],
   tokens: ["", ""],
   isLoading: false,
   message: "",
+  steps: stepsByOrder,
+  curStep: 0,
+  numOfSteps,
 };
 
 export const smsSlice = createSlice({
@@ -72,22 +81,19 @@ export const smsSlice = createSlice({
     setExportTo: (state, action: PayloadAction<ExportTo>) => {
       state.exportTo = action.payload;
     },
-    incrementCurStep: (state) => {
-      state.curStep += 1;
-    },
-    decrementCurStep: (state) => {
-      state.curStep -= 1;
-    },
-    resetCurStep: (state) => {
-      state.curStep = 0;
-    },
     setToken(state, action: PayloadAction<string>) {
       const index = state.curStep >= 1 ? 1 : 0;
       state.tokens[index] = action.payload;
-      state.curStep += 1;
+      smsSlice.caseReducers.incrementCurStep(state);
     },
     resetMessage: (state) => {
       state.message = "";
+    },
+    incrementCurStep: (state) => {
+      state.curStep = getNextStep(state.curStep);
+    },
+    resetSteps: (state) => {
+      state.curStep = 0;
     },
   },
   extraReducers: (builder) => {
@@ -115,11 +121,10 @@ export const smsSlice = createSlice({
 export const {
   setExportFrom,
   setExportTo,
-  incrementCurStep,
-  decrementCurStep,
-  resetCurStep,
   setToken,
   resetMessage,
+  incrementCurStep,
+  resetSteps,
 } = smsSlice.actions;
 
 export default smsSlice.reducer;
