@@ -88,7 +88,7 @@ describe('notion', () => {
             options: [
               {
                 name: 'Comment',
-                color: 'brown', // "default" | "gray" | "brown" | "orange" | "yellow" | "green" | "blue" | "purple" | "pink" | "red";
+                color: 'brown',
               },
               {
                 name: 'Post',
