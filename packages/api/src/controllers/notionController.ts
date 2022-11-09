@@ -1,14 +1,16 @@
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
-dotenv.config();
 import { Request, Response } from 'express';
-import axios, { AxiosResponse, AxiosError } from 'axios';
-const Axios = axios.default;
+import { Client } from "@notionhq/client";
 import { encodeURIOptions } from '../lib/index.js';
 import {
   AccessTokenReqConfig,
   AccessTokenResponse,
   OTTReqNotionOptions,
 } from './types.js';
+import { getLastEditedPage } from '../lib/notion/index.js';
+dotenv.config();
+const Axios = axios.default;
 
 const { NOTION_CLIENT_ID, NOTION_REDIRECT_URI, NOTION_SECRET, NOTION_STATE } =
   process.env;
@@ -38,9 +40,9 @@ const logged = async (req: Request, res: Response) => {
     res.status(404).send({ error });
   } else if (state === null) {
     // res.redirect('/#' + new URLSearchParams({ error: 'state_missing' }));
-    res.status(404).send({ error: 'State missing' });
+    res.status(404).send({ msg: 'State missing' });
   } else if (state !== NOTION_STATE) {
-    res.status(404).send({ error: 'Invalid state' });
+    res.status(404).send({ msg: 'Invalid state' });
   } else {
     const authOptions: AccessTokenReqConfig = {
       url: "https://api.notion.com/v1/oauth/token",
@@ -68,12 +70,31 @@ const logged = async (req: Request, res: Response) => {
       })
       .catch((error: AxiosError) => {
         console.log(error);
-        res.status(404).send({ error: 'Invalid request' });
+        res.status(404).send({ msg: 'Invalid request' });
       });
   }
+};
+
+const lastEditedPageID = async (req: Request, res: Response) => {
+  const accessToken = req.query.access_token as string;
+  const notion = new Client({ auth: accessToken });
+
+  try {
+    const lastEditedPage = await getLastEditedPage(notion);
+    if (!lastEditedPage) res.status(404).send({ msg: "You need to give access to at least one notion page." });
+    else res.send({ id: lastEditedPage.id });
+  } catch(err) {
+    console.log(err);
+    if (err.code && err.code === "unauthorized") {
+      res.status(401).send({ msg: "API token is invalid." }); //TODO this is an assumption. Parse the real message from the response
+    } else {
+      res.status(404).send({ msg: "Something bad happened." });
+    }
 }
+}; 
 
 export default {
   login,
-  logged
+  logged,
+  lastEditedPageID,
 }
