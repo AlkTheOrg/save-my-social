@@ -1,3 +1,5 @@
+import { ExportFrom, ReqBodyWithExportProps } from "../../controllers/types.js";
+
 export type EmptyObject = Record<string, never>;
 
 export type ParentID = {
@@ -94,3 +96,16 @@ export type CreateDBPropArguments =
     }
   | { type: 'number'; key: string; args: NumberFormat }
   | { type: 'select'; key: string; args: SelectOptions };
+
+// body of /importItems endpoint
+export interface ReqBodyWithLastEditedPageID extends ReqBodyWithExportProps {
+  lastEditedPageID: string,
+};
+
+export type SocialAppToDBPropsMapping = {
+  [T in ExportFrom] : {
+    [exportFeatureType in `${T}_${string}`]: {
+      properties: Array<CreateDBPropArguments>
+    }
+  }
+};

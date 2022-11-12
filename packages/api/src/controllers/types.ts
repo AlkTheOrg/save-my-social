@@ -1,3 +1,9 @@
+import { Request } from 'express';
+
+export interface CustomRequest<T> extends Request {
+  body: T
+}
+
 export type ScopeVariables = string[];
 
 // One Time Token Request Options
@@ -47,3 +53,61 @@ export interface AccessTokenResponse {
   refresh_token: string,
   scope: string,
 }
+
+export type SmsApp =
+  | "reddit"
+  | "spotify"
+  | "twitter"
+  | "youtube"
+  | "notion"
+  | "sheets"
+  | "download";
+
+export type ExportFrom = Exclude<
+  SmsApp,
+  "notion" | "sheets" | "download"
+>;
+export type ExportTo = SmsApp;
+
+export type FeaturesOfExportFrom =
+  | {
+      reddit: {
+        saved: {
+          lastItemID: string;
+        };
+      };
+    }
+  | {
+      spotify: {
+        playlist: {
+          id: string;
+          lastTrackID: string;
+        };
+        likedSongs: {
+          lastTrackID: string;
+        };
+      };
+    }
+  | {
+      youtube: {
+        playlist: {
+          id: string;
+          lastVideoID: string;
+        };
+      };
+    }
+  | {
+      twitter: {
+        bookmarks: {
+          lastTweetID: string;
+        };
+      };
+    };
+
+export interface ReqBodyWithAccessToken {
+  accessToken: string,
+};
+
+export interface ReqBodyWithExportProps extends ReqBodyWithAccessToken {
+  exportProps: FeaturesOfExportFrom,
+};

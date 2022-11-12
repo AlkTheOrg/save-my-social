@@ -10,6 +10,7 @@ import {
   RichTextProp,
   SelectOptions,
   SelectProp,
+  SocialAppToDBPropsMapping,
   Title,
   TitleProp,
 } from './types.js';
@@ -78,6 +79,69 @@ const DBCreator = () => {
   return {
     createDBProp,
     createDB
+  }
+};
+
+export const socialAppToDBPropsMapping: SocialAppToDBPropsMapping = {
+  reddit: {
+    reddit_saved: {
+      properties: [
+        {
+          type: 'title',
+          key: 'Name',
+          args: undefined,
+        },
+        {
+          type: 'number',
+          key: 'ID',
+          args: 'number',
+        },
+        {
+          type: 'number',
+          key: 'Count',
+          args: 'number',
+        },
+        {
+          type: 'rich_text',
+          key: 'Subreddit',
+          args: undefined,
+        },
+        {
+          type: 'checkbox',
+          key: 'Checked',
+          args: undefined,
+        },
+        {
+          type: 'select',
+          key: 'Type',
+          args: [
+            {
+              name: 'Comment',
+              color: 'brown',
+            },
+            {
+              name: 'Post',
+              color: 'orange',
+            },
+          ],
+        },
+      ]
+    }
+  },
+  spotify: {
+    spotify_playlist: {
+      properties: []
+    }
+  },
+  twitter: {
+    twitter_playlist: {
+      properties: []
+    }
+  },
+  youtube: {
+    youtube_playlist: {
+      properties: []
+    }
   }
 };
 
