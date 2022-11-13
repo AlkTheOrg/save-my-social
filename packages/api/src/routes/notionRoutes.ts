@@ -5,6 +5,7 @@ import { requireAccessToken } from "../middlewares/index.js";
 const router = Router();
 router.get('/login', notionController.login);
 router.get('/logged', notionController.logged);
-router.get('/lastEditedPageID', requireAccessToken, notionController.lastEditedPageID);
+// TODO, requireAccessTokenOnBody mw
+router.post('/importItems', notionController.importItems);
 
 export default router;
