@@ -52,3 +52,25 @@ export const getMe = async (headers) => {
   } = await Axios.get('https://oauth.reddit.com/api/v1/me', { headers });
   return url;
 }
+
+export const fetchSavedModels = async (accessToken: string, after?: string) => {
+  const headers = getAuthHeaders(accessToken);
+  const result = {
+    models: [] as ProcessedSavedChildren[],
+    lastQueried: '',
+  };
+  const userURL = await getMe(headers); // /user/<username>/
+  const savedEndpoint = `https://oauth.reddit.com${userURL}saved`;
+  const params = { limit: 100, after }; // can also be added to the endpoint url as a query string
+
+  const savedResponse = await Axios.get(savedEndpoint, { headers, params });
+  const { children } = savedResponse.data.data;
+  
+  result.models.push(...processSavedChildren(children));
+  
+  const lastModel = result.models[result.models.length - 1] || null;
+  if (lastModel && lastModel.id) {
+    result.lastQueried = lastModel.kindID;
+  }
+  return result;
+}

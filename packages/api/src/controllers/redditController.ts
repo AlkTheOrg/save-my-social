@@ -2,8 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { concatWithEmptySpace, encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowErrorPosterHTML, getWindowMessagePosterHTML } from '../lib/index.js';
-import { getAuthHeaders, getMe, processSavedChildren } from '../lib/reddit/index.js';
-import { ProcessedSavedChildren } from '../lib/reddit/types.js';
+import { fetchSavedModels } from '../lib/reddit/index.js';
 import { AccessTokenReqConfig, AccessTokenResponse, OTTReqOptions, ScopeVariables } from './types.js';
 dotenv.config();
 const Axios = axios.default;
@@ -86,27 +85,10 @@ const logged = async (req: Request, res: Response) => {
 }
 
 const getSavedModels = async (req: Request, res: Response) => {
-  const accessToken = req.query.access_token as string;
+  const accessToken = req.query.accessToken as string;
   const after = req.query.after as string | undefined; // last queried item
-  const headers = getAuthHeaders(accessToken);
-  const result = {
-    models: [] as ProcessedSavedChildren[],
-    lastQueried: '',
-  };
-
   try {
-    const userURL = await getMe(headers); // /user/<username>/
-    const savedEndpoint = `https://oauth.reddit.com${userURL}saved`;
-    const params = { limit: 100, after }; // can also be added to the endpoint url as a query string
-    const savedResponse = await Axios.get(savedEndpoint, { headers, params });
-    const { children } = savedResponse.data.data;
-
-    result.models.push(...processSavedChildren(children));
-
-    const lastModel = result.models[result.models.length - 1] || null;
-    if (lastModel && lastModel.id) {
-      result.lastQueried = lastModel.kindID;
-    }
+    const result = await fetchSavedModels(accessToken, after);
     res.send(result);
   } catch (err) {
     console.log(err);

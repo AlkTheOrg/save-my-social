@@ -5,7 +5,7 @@ export const requireAccessToken = (
   res: Response,
   next: NextFunction,
 ): void => {
-  if (!req.query.access_token)
+  if (!req.query.accessToken)
     res.status(404).send({ msg: 'Access token must be provided.' });
   else next();
 };
