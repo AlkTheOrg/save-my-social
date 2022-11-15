@@ -2,7 +2,7 @@ import { ExportFrom, ReqBodyWithExportProps } from "../../controllers/types.js";
 
 export type EmptyObject = Record<string, never>;
 
-export type ParentID = {
+export type ParentPageID = {
   page_id: string;
   type: 'page_id';
 };

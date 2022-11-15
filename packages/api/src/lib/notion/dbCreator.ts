@@ -6,7 +6,7 @@ import {
   DBPropTypeName,
   NumberFormat,
   NumberProp,
-  ParentID,
+  ParentPageID,
   RichTextProp,
   SelectOptions,
   SelectProp,
@@ -16,7 +16,7 @@ import {
 } from './types.js';
 
 const DBCreator = () => {
-  const createParentIDObj = (parentPageID: string): ParentID => ({
+  const createParentIDObj = (parentPageID: string): ParentPageID => ({
     page_id: parentPageID,
     type: 'page_id',
   });
