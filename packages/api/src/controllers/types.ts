@@ -69,45 +69,53 @@ export type ExportFrom = Exclude<
 >;
 export type ExportTo = SmsApp;
 
-export type FeaturesOfExportFrom =
-  | {
-      reddit: {
-        saved: {
-          lastItemID: string;
-        };
-      };
+export type FeaturesOfRedditExport = {
+  reddit: {
+    saved: {
+      lastItemID: string,
     }
-  | {
-      spotify: {
-        playlist: {
-          id: string;
-          lastTrackID: string;
-        };
-        likedSongs: {
-          lastTrackID: string;
-        };
-      };
+  }
+}
+
+export type FeaturesOfSpotifyExport = {
+  spotify: {
+    playlist: {
+      id: string,
+      lastTrackID: string,
+    },
+    likedSongs: {
+      lastTrackID: string,
     }
-  | {
-      youtube: {
-        playlist: {
-          id: string;
-          lastVideoID: string;
-        };
-      };
+  }
+}
+
+export type FeaturesOfYoutubeExport = {
+  youtube: {
+    playlist: {
+      id: string,
+      lastVideoID: string,
     }
-  | {
-      twitter: {
-        bookmarks: {
-          lastTweetID: string;
-        };
-      };
-    };
+  }
+}
+
+export type FeaturesOfTwitterExport = {
+  twitter: {
+    bookmarks: {
+      lastTweetID: string,
+    }
+  }
+}
+
+export type FeaturesOfSocialAppExport =
+  | FeaturesOfRedditExport
+  | FeaturesOfSpotifyExport
+  | FeaturesOfYoutubeExport
+  | FeaturesOfTwitterExport;
 
 export interface ReqBodyWithAccessToken {
   accessToken: string,
 };
 
 export interface ReqBodyWithExportProps extends ReqBodyWithAccessToken {
-  exportProps: FeaturesOfExportFrom,
+  exportProps: FeaturesOfSocialAppExport,
 };
