@@ -43,3 +43,12 @@ export async function getSavedModelsRecursive(
     await getSavedModelsRecursive(userURL, headers, after, resultArr);
   }
 }
+
+export const getMe = async (headers) => {
+  const {
+    data: {
+      subreddit: { url }, // can also return display_name, display_name_prefixed, name
+    },
+  } = await Axios.get('https://oauth.reddit.com/api/v1/me', { headers });
+  return url;
+}

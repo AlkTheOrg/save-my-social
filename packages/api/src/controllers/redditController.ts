@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { concatWithEmptySpace, encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowErrorPosterHTML, getWindowMessagePosterHTML } from '../lib/index.js';
-import { getAuthHeaders, processSavedChildren } from '../lib/reddit/index.js';
+import { getAuthHeaders, getMe, processSavedChildren } from '../lib/reddit/index.js';
 import { ProcessedSavedChildren } from '../lib/reddit/types.js';
 import { AccessTokenReqConfig, AccessTokenResponse, OTTReqOptions, ScopeVariables } from './types.js';
 dotenv.config();
@@ -85,15 +85,6 @@ const logged = async (req: Request, res: Response) => {
   }
 }
 
-const getMe = async (headers) => {
-  const {
-    data: {
-      subreddit: { url }, // can also return display_name, display_name_prefixed, name
-    },
-  } = await Axios.get('https://oauth.reddit.com/api/v1/me', { headers });
-  return url;
-}
-
 const getSavedModels = async (req: Request, res: Response) => {
   const accessToken = req.query.access_token as string;
   const after = req.query.after as string | undefined; // last queried item
@@ -111,17 +102,6 @@ const getSavedModels = async (req: Request, res: Response) => {
     const { children } = savedResponse.data.data;
 
     result.models.push(...processSavedChildren(children));
-
-    // handling this on frontend for a better UX
-    // if (result.items.length) {
-    //   const { id, kind } = result.items[result.items.length - 1].id;
-    //   await getSavedModelsRecursive(
-    //     savedEndpoint,
-    //     headers,
-    //     `${kind}_${id}`,
-    //     result.items,
-    //   );
-    // }
 
     const lastModel = result.models[result.models.length - 1] || null;
     if (lastModel && lastModel.id) {
