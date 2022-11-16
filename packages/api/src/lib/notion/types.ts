@@ -7,18 +7,24 @@ export type ParentPageID = {
   type: 'page_id';
 };
 
+export type ParentDBID = {
+  database_id: string;
+  type: 'database_id';
+};
+
 export type Title = Array<{
   type: 'text';
   text: { content: string };
 }>;
 
-// prop types
+// prop types for creating a db
 export type DBPropTypeName =
   | 'title'
   | 'number'
   | 'rich_text'
   | 'checkbox'
-  | 'select';
+  | 'select'
+  | 'url'
 export type TitleProp = { type: 'title'; title: EmptyObject };
 export type NumberFormat =
   | 'number'
@@ -81,12 +87,14 @@ export type SelectColor =
   | 'red';
 export type SelectOptions = Array<{ name: string; color: SelectColor }>;
 export type SelectProp = { type: 'select'; select: { options: SelectOptions } };
+export type URLProp = { type: 'url'; url: EmptyObject };
 export type DBPropType =
   | TitleProp
   | NumberProp
   | RichTextProp
   | CheckBoxProp
-  | SelectProp;
+  | SelectProp
+  | URLProp
 
 export type CreateDBPropArguments =
   | {

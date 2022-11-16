@@ -13,6 +13,7 @@ import {
   SocialAppToDBPropsMapping,
   Title,
   TitleProp,
+  URLProp,
 } from './types.js';
 
 const DBCreator = () => {
@@ -54,6 +55,10 @@ const DBCreator = () => {
         options
       },
     }),
+    url: (): URLProp => ({
+      url: {},
+      type: 'url',
+    }),
   };
 
   const createDBProp = ({ type, key, args }: CreateDBPropArguments) => ({
@@ -87,19 +92,19 @@ export const socialAppToDBPropsMapping: SocialAppToDBPropsMapping = {
     reddit_saved: {
       properties: [
         {
-          type: 'title',
-          key: 'Name',
-          args: undefined,
-        },
-        {
-          type: 'number',
-          key: 'ID',
-          args: 'number',
-        },
-        {
           type: 'number',
           key: 'Count',
           args: 'number',
+        },
+        {
+          type: 'title',
+          key: 'Title',
+          args: undefined,
+        },
+        {
+          type: 'title',
+          key: 'ID',
+          args: undefined,
         },
         {
           type: 'rich_text',
@@ -108,7 +113,7 @@ export const socialAppToDBPropsMapping: SocialAppToDBPropsMapping = {
         },
         {
           type: 'checkbox',
-          key: 'Checked',
+          key: 'Over 18',
           args: undefined,
         },
         {
@@ -124,6 +129,11 @@ export const socialAppToDBPropsMapping: SocialAppToDBPropsMapping = {
               color: 'orange',
             },
           ],
+        },
+        {
+          type: 'url',
+          key: 'Link',
+          args: undefined,
         },
       ]
     }
