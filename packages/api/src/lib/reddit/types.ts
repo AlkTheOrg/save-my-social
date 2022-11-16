@@ -23,6 +23,11 @@ export type ProcessedSavedChildren = {
   link: string,
 };
 
+export type FetchSavedModelsResponse = {
+  models: ProcessedSavedChildren[],
+  lastQueried: string,
+}
+
 export type AuthHeaders = {
   Authorization: string,
   Accept: string,

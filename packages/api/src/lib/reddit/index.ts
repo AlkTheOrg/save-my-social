@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { AuthHeaders, ProcessedSavedChildren, SavedChildren } from './types.js';
+import { AuthHeaders, FetchSavedModelsResponse, ProcessedSavedChildren, SavedChildren } from './types.js';
 const Axios = axios.default;
 
 export const processSavedChildren = (children: SavedChildren[]): ProcessedSavedChildren[] =>
@@ -53,24 +53,26 @@ export const getMe = async (headers) => {
   return url;
 }
 
-export const fetchSavedModels = async (accessToken: string, after?: string) => {
+export const fetchSavedModels = async (
+  accessToken: string,
+  after?: string,
+): Promise<FetchSavedModelsResponse> => {
   const headers = getAuthHeaders(accessToken);
   const result = {
-    models: [] as ProcessedSavedChildren[],
+    models: [],
     lastQueried: '',
-  };
+  } as FetchSavedModelsResponse;
   const userURL = await getMe(headers); // /user/<username>/
   const savedEndpoint = `https://oauth.reddit.com${userURL}saved`;
   const params = { limit: 100, after }; // can also be added to the endpoint url as a query string
 
   const savedResponse = await Axios.get(savedEndpoint, { headers, params });
   const { children } = savedResponse.data.data;
-  
   result.models.push(...processSavedChildren(children));
-  
+
   const lastModel = result.models[result.models.length - 1] || null;
   if (lastModel && lastModel.id) {
     result.lastQueried = lastModel.kindID;
   }
   return result;
-}
+};
