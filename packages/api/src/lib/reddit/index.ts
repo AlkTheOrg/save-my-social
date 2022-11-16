@@ -8,7 +8,7 @@ export const processSavedChildren = (children: SavedChildren[]): ProcessedSavedC
     kind: child.kind === 't1' ? 'Comment' : 'Post',
     kindID: `${child.kind}_${child.data.id}`,
     subreddit: child.data.subreddit,
-    title: child.data.title || '',
+    title: child.data.title || child.data.link_title || '',
     over_18: child.data.over_18,
     permalink: child.data.permalink,
     // url: child.data.url,

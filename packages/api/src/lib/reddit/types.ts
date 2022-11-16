@@ -1,7 +1,8 @@
 export type SavedChildren = {
   data: {
     id: string;
-    title: string;
+    title?: string;
+    link_title?: string;
     over_18: boolean;
     permalink: string;
     urL: string;
