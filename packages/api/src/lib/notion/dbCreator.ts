@@ -91,18 +91,18 @@ export const socialAppToDBPropsMapping: SocialAppToDBPropsMapping = {
   reddit: {
     reddit_saved: {
       properties: [
-        {
-          type: 'number',
-          key: 'Count',
-          args: 'number',
-        },
+        // {
+        //   type: 'number',
+        //   key: 'Count',
+        //   args: 'number',
+        // },
         {
           type: 'title',
           key: 'Title',
           args: undefined,
         },
         {
-          type: 'title',
+          type: 'rich_text',
           key: 'ID',
           args: undefined,
         },
