@@ -107,7 +107,8 @@ export type CreateDBPropArguments =
 
 // body of /importItems endpoint
 export interface ReqBodyWithLastEditedPageID extends ReqBodyWithExportProps {
-  lastEditedPageID: string,
+  lastEditedDBID: string,
+  accessTokenSocial: string,
 };
 
 export type SocialAppToDBPropsMapping = {
@@ -117,3 +118,55 @@ export type SocialAppToDBPropsMapping = {
     }
   }
 };
+
+// types for creating a page into a db
+export type DBPageTitleProp = {
+  'title': Array<{
+    'text': {
+      'content': string
+    }
+  }>
+};
+
+export type DBPageNumberProp = {
+  number: number | null
+};
+
+export type DBPageRichTextProp = {
+  'rich_text': Array<{
+    'text': {
+      'content': string
+    }
+  }>
+};
+
+export type DBPageCheckboxProp = {
+  checkbox: boolean
+};
+
+export type DBPageSelectProp = {
+  select: {
+    name: string
+  }
+};
+
+export type DBPageURLProp = {
+  url: string
+}
+
+export type DBPagePropType =
+  | DBPageTitleProp
+  | DBPageNumberProp
+  | DBPageRichTextProp
+  | DBPageCheckboxProp
+  | DBPageSelectProp
+  | DBPageURLProp
+
+export type CreateDBPagePropArguments = 
+  | {
+    type: Exclude<DBPropTypeName, 'number' | 'checkbox'>;
+    key: string;
+    value: string;
+  }
+  | { type: 'number'; key: string, value: number | null }
+  | { type: 'checkbox'; key: string, value: boolean };
