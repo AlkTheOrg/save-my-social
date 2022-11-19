@@ -2,13 +2,27 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { Client } from "@notionhq/client";
-import { encodeURIOptions } from '../lib/index.js';
+import { encodeURIOptions, sendMsgResponse } from '../lib/index.js';
 import {
   AccessTokenReqConfig,
   AccessTokenResponse,
+  CustomRequest,
+  FeaturesOfRedditExport,
   OTTReqNotionOptions,
 } from './types.js';
-import { getLastEditedPage } from '../lib/notion/index.js';
+import {
+  createDB,
+  createPagesFromRedditExportProps,
+  getAppExportFeatureKey,
+  getLastEditedPage,
+  retrieveDB,
+  updateDBTitle,
+} from '../lib/notion/index.js';
+import {
+  CreateDBPropArguments,
+  ReqBodyWithLastEditedPageID as ImportItemsToNotionReqBody,
+} from '../lib/notion/types.js';import { appsToExportFrom } from '../lib/constants.js';
+import { socialAppToDBPropsMapping } from '../lib/notion/dbCreator.js';
 dotenv.config();
 const Axios = axios.default;
 
@@ -75,26 +89,87 @@ const logged = async (req: Request, res: Response) => {
   }
 };
 
-const lastEditedPageID = async (req: Request, res: Response) => {
-  const accessToken = req.query.access_token as string;
-  const notion = new Client({ auth: accessToken });
-
+const importItems = async (
+  req: CustomRequest<ImportItemsToNotionReqBody>,
+  res: Response,
+) => {
   try {
-    const lastEditedPage = await getLastEditedPage(notion);
-    if (!lastEditedPage) res.status(404).send({ msg: "You need to give access to at least one notion page." });
-    else res.send({ id: lastEditedPage.id });
-  } catch(err) {
-    console.log(err);
-    if (err.code && err.code === "unauthorized") {
-      res.status(401).send({ msg: "API token is invalid." }); //TODO this is an assumption. Parse the real message from the response
-    } else {
-      res.status(404).send({ msg: "Something bad happened." });
+    const { lastEditedDBID, accessToken, accessTokenSocial, exportProps } = req.body;
+    if (!accessTokenSocial || !exportProps || Object.keys(exportProps).length < 1) {
+      sendMsgResponse(res, 400, 'One of the required parameters is missing.');
+      return;
     }
-}
-}; 
+    const notion = new Client({ auth: accessToken });
+
+    // get the type of the exported app (reddit, twitter etc.)
+    const appName = appsToExportFrom.find((app) => app === Object.keys(exportProps)[0]);
+    if (!appName) {
+      sendMsgResponse(res, 400, 'Invalid app name... bruh...');
+      return;
+    }
+
+    const featureKey = getAppExportFeatureKey(exportProps, appName);
+    const exportType = `${appName}_${featureKey}`
+
+    // get the socialAppToDBProp mapping value
+    const appDBProps = socialAppToDBPropsMapping[appName][exportType];
+    if (!appDBProps) {
+      sendMsgResponse(res, 400, `"${featureKey}" is an invalid feature to export from "${appName}".`);
+      return;
+    }
+
+    let db;
+    // set DB
+    if (lastEditedDBID) {
+      db = await retrieveDB(notion, lastEditedDBID);
+    } else {
+      // get the last edited page and create a new db
+      const lastEditedPage = await getLastEditedPage(notion);
+      if (!lastEditedPage) {
+        sendMsgResponse(res, 404, 'You need to give access to at least one notion page.');
+        return;
+      }
+      db = await createDB(
+        notion,
+        lastEditedPage.id,
+        `${appName} ${featureKey} - Import In Proggress`,
+        appDBProps.properties as Array<CreateDBPropArguments>,
+      );
+    }
+
+    let lastQueriedItem = '';
+    switch (appName) {
+      case "reddit": {
+        lastQueriedItem = await createPagesFromRedditExportProps(
+          notion,
+          accessTokenSocial,
+          db.id,
+          exportProps as FeaturesOfRedditExport
+        );
+        break;
+      }
+
+      default:
+        sendMsgResponse(res, 401, 'Invalid social app.');
+        return;
+    }
+
+    if (!lastQueriedItem)
+      updateDBTitle(notion, `${appName} ${featureKey} - Completed`, db.id);
+
+    res.send({
+      dbURL: db.url,
+      dbID: db.id,
+      lastQueriedItem,
+    });
+  } catch (err) {
+    console.log(err);
+    res.send(err);
+  }
+};
 
 export default {
   login,
   logged,
-  lastEditedPageID,
+  importItems,
 }
