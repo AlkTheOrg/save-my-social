@@ -16,3 +16,16 @@ export const getLastEditedPage = async (notion: Client) => {
   });
   return page;
 };
+
+export const updateDBTitle = (notion: Client, title: string, dbID: string) => {
+  return notion.databases.update({
+    database_id: dbID,
+    title: [
+      {
+        text: {
+          content: title,
+        },
+      },
+    ]
+  })
+};
