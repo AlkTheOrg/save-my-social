@@ -80,7 +80,7 @@ const logged = async (req: Request, res: Response) => {
       authOptions.axiosConfig,
     )
       .then((response: AxiosResponse<AccessTokenResponse>) => {
-        res.send({ access_token: response.data.access_token });
+        res.send({ accessToken: response.data.access_token });
       })
       .catch((error: AxiosError) => {
         console.log(error);
