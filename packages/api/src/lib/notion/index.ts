@@ -1,5 +1,7 @@
 import { Client } from "@notionhq/client";
 import { ExportFrom, FeaturesOfSocialAppExport } from "../../controllers/types.js";
+import DBCreator from "./dbCreator.js";
+import { CreateDBPropArguments } from "./types.js";
 
 export const getLastEditedPage = async (notion: Client) => {
   const {
@@ -43,4 +45,18 @@ export const getAppExportFeatureKey = (
       : Object.keys(propertiesOfAppExport)[0]; // get the first found feature for now
   // if featureKey is null or an unsupported feature, it will considered invalid
   return featureKey;
+};
+
+export const retrieveDB = (notion: Client, dbID: string) =>
+  notion.databases.retrieve({ database_id: dbID });
+
+export const createDB = async (
+  notion: Client,
+  parentPageID: string,
+  title: string,
+  properties: Array<CreateDBPropArguments>,
+) => {
+  const dbCreator = DBCreator();
+  const db = await dbCreator.createDB(notion, parentPageID, title, properties);
+  return db;
 };
