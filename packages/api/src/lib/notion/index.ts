@@ -1,6 +1,9 @@
 import { Client } from "@notionhq/client";
-import { ExportFrom, FeaturesOfSocialAppExport } from "../../controllers/types.js";
+import { ExportFrom, FeaturesOfRedditExport, FeaturesOfSocialAppExport } from "../../controllers/types.js";
+import { fetchSavedModels } from "../reddit/index.js";
+import { ProcessedSavedChildren } from "../reddit/types.js";
 import DBCreator from "./dbCreator.js";
+import PageCreator, { createRedditPropsForDBPage } from "./pageCreator.js";
 import { CreateDBPropArguments } from "./types.js";
 
 export const getLastEditedPage = async (notion: Client) => {
@@ -60,3 +63,31 @@ export const createDB = async (
   const db = await dbCreator.createDB(notion, parentPageID, title, properties);
   return db;
 };
+
+const createPagesFromRedditModels = async (
+  notion: Client,
+  dbID: string,
+  models: ProcessedSavedChildren[],
+) => {
+  const pageCreator = PageCreator();
+  return Promise.all(
+    models.map(async (model) => pageCreator.createDBPage(
+        notion,
+        dbID,
+        createRedditPropsForDBPage(model),
+      )
+    ),
+  );
+} 
+
+export const createPagesFromRedditExportProps = async (
+  notion: Client,
+  redditAccessToken,
+  dbID: string,
+  exportProps: FeaturesOfRedditExport,
+) => {
+  const { reddit: { saved: { lastItemID }}} = exportProps as FeaturesOfRedditExport;
+  const { models, lastQueried } = await fetchSavedModels(redditAccessToken, lastItemID);
+  await createPagesFromRedditModels(notion, dbID, models);
+  return lastQueried;
+}
