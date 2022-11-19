@@ -1,3 +1,5 @@
+import { Response } from "express";
+
 export const encodeURIOptions = (options: Record<string, string>): string => {
   return Object.keys(options)
     .map(
@@ -52,3 +54,9 @@ export const getWindowErrorPosterHTML = (error: string, targetOrigin = '*') =>
     },
     targetOrigin,
   );
+
+export const sendMsgResponse = (
+  res: Response,
+  status: number,
+  msg: string,
+) => res.status(status).send({ msg });
