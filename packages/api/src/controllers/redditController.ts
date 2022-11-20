@@ -1,9 +1,10 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
-import { concatWithEmptySpace, encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowErrorPosterHTML, getWindowMessagePosterHTML } from '../lib/index.js';
+import { concatWithEmptySpace, encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowErrorPosterHTML, getWindowMessagePosterHTML, sendMsgResponse } from '../lib/index.js';
 import { fetchSavedModels } from '../lib/reddit/index.js';
-import { AccessTokenReqConfig, AccessTokenResponse, OTTReqOptions, ScopeVariables } from './types.js';
+import { ReqBodyWithItemAfter } from '../lib/reddit/types.js';
+import { AccessTokenReqConfig, AccessTokenResponse, CustomRequest, OTTReqOptions, ScopeVariables } from './types.js';
 dotenv.config();
 const Axios = axios.default;
 
@@ -84,9 +85,8 @@ const logged = async (req: Request, res: Response) => {
   }
 }
 
-const getSavedModels = async (req: Request, res: Response) => {
-  const accessToken = req.query.accessToken as string;
-  const after = req.query.after as string | undefined; // last queried item
+const getSavedModels = async (req: CustomRequest<ReqBodyWithItemAfter>, res: Response) => {
+  const { accessToken, after } = req.body;
   try {
     const result = await fetchSavedModels(accessToken, after);
     res.send(result);

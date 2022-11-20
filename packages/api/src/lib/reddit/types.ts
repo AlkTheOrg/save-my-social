@@ -1,3 +1,5 @@
+import { ReqBodyWithAccessToken } from "../../controllers/types.js";
+
 export type SavedChildren = {
   data: {
     id: string;
@@ -33,4 +35,8 @@ export type AuthHeaders = {
   Accept: string,
   'Content-Type': string,
   'User-Agent'?: string,
+}
+
+export interface ReqBodyWithItemAfter extends ReqBodyWithAccessToken {
+  after: string,
 }
