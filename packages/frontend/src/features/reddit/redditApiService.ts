@@ -21,6 +21,10 @@ type SavedModelsResponse = {
 };
 
 export const fetchSavedModels = (accessToken: string, after = "") =>
-  axios.get<SavedModelsResponse>(
-    `${REDDIT_BACKEND}/savedModels?access_token=${accessToken}&after=${after}`,
+  axios.post<SavedModelsResponse>(
+    `${REDDIT_BACKEND}/savedModels`,
+    {
+      accessToken,
+      after,
+    },
   );
