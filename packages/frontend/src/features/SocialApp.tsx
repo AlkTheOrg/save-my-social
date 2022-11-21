@@ -9,6 +9,7 @@ import {
 } from "../app/smsSlice";
 import SocialAppBtn from "../components/SocialAppBtn";
 import { getAuthURL as getRedditAuthURL } from "./reddit/redditSlice";
+import { getAuthURL as getNotionAuthURL } from "./notion/notionSlice";
 
 type Props = {
   appName: SmsApp;
@@ -27,7 +28,7 @@ const SocialApp: (props: Props) => JSX.Element = ({ appName }) => {
     spotify: getRedditAuthURL,
     twitter: getRedditAuthURL,
     youtube: getRedditAuthURL,
-    notion: getRedditAuthURL,
+    notion: getNotionAuthURL,
     sheets: getRedditAuthURL, // TODO: Update these when implemented
   };
 
