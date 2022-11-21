@@ -13,10 +13,26 @@ export const getAuthURL = createAsyncThunk("reddit/fetchOtt", async () => {
   return response.data.url;
 });
 
+export const getSavedModels = createAsyncThunk(
+  "reddit/getSavedModels",
+  async (accessToken: string) => {
+    const {
+      data: { models: savedModels, lastQueried },
+    } = await fetchSavedModels(accessToken);
+    console.log(savedModels);
+    console.log(lastQueried);
+  },
+);
+
 export const redditSlice = createSlice({
   name: "reddit",
   initialState,
   reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(getSavedModels.fulfilled, (state, action) => {
+      console.log(action.payload);
+    });
+  },
 });
 
 export default redditSlice.reducer;
