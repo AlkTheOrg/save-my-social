@@ -5,7 +5,6 @@ import { RedditState } from "./types";
 const initialState: RedditState = {
   name: "reddit",
   selections: ["saved"],
-  importableTo: ["download", "reddit", "drive", "sheets"],
 };
 
 export const getAuthURL = createAsyncThunk("reddit/fetchOtt", async () => {
