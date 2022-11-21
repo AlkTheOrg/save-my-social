@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchAuthURL, fetchSavedModels } from "./redditApiService";
+import { fetchAuthURL } from "./redditApiService";
 import { RedditState } from "./types";
 
 const initialState: RedditState = {
