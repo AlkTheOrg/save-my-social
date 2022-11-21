@@ -38,6 +38,13 @@ const options: OTTReqNotionOptions = {
   state: NOTION_STATE,
 };
 
+const redirectUrl = (_: Request, res: Response) => {
+  const url =
+  'https://api.notion.com/v1/oauth/authorize?' +
+  encodeURIOptions({ ...options });
+  res.send({ url });
+}
+
 const login = (_: Request, res: Response) => {
   const url =
     'https://api.notion.com/v1/oauth/authorize?' +
@@ -169,6 +176,7 @@ const importItems = async (
 };
 
 export default {
+  redirectUrl,
   login,
   logged,
   importItems,
