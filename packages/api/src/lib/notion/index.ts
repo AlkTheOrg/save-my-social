@@ -1,10 +1,31 @@
 import { Client } from "@notionhq/client";
-import { ExportFrom, FeaturesOfRedditExport, FeaturesOfSocialAppExport } from "../../controllers/types.js";
+import { AccessTokenReqConfig, ExportFrom, FeaturesOfRedditExport, FeaturesOfSocialAppExport } from "../../controllers/types.js";
 import { fetchSavedModels } from "../reddit/index.js";
 import { ProcessedSavedChildren } from "../reddit/types.js";
 import DBCreator from "./dbCreator.js";
 import PageCreator, { createRedditPropsForDBPage } from "./pageCreator.js";
 import { CreateDBPropArguments } from "./types.js";
+
+export const getAuthOptions = (
+  code: string,
+  redirect_uri: string,
+  clientID: string,
+  secret: string
+): AccessTokenReqConfig => ({
+  url: "https://api.notion.com/v1/oauth/token",
+  form: {
+    code,
+    redirect_uri,
+    grant_type: "authorization_code",
+  },
+  axiosConfig: {
+    headers: {
+      Authorization:
+        "Basic " + Buffer.from(clientID + ":" + secret).toString("base64"),
+      "Content-Type": "application/json",
+    }
+  }
+});
 
 export const getLastEditedPage = async (notion: Client) => {
   const {

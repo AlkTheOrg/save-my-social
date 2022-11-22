@@ -2,9 +2,8 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { Client } from "@notionhq/client";
-import { encodeURIOptions, sendMsgResponse } from '../lib/index.js';
+import { encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowErrorPosterHTML, getWindowMessagePosterHTML, sendMsgResponse } from '../lib/index.js';
 import {
-  AccessTokenReqConfig,
   AccessTokenResponse,
   CustomRequest,
   FeaturesOfRedditExport,
@@ -14,6 +13,7 @@ import {
   createDB,
   createPagesFromRedditExportProps,
   getAppExportFeatureKey,
+  getAuthOptions,
   getLastEditedPage,
   retrieveDB,
   updateDBTitle,
@@ -65,33 +65,20 @@ const logged = async (req: Request, res: Response) => {
   } else if (state !== NOTION_STATE) {
     res.status(404).send({ msg: 'Invalid state' });
   } else {
-    const authOptions: AccessTokenReqConfig = {
-      url: "https://api.notion.com/v1/oauth/token",
-      form: {
-        code,
-        redirect_uri: NOTION_REDIRECT_URI,
-        grant_type: "authorization_code",
-      },
-      axiosConfig: {
-        headers: {
-          Authorization:
-            "Basic " + Buffer.from(NOTION_CLIENT_ID + ":" + NOTION_SECRET).toString("base64"),
-          "Content-Type": "application/json",
-        }
-      }
-    };
+    const authOptions = getAuthOptions(
+      code,
+      NOTION_REDIRECT_URI,
+      NOTION_CLIENT_ID,
+      NOTION_SECRET,
+    );
 
-    await Axios.post(
-      authOptions.url,
-      authOptions.form,
-      authOptions.axiosConfig,
-    )
+    await Axios.post(authOptions.url, authOptions.form, authOptions.axiosConfig)
       .then((response: AxiosResponse<AccessTokenResponse>) => {
-        res.send({ accessToken: response.data.access_token });
+        res.send(getWindowAccessTokenPosterHTML(response.data.access_token));
       })
       .catch((error: AxiosError) => {
         console.log(error);
-        res.status(404).send({ msg: 'Invalid request' });
+        res.send(getWindowErrorPosterHTML('Error while getting access token'));
       });
   }
 };
