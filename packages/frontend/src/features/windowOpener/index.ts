@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getAuthURL as getRedditAuthURL } from "../reddit/redditSlice";
+import { getAuthURL as getNotionAuthURL } from "../notion/notionSlice";
 
 export const windowSlice = createSlice({
   name: "windowOpener",
@@ -23,6 +24,10 @@ export const windowSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getRedditAuthURL.fulfilled, (state, action) => {
+        state.isOpened = true;
+        state.target = action.payload;
+      })
+      .addCase(getNotionAuthURL.fulfilled, (state, action) => {
         state.isOpened = true;
         state.target = action.payload;
       });

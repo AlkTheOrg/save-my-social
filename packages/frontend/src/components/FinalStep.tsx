@@ -1,6 +1,9 @@
 const FinalStep = (): JSX.Element => {
   return (
-    <div>FinalStep</div>
+    <>
+      <div>FinalStep</div>
+      <button type="button">Start Process</button>
+    </>
   );
 };
 

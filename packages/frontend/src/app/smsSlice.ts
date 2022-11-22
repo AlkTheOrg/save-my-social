@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getAuthURL as getRedditAuthURL } from "../features/reddit/redditSlice";
+import { getAuthURL as getNotionAuthURL } from "../features/notion/notionSlice";
 import { getExportableTargetsOfCurApp } from "../features/socialApp/socialAppConstants";
 import {
   Steps,
@@ -29,7 +30,6 @@ export interface SmsState {
   exportTo: ExportTo;
   apps: SmsApp[];
   activeApps: SmsApp[];
-  authURLs: [toExport: string, toImport: string]; // i.e. [<redditURL>, <sheetsURL>].
   tokens: [toExport: string, toImport: string];
   isLoading: boolean;
   message: string;
@@ -61,7 +61,6 @@ const initialState: SmsState = {
   exportTo: "",
   apps: allApps,
   activeApps: appsToExportFrom,
-  authURLs: ["", ""],
   tokens: ["", ""],
   isLoading: false,
   message: "",
@@ -83,13 +82,10 @@ export const smsSlice = createSlice({
     setToken: (state, action: PayloadAction<string>) => {
       const index = state.curStep >= 1 ? 1 : 0;
       state.tokens[index] = action.payload;
+      // TODO: May get rid of below logic and use a new component for the next step
       if (index < 1) { // if token belongs to the first app
         const exportableTargetsOfCurApp = getExportableTargetsOfCurApp(state.exportFrom);
         state.activeApps = exportableTargetsOfCurApp;
-      } else {
-        // TODO: either reset active apps if second app is set
-        // or do reset operations as a whole at the end of the export process
-        // state.activeApps = initialState.activeApps;
       }
       smsSlice.caseReducers.incrementCurStep(state);
     },
@@ -108,12 +104,7 @@ export const smsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getRedditAuthURL.fulfilled, (state, action) => {
-        if (!state.authURLs[0]) {
-          state.authURLs[0] = action.payload;
-        } else {
-          state.authURLs[1] = action.payload;
-        }
+      .addCase(getRedditAuthURL.fulfilled, (state) => {
         state.isLoading = false;
         smsSlice.caseReducers.resetMessage(state);
       })
@@ -124,6 +115,18 @@ export const smsSlice = createSlice({
       .addCase(getRedditAuthURL.rejected, (state) => {
         state.isLoading = false;
         state.message = "Error on getting the Auth URL for Reddit";
+      })
+      .addCase(getNotionAuthURL.fulfilled, (state) => {
+        state.isLoading = false;
+        smsSlice.caseReducers.resetMessage(state);
+      })
+      .addCase(getNotionAuthURL.pending, (state) => {
+        state.isLoading = true;
+        state.message = "Getting Notion redirection URL.";
+      })
+      .addCase(getNotionAuthURL.rejected, (state) => {
+        state.isLoading = false;
+        state.message = "Error on getting the Auth URL for Notion";
       });
   },
 });
