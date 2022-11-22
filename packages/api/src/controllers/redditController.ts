@@ -2,9 +2,9 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { concatWithEmptySpace, encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowErrorPosterHTML, getWindowMessagePosterHTML, sendMsgResponse } from '../lib/index.js';
-import { fetchSavedModels } from '../lib/reddit/index.js';
+import { fetchSavedModels, getAuthOptions } from '../lib/reddit/index.js';
 import { ReqBodyWithItemAfter } from '../lib/reddit/types.js';
-import { AccessTokenReqConfig, AccessTokenResponse, CustomRequest, OTTReqOptions, ScopeVariables } from './types.js';
+import { AccessTokenResponse, CustomRequest, OTTReqOptions, ScopeVariables } from './types.js';
 dotenv.config();
 const Axios = axios.default;
 
@@ -54,21 +54,12 @@ const logged = async (req: Request, res: Response) => {
     console.log('Invalid state');
     res.send(getWindowErrorPosterHTML('Invalid state'));
   } else {
-    const authOptions: AccessTokenReqConfig = {
-      url: 'https://www.reddit.com/api/v1/access_token',
-      form: {
-        code,
-        redirect_uri: REDDIT_REDIRECT_URI,
-        grant_type: 'authorization_code'
-      },
-      axiosConfig: {
-        headers: {
-          Accept: 'application/json',
-          Authorization: 'Basic ' + Buffer.from(REDDIT_CLIENT_ID + ':' + REDDIT_SECRET).toString('base64'),
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      }
-    };
+    const authOptions = getAuthOptions(
+      code,
+      REDDIT_REDIRECT_URI,
+      REDDIT_CLIENT_ID,
+      REDDIT_SECRET,
+    );
 
     await Axios.post(authOptions.url, encodeURIOptions(authOptions.form), authOptions.axiosConfig)
       .then((response: AxiosResponse<AccessTokenResponse> )=> {
@@ -76,11 +67,7 @@ const logged = async (req: Request, res: Response) => {
       }
       ).catch((err: AxiosError) => {
         console.log(err);
-        res.send(getWindowMessagePosterHTML({
-          error: 'Error while getting access token',
-          source: 'save-my-social',
-          type: 'error',
-        }));
+        res.send(getWindowErrorPosterHTML('Error while getting access token'));
       })
   }
 }

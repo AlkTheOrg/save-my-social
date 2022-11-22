@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { AccessTokenReqConfig } from '../../controllers/types.js';
 import { AuthHeaders, FetchSavedModelsResponse, ProcessedSavedChildren, SavedChildren } from './types.js';
 const Axios = axios.default;
 
@@ -23,6 +24,26 @@ export const getAuthHeaders = (accessToken: string): AuthHeaders => ({
   "Content-Type": "application/x-www-form-urlencoded",
 });
 
+export const getAuthOptions = (
+  code: string,
+  redirect_uri: string,
+  clientID: string,
+  secret: string
+): AccessTokenReqConfig => ({
+  url: 'https://www.reddit.com/api/v1/access_token',
+  form: {
+    code,
+    redirect_uri,
+    grant_type: 'authorization_code',
+  },
+  axiosConfig: {
+    headers: {
+      Accept: 'application/json',
+      Authorization: 'Basic ' + Buffer.from(clientID + ':' + secret).toString('base64'),
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  }
+});
 
 export async function getSavedModelsRecursive(
   userURL: string,
