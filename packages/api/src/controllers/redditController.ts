@@ -1,21 +1,27 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
-import { concatWithEmptySpace, encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowErrorPosterHTML, getWindowMessagePosterHTML, sendMsgResponse } from '../lib/index.js';
+import {
+  concatWithEmptySpace,
+  encodeURIOptions,
+  getWindowAccessTokenPosterHTML,
+  getWindowErrorPosterHTML,
+} from '../lib/index.js';
 import { fetchSavedModels, getAuthOptions } from '../lib/reddit/index.js';
 import { ReqBodyWithItemAfter } from '../lib/reddit/types.js';
-import { AccessTokenResponse, CustomRequest, OTTReqOptions, ScopeVariables } from './types.js';
+import {
+  AccessTokenResponse,
+  CustomRequest,
+  OTTReqOptions,
+  ScopeVariables,
+} from './types.js';
 dotenv.config();
 const Axios = axios.default;
 
-const scopeVariables: ScopeVariables = ["save", "history", "identity"]; // https://www.reddit.com/dev/api/oauth
+const scopeVariables: ScopeVariables = ['save', 'history', 'identity']; // https://www.reddit.com/dev/api/oauth
 
-const {
-  REDDIT_CLIENT_ID,
-  REDDIT_REDIRECT_URI,
-  REDDIT_SECRET,
-  REDDIT_STATE,
-} = process.env;
+const { REDDIT_CLIENT_ID, REDDIT_REDIRECT_URI, REDDIT_SECRET, REDDIT_STATE } =
+  process.env;
 
 const options: OTTReqOptions = {
   client_id: REDDIT_CLIENT_ID,
@@ -31,13 +37,12 @@ const uriEncodedOptions = encodeURIOptions(options);
 const redirectUrl = (_: Request, res: Response) => {
   const url = `https://www.reddit.com/api/v1/authorize?${uriEncodedOptions}`;
   res.send({ url });
-}
+};
 
 const login = (_: Request, res: Response) => {
-  const url =
-    'https://www.reddit.com/api/v1/authorize?' + uriEncodedOptions;
+  const url = 'https://www.reddit.com/api/v1/authorize?' + uriEncodedOptions;
   res.redirect(url);
-}
+};
 
 const logged = async (req: Request, res: Response) => {
   const code = (req.query.code as string) || null;
@@ -64,13 +69,13 @@ const logged = async (req: Request, res: Response) => {
     await Axios.post(authOptions.url, encodeURIOptions(authOptions.form), authOptions.axiosConfig)
       .then((response: AxiosResponse<AccessTokenResponse> )=> {
         res.send(getWindowAccessTokenPosterHTML(response.data.access_token));
-      }
-      ).catch((err: AxiosError) => {
+      })
+      .catch((err: AxiosError) => {
         console.log(err);
         res.send(getWindowErrorPosterHTML('Error while getting access token'));
-      })
+      });
   }
-}
+};
 
 const getSavedModels = async (req: CustomRequest<ReqBodyWithItemAfter>, res: Response) => {
   const { accessToken, after } = req.body;
@@ -89,5 +94,5 @@ export default {
   redirectUrl,
   login,
   logged,
-  getSavedModels
-}
+  getSavedModels,
+};
