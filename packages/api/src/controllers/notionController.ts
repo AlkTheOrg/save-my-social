@@ -1,8 +1,13 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
-import { Client } from "@notionhq/client";
-import { encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowErrorPosterHTML, getWindowMessagePosterHTML, sendMsgResponse } from '../lib/index.js';
+import { Client } from '@notionhq/client';
+import {
+  encodeURIOptions,
+  getWindowAccessTokenPosterHTML,
+  getWindowErrorPosterHTML,
+  sendMsgResponse,
+} from '../lib/index.js';
 import {
   AccessTokenResponse,
   CustomRequest,
@@ -21,7 +26,8 @@ import {
 import {
   CreateDBPropArguments,
   ReqBodyWithLastEditedPageID as ImportItemsToNotionReqBody,
-} from '../lib/notion/types.js';import { appsToExportFrom } from '../lib/constants.js';
+} from '../lib/notion/types.js';
+import { appsToExportFrom } from '../lib/constants.js';
 import { socialAppToDBPropsMapping } from '../lib/notion/dbCreator.js';
 dotenv.config();
 const Axios = axios.default;
@@ -40,10 +46,10 @@ const options: OTTReqNotionOptions = {
 
 const redirectUrl = (_: Request, res: Response) => {
   const url =
-  'https://api.notion.com/v1/oauth/authorize?' +
-  encodeURIOptions({ ...options });
+    'https://api.notion.com/v1/oauth/authorize?' +
+    encodeURIOptions({ ...options });
   res.send({ url });
-}
+};
 
 const login = (_: Request, res: Response) => {
   const url =
@@ -53,9 +59,9 @@ const login = (_: Request, res: Response) => {
 };
 
 const logged = async (req: Request, res: Response) => {
-  const code = req.query.code as string || null;
-  const state = req.query.state as string || null;
-  const error = req.query.error as string || null;
+  const code = (req.query.code as string) || null;
+  const state = (req.query.state as string) || null;
+  const error = (req.query.error as string) || null;
 
   if (error) {
     res.status(404).send({ error });
@@ -103,7 +109,7 @@ const importItems = async (
     }
 
     const featureKey = getAppExportFeatureKey(exportProps, appName);
-    const exportType = `${appName}_${featureKey}`
+    const exportType = `${appName}_${featureKey}`;
 
     // get the socialAppToDBProp mapping value
     const appDBProps = socialAppToDBPropsMapping[appName][exportType];
@@ -133,12 +139,12 @@ const importItems = async (
 
     let lastQueriedItem = '';
     switch (appName) {
-      case "reddit": {
+      case 'reddit': {
         lastQueriedItem = await createPagesFromRedditExportProps(
           notion,
           accessTokenSocial,
           db.id,
-          exportProps as FeaturesOfRedditExport
+          exportProps as FeaturesOfRedditExport,
         );
         break;
       }
@@ -167,4 +173,4 @@ export default {
   login,
   logged,
   importItems,
-}
+};
