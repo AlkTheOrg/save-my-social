@@ -5,6 +5,7 @@ import {
   getAppExportFeatureKey,
   getAuthOptions,
   getLastEditedPage,
+  updateDBTitle,
 } from '../../src/lib/notion/index.js';
 import { CreateDBPropArguments } from '../../src/lib/notion/types.js';
 
@@ -171,5 +172,22 @@ describe('notion', () => {
     );
     const lastEditedPage = await getLastEditedPage(notion);
     expect(lastEditedPage).toBe('page representer string');
+  });
+
+  it('should update db title', async () => {
+    const notion = { databases: {} } as Client;
+    notion.databases.update = jest.fn().mockImplementation(
+      () =>
+        new Promise((resolve, _) =>
+          resolve({
+            object: 'database',
+            id: '1',
+            properties: { myprop: { id: '12', name: 'asdf', color: 'brown' } },
+          }),
+        ),
+    );
+
+    const updatedDBTitleRes = await updateDBTitle(notion, 'newTitle', '1');
+    expect(updatedDBTitleRes.id).toBe('1');
   });
 });
