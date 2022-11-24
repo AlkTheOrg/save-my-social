@@ -1,4 +1,9 @@
+import { FeaturesOfSocialAppExport } from '../../src/controllers/types.js';
 import DBCreator from '../../src/lib/notion/dbCreator.js';
+import {
+  getAppExportFeatureKey,
+  getAuthOptions,
+} from '../../src/lib/notion/index.js';
 import { CreateDBPropArguments } from '../../src/lib/notion/types.js';
 
 describe('notion', () => {
@@ -100,11 +105,50 @@ describe('notion', () => {
       },
     };
 
-  const reducedProps = properties.reduce((prev, curArgs) => ({
-    ...prev,
-    ...dbCreator.createDBProp(curArgs)
-  }), {});
+    const reducedProps = properties.reduce(
+      (prev, curArgs) => ({
+        ...prev,
+        ...dbCreator.createDBProp(curArgs),
+      }),
+      {},
+    );
 
-  expect(reducedProps).toStrictEqual(expectedInput.properties);
+    expect(reducedProps).toStrictEqual(expectedInput.properties);
+  });
+
+  it('should get auth options', () => {
+    const code = 'test';
+    const redirect_uri = 'https://localhost:9999';
+    const clientID = '123';
+    const clientSecret = 'secret123';
+    expect(
+      getAuthOptions(code, redirect_uri, clientID, clientSecret),
+    ).toStrictEqual({
+      url: 'https://api.notion.com/v1/oauth/token',
+      form: {
+        code,
+        redirect_uri,
+        grant_type: 'authorization_code',
+      },
+      axiosConfig: {
+        headers: {
+          Authorization:
+            'Basic ' +
+            Buffer.from(clientID + ':' + clientSecret).toString('base64'),
+          'Content-Type': 'application/json',
+        },
+      },
+    });
+  });
+
+  it('should get app export feature key', () => {
+    const redditExportProps: FeaturesOfSocialAppExport = {
+      reddit: {
+        saved: {
+          lastItemID: '',
+        },
+      },
+    };
+    expect(getAppExportFeatureKey(redditExportProps, 'reddit')).toBe('saved');
   });
 });
