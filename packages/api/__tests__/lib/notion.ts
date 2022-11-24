@@ -1,8 +1,10 @@
+import { Client } from '@notionhq/client';
 import { FeaturesOfSocialAppExport } from '../../src/controllers/types.js';
 import DBCreator from '../../src/lib/notion/dbCreator.js';
 import {
   getAppExportFeatureKey,
   getAuthOptions,
+  getLastEditedPage,
 } from '../../src/lib/notion/index.js';
 import { CreateDBPropArguments } from '../../src/lib/notion/types.js';
 
@@ -150,5 +152,24 @@ describe('notion', () => {
       },
     };
     expect(getAppExportFeatureKey(redditExportProps, 'reddit')).toBe('saved');
+  });
+
+  it('should get last edited page', async () => {
+    const notion = {} as Client;
+    notion.search = jest.fn().mockImplementation(
+      () =>
+        new Promise((resolve, _) =>
+          resolve({
+            type: 'page_or_database',
+            page_or_database: {},
+            object: 'list',
+            next_cursor: null,
+            has_more: false,
+            results: ['page representer string'],
+          }),
+        ),
+    );
+    const lastEditedPage = await getLastEditedPage(notion);
+    expect(lastEditedPage).toBe('page representer string');
   });
 });
