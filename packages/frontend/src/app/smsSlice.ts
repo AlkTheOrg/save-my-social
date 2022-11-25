@@ -92,6 +92,9 @@ export const smsSlice = createSlice({
     setActiveApps: (state, action: PayloadAction<SmsApp[]>) => {
       state.activeApps = action.payload;
     },
+    setMessage: (state, action: PayloadAction<string>) => {
+      state.message = action.payload;
+    },
     resetMessage: (state) => {
       state.message = "";
     },
@@ -136,6 +139,7 @@ export const {
   setExportTo,
   setToken,
   setActiveApps,
+  setMessage,
   resetMessage,
   incrementCurStep,
   resetSteps,
