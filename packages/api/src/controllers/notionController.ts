@@ -164,7 +164,7 @@ const importItems = async (
     });
   } catch (err) {
     console.log(err);
-    res.send(err);
+    res.status(err.status || 500).send(err);
   }
 };
 
