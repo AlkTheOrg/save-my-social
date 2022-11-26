@@ -138,14 +138,16 @@ const importItems = async (
     }
 
     let lastQueriedItem = '';
+    let numOfImportedItems = 0;
     switch (appName) {
       case 'reddit': {
-        lastQueriedItem = await createPagesFromRedditExportProps(
-          notion,
-          accessTokenSocial,
-          db.id,
-          exportProps as FeaturesOfRedditExport,
-        );
+        [numOfImportedItems, lastQueriedItem] =
+          await createPagesFromRedditExportProps(
+            notion,
+            accessTokenSocial,
+            db.id,
+            exportProps as FeaturesOfRedditExport,
+          );
         break;
       }
 
@@ -160,6 +162,7 @@ const importItems = async (
     res.send({
       dbURL: db.url,
       dbID: db.id,
+      numOfImportedItems,
       lastQueriedItem,
     });
   } catch (err) {
