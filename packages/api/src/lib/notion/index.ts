@@ -106,9 +106,9 @@ export const createPagesFromRedditExportProps = async (
   redditAccessToken,
   dbID: string,
   exportProps: FeaturesOfRedditExport,
-) => {
+): Promise<[number, string]> => {
   const { reddit: { saved: { lastItemID }}} = exportProps as FeaturesOfRedditExport;
   const { models, lastQueried } = await fetchSavedModels(redditAccessToken, lastItemID);
   await createPagesFromRedditModels(notion, dbID, models);
-  return lastQueried;
+  return [models.length, lastQueried];
 }
