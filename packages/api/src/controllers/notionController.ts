@@ -156,7 +156,7 @@ const importItems = async (
         return;
     }
 
-    if (!lastQueriedItem)
+    if (numOfImportedItems < 100)
       updateDBTitle(notion, `${appName} ${featureKey} - Completed`, db.id);
 
     res.send({
