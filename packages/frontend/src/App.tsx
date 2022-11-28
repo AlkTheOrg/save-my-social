@@ -5,9 +5,14 @@ import { setToken } from "./app/smsSlice";
 import SocialApps from "./components/SocialApps";
 import "./styles/reset.css";
 import Header from "./components/Header";
+import { stepsByOrder } from "./app/steps";
+import FinalStep from "./components/FinalStep";
 
 function App(): JSX.Element {
   const { target, isOpened } = useAppSelector((state) => state.windowOpener);
+  const curStep = useAppSelector((state) => state.sms.curStep);
+  const curStepName = stepsByOrder[curStep];
+
   const dispatch = useAppDispatch();
 
   const onWindowOpen = (): void => {
@@ -36,7 +41,7 @@ function App(): JSX.Element {
   return (
     <div className="App">
       <Header />
-      <SocialApps />
+      {curStepName === "final" ? <FinalStep /> : <SocialApps />}
       <WindowOpener
         target={target}
         onOpen={onWindowOpen}
