@@ -1,44 +1,50 @@
 import { Client } from "@notionhq/client";
-import { AccessTokenReqConfig, ExportFrom, FeaturesOfRedditExport, FeaturesOfSocialAppExport } from "../../controllers/types.js";
+import {
+  AccessTokenReqConfig,
+  ExportFrom,
+  FeaturesOfRedditExport,
+  FeaturesOfSocialAppExport
+} from "../../controllers/types.js";
 import { fetchSavedModels } from "../reddit/index.js";
 import { ProcessedSavedChildren } from "../reddit/types.js";
 import DBCreator from "./dbCreator.js";
-import PageCreator, { createRedditPropsForDBPage } from "./pageCreator.js";
+import PageCreator,
+{ createRedditPropsForDBPage } from "./pageCreator.js";
 import { CreateDBPropArguments } from "./types.js";
 
 export const getAuthOptions = (
   code: string,
   redirect_uri: string,
   clientID: string,
-  secret: string
+  secret: string,
 ): AccessTokenReqConfig => ({
-  url: "https://api.notion.com/v1/oauth/token",
+  url: 'https://api.notion.com/v1/oauth/token',
   form: {
     code,
     redirect_uri,
-    grant_type: "authorization_code",
+    grant_type: 'authorization_code',
   },
   axiosConfig: {
     headers: {
       Authorization:
-        "Basic " + Buffer.from(clientID + ":" + secret).toString("base64"),
-      "Content-Type": "application/json",
-    }
-  }
+        'Basic ' + Buffer.from(clientID + ':' + secret).toString('base64'),
+      'Content-Type': 'application/json',
+    },
+  },
 });
 
 export const getLastEditedPage = async (notion: Client) => {
   const {
     results: [page],
   } = await notion.search({
-    query: "",
+    query: '',
     sort: {
-      direction: "descending",
-      timestamp: "last_edited_time",
+      direction: 'descending',
+      timestamp: 'last_edited_time',
     },
     filter: {
-      property: "object",
-      value: "page",
+      property: 'object',
+      value: 'page',
     },
   });
   return page;
@@ -53,8 +59,8 @@ export const updateDBTitle = (notion: Client, title: string, dbID: string) => {
           content: title,
         },
       },
-    ]
-  })
+    ],
+  });
 };
 
 // get the export feature (saved, playlist etc.) that is made from the app
@@ -92,14 +98,11 @@ const createPagesFromRedditModels = async (
 ) => {
   const pageCreator = PageCreator();
   return Promise.all(
-    models.map(async (model) => pageCreator.createDBPage(
-        notion,
-        dbID,
-        createRedditPropsForDBPage(model),
-      )
+    models.map(async (model) =>
+      pageCreator.createDBPage(notion, dbID, createRedditPropsForDBPage(model)),
     ),
   );
-} 
+}; 
 
 export const createPagesFromRedditExportProps = async (
   notion: Client,
