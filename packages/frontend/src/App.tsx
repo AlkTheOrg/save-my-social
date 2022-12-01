@@ -7,6 +7,7 @@ import "./styles/reset.css";
 import Header from "./components/Header";
 import { stepsByOrder } from "./app/steps";
 import FinalStep from "./components/FinalStep";
+import "./styles/App.scss";
 
 function App(): JSX.Element {
   const { target, isOpened } = useAppSelector((state) => state.windowOpener);
