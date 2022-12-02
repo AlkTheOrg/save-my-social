@@ -1,4 +1,32 @@
 header {
   height: 100px;
-  width: 100%;
+  max-width: 100%;
+  padding: 30px 0;
+  margin: 0 100px;
+  display: flex;
+  justify-content: space-between;
+
+  .logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #614CE7;
+  }
+
+  .links {
+    font-size: 22px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    a {
+      margin-left: 30px;
+      color: #555555;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+    img {
+      width: 22px;
+    }
+  }
 }
