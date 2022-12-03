@@ -13,6 +13,7 @@ const Header = (): JSX.Element => {
           <img id="github" src="logos/github.svg" alt="GitHub" />
         </a>
       </div>
+      <div className="hamburger"></div>
     </header>
   );
 };
