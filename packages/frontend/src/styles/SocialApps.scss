@@ -4,7 +4,7 @@
     margin: 0 auto;
 
     display: grid;
-    grid-template-columns: repeat(3, 240px);
+    grid-template-columns: repeat(3, 250px);
     gap: 30px;
     justify-content: center;
   }
@@ -15,7 +15,7 @@
   color: #333;
   cursor: pointer;
   font-size: 28px;
-  height: 240px;
+  height: 250px;
   padding: 0;
   position: relative;
   transition: background-color .5s ease;
