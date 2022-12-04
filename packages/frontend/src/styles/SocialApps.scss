@@ -4,7 +4,7 @@
     margin: 0 auto;
 
     display: grid;
-    grid-template-columns: repeat(3, 250px);
+    grid-template-columns: repeat(3, 240px);
     gap: 30px;
     justify-content: center;
   }
@@ -15,7 +15,7 @@
   color: #333;
   cursor: pointer;
   font-size: 28px;
-  height: 250px;
+  height: 240px;
   padding: 0;
   position: relative;
   transition: background-color .5s ease;
@@ -39,7 +39,7 @@
   @media screen and (max-width: 830px) {
     &-container {
       grid-template-columns: repeat(2, minmax(200px, 300px));
-      gap: 7.5px;
+      gap: 20px;
     }
   }
 
