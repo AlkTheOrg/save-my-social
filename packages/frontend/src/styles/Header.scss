@@ -1,68 +1,69 @@
 .header {
-  max-width: 1920px;
-  width: 100%;
+  max-inline-size: 1920px;
+  inline-size: 100%;
 
   &-container {
-    height: 100px;
-    width: 100%;
-    padding: 30px 100px;
+    block-size: 100px;
+    inline-size: 100%;
+    padding-block: 30px;
+    padding-inline: 100px;
     display: flex;
     justify-content: space-between;
   }
 
   .logo {
-    $logoWidth: 36px;
-    width: $logoWidth;
-    min-width: $logoWidth;
-    height: $logoWidth;
+    $logoInlineSize: 36px;
+    inline-size: $logoInlineSize;
+    min-inline-size: $logoInlineSize;
+    block-size: $logoInlineSize;
     border-radius: 50%;
     background-color: #614CE7;
   }
 
   .links {
-    $iconWidth: 20px;
-    font-size: $iconWidth;
+    $iconInlineSize: 20px;
+    font-size: $iconInlineSize;
     font-weight: 600;
     display: flex;
     align-items: center;
     a {
-      margin-left: 30px;
+      margin-inline-start: 30px;
       color: #555555;
       text-decoration: none;
       display: flex;
       align-items: center;
     }
     img {
-      width: $iconWidth;
+      inline-size: $iconInlineSize;
     }
   }
 
   @media screen and (max-width: 1250px) {
     &-container {
-      padding: 30px 50px;
+      padding-inline: 50px;
     }
   }
 
   @media screen and (max-width: 830px) {
     &-container {
-      padding: 30px 25px;
+      padding-inline: 25px;
     }
     .links {
-      $iconWidth: 22px;
-      font-size: $iconWidth;
-      img { width: $iconWidth; }
+      $iconInlineSize: 22px;
+      font-size: $iconInlineSize;
+      img { inline-size: $iconInlineSize; }
     }
   }
 
   @media screen and (max-width: 520px) {
     &-container {
-      padding: 30px 10px;
+      padding-inline: 10px;
     }
     .links {
-      $iconWidth: 24px;
-      font-size: $iconWidth;
-      a { margin-left: 35px; }
-      img { width: $iconWidth; }
+      $iconInlineSize: 24px;
+      font-size: $iconInlineSize;
+      a { margin-inline-start: 35px; }
+      img { inline-size: $iconInlineSize; }
     }
   }
 }

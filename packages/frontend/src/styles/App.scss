@@ -1,1 +1,9 @@
 *, *::before, *::after { box-sizing: border-box ;}
+
+html {
+  /* Logical properties are used in this project, but it only supports lr and rl
+  direction modes as logical properties are not supported on translate function for
+  absolute positioning. A work around may be applied for this later to support all kinds
+  of writing-modes. */
+  writing-mode: horizontal-tb !important;
+}
