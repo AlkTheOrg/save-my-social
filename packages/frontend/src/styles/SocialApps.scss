@@ -12,26 +12,7 @@
     justify-content: center;
   }
 
-  $border: 1px solid rgba(51, 51, 51, 0.048);
-  @include button(
-    100%, 250px,
-    $border, 5px, #fbfbfb, #333, 28px,
-    #f4f4f4, false,
-    background-color .5 ease
-  );
-
-  img, h3 {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  img {
-    top: 46px;
-  }
-  h3 {
-    top: 169px;
-    text-transform: capitalize;
-  }
+  @include socialApp(100%, 250px);
 
   @media screen and (max-width: 830px) {
     &-container {

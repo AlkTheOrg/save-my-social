@@ -1,0 +1,123 @@
+@import "./mixins.scss";
+
+.final {
+  text-align: center;
+  max-width: 940px;
+  margin-inline: auto;
+  &__summary {
+    color: #333;
+    margin-block-end: 50px;
+    &__title {
+      font-size: 32px;
+      font-weight: 600;
+      margin-block-end: 15px;
+    }
+
+    &__apps {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      &__app {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        h4 {
+          margin-block-end: 18px;
+          font-weight: bold;
+        }
+        div {
+          @include socialApp(250px, 250px, false);
+          cursor: auto;
+          pointer-events: none;
+          h3 { text-transform: capitalize; }
+        }
+      }
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    #start {
+      background-image: linear-gradient(
+        to right,
+        #25aae1,
+        #4481eb,
+        #04befe,
+        #3f86ed
+      );
+      box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.25);
+    }
+
+    #reset {
+      background-image: linear-gradient(
+        to right,
+        #29323c,
+        #485563,
+        #2b5876,
+        #2d2744
+      );
+      box-shadow: 0 4px 15px 0 rgba(45, 54, 65, 0.25);
+    }
+    
+    button {
+      background-size: 300% 100%;
+      font-weight: 600;
+      margin-block-end: 30px;
+      @include button(
+        160px, 55px,
+        none, 50px, #fbfbfb, #fff, 16px,
+        #f4f4f4, false,
+        all .4s ease-in-out
+      );
+      &:hover { background-position: 100% 0; }
+
+      &:disabled {
+        background-image: none;
+        background-color: #3332;
+      }
+    }
+  }
+
+  &__process__info {
+    h2 {
+      margin-block-start: 24px;
+      font-size: 24px;
+    }
+  }
+
+  @media screen and (max-width: 1250px) {
+    &__summary {
+      &__apps {
+        justify-content: space-around;
+      }
+    }
+  }
+
+  @media screen and (max-width: 520px) {
+    &__summary {
+      margin-block-end: 10px;
+      &__title {
+        margin-block-end: 30px;
+      }
+
+      &__apps {
+        flex-direction: column;
+        &__app {
+          margin-block-end: 35px;
+        }
+      }
+    }
+
+    &__process__info {
+      h2 {
+        margin-block-end: 48px;
+      }
+    }
+  }
+}

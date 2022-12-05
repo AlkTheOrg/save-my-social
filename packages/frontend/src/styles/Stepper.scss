@@ -14,7 +14,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
-    // .stepWidhth * stepAmount + (stepAmount - 1) * margin-inline-size
+    // .stepWidth * stepAmount + (stepAmount - 1) * margin-inline-size
     width: calc(($stepMarginInlineStart * 3) + (4 * $regularStepSize));
     margin: 0 auto;
     transition: width .5s;
@@ -95,7 +95,7 @@
         justify-content: center;
         align-items: center;
         position: relative;
-        font-weight: bold;
+        font-weight: 600;
         color: white;
         span { padding: 3px; }
         .step__name { color: black; }
