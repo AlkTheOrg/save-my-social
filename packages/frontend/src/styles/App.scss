@@ -1,4 +1,8 @@
-*, *::before, *::after { box-sizing: border-box ;}
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Devanagari:wght@400;600;700&display=swap');
+*, *::before, *::after {
+  box-sizing: border-box ;
+  font-family: 'IBM Plex Sans Devanagari', Arial, Helvetica, sans-serif;
+}
 
 html {
   /* Logical properties are used in this project, but it only supports lr and rl
@@ -6,4 +10,8 @@ html {
   absolute positioning. A work around may be applied for this later to support all kinds
   of writing-modes. */
   writing-mode: horizontal-tb !important;
+}
+
+body {
+  font-family: 'IBM Plex Sans Devanagari', Arial, Helvetica, sans-serif;
 }

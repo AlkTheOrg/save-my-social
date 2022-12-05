@@ -1,6 +1,7 @@
 .header {
   max-inline-size: 1920px;
   inline-size: 100%;
+  margin-block-end: 40px;
 
   &-container {
     block-size: 100px;
@@ -56,6 +57,7 @@
   }
 
   @media screen and (max-width: 520px) {
+  margin-block-end: 20px;
     &-container {
       padding-inline: 10px;
     }
