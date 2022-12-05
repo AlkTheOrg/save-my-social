@@ -1,3 +1,5 @@
+@import "./mixins.scss";
+
 .social-app {
   &-container {
     max-inline-size: 810px;
@@ -10,16 +12,13 @@
     justify-content: center;
   }
 
-  border: 1px solid rgba(51, 51, 51, 0.048);
-  border-radius: 5px;
-  background-color: #fbfbfb;
-  color: #333;
-  cursor: pointer;
-  font-size: 28px;
-  block-size: 250px;
-  padding: 0;
-  position: relative;
-  transition: background-color .5s ease;
+  $border: 1px solid rgba(51, 51, 51, 0.048);
+  @include button(
+    100%, 250px,
+    $border, 5px, #fbfbfb, #333, 28px,
+    #f4f4f4, false,
+    background-color .5 ease
+  );
 
   img, h3 {
     position: absolute;
@@ -32,9 +31,6 @@
   h3 {
     top: 169px;
     text-transform: capitalize;
-  }
-  &:hover {
-    background-color: #f4f4f4;
   }
 
   @media screen and (max-width: 830px) {

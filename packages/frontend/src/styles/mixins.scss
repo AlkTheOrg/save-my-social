@@ -1,0 +1,27 @@
+@mixin button(
+  $inlineSize, $blockSize,
+  $border, $borderRadius, $bgColor, $color, $fontSize,
+  $bgHoverColor, $hoverColor,
+  $transition: none,
+  $position: relative, $cursor: pointer,
+) {
+  inline-size: $inlineSize;
+  block-size: $blockSize;
+  border: $border;
+  border-radius: $borderRadius;
+  background-color: $bgColor;
+  color: $color;
+  font-size: $fontSize;
+  transition: $transition;
+  position: $position;
+  cursor: $cursor;
+
+  &:hover {
+    @if $bgHoverColor {
+      background-color: $bgHoverColor;
+    }
+    @if $hoverColor {
+      color: $hoverColor;
+    }
+  }
+}
