@@ -8,6 +8,7 @@ import Header from "./components/Header";
 import { stepsByOrder } from "./app/steps";
 import FinalStep from "./components/FinalStep";
 import "./styles/App.scss";
+import Stepper from "./components/Stepper";
 
 function App(): JSX.Element {
   const { target, isOpened } = useAppSelector((state) => state.windowOpener);
@@ -42,6 +43,10 @@ function App(): JSX.Element {
   return (
     <div className="App">
       <Header />
+      <Stepper
+        steps={Object.values(stepsByOrder)}
+        curStep={curStep}
+      />
       {curStepName === "final" ? <FinalStep /> : <SocialApps />}
       <WindowOpener
         target={target}
