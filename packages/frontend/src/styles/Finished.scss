@@ -1,0 +1,71 @@
+@import "./mixins.scss";
+
+.finished {
+  text-align: center;
+  padding-inline: 20px;
+  padding-block-start: 50px;
+
+  .capitalize { text-transform: capitalize; }
+
+  h2 {
+    font-size: 26px;
+    margin-block-end: 24px;
+    line-height: 36px;
+    span {
+      text-transform: capitalize;
+      font-weight: 600;
+      font-size: 30px;
+    }
+  }
+
+  #final-link {
+    font-size: 24px;
+    margin-block-end: 38px;
+    a {
+      font-weight: bold;
+      transition: color .2s ease;
+      &, &:visited, &:active {
+        color: #ed73e3;
+      }
+      &:hover {
+        color: #ba5ab2;
+      }
+    }
+  }
+
+  #restart {
+    background-image: linear-gradient(
+      to right,
+      #29323c,
+      #485563,
+      #2b5876,
+      #2d2744
+    );
+    box-shadow: 0 4px 15px 0 rgba(45, 54, 65, 0.25);
+  }
+  
+  button {
+    background-size: 300% 100%;
+    font-weight: 600;
+    margin-block-end: 30px;
+    @include button(
+      160px, 55px,
+      none, 50px, #fbfbfb, #fff, 16px,
+      #f4f4f4, false,
+      all .4s ease-in-out
+    );
+    &:hover { background-position: 100% 0; }
+
+    &:disabled {
+      background-image: none;
+      background-color: #3332;
+    }
+  }
+
+  @media screen and (max-width: 520px) {
+    padding-block-start: 10px;
+    #final-link {
+      margin-block-end: 48px;
+    }
+  }
+}

@@ -33,6 +33,7 @@ export interface SmsState {
   tokens: [toExport: string, toImport: string];
   isLoading: boolean;
   message: string;
+  finalURL: string;
   // -- steps --
   steps: Steps,
   curStep: number,
@@ -65,6 +66,7 @@ const initialState: SmsState = {
   isLoading: false,
   message: "",
   steps: stepsByOrder,
+  finalURL: "",
   curStep: 0,
   numOfSteps,
 };
@@ -101,8 +103,8 @@ export const smsSlice = createSlice({
     incrementCurStep: (state) => {
       state.curStep = getNextStep(state.curStep);
     },
-    resetSteps: (state) => {
-      state.curStep = 0;
+    reset: () => {
+      return initialState;
     },
   },
   extraReducers: (builder) => {
@@ -142,7 +144,7 @@ export const {
   setMessage,
   resetMessage,
   incrementCurStep,
-  resetSteps,
+  reset,
 } = smsSlice.actions;
 
 export default smsSlice.reducer;

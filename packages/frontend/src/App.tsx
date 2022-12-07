@@ -1,14 +1,15 @@
-import { useAppSelector, useAppDispatch } from "./app/hooks";
-import WindowOpener from "./components/WindowOpener";
-import { opened, closed } from "./features/windowOpener";
+import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { setToken } from "./app/smsSlice";
-import SocialApps from "./components/SocialApps";
-import "./styles/reset.css";
-import Header from "./components/Header";
 import { stepsByOrder } from "./app/steps";
 import FinalStep from "./components/FinalStep";
-import "./styles/App.scss";
+import Finished from "./components/Finished";
+import Header from "./components/Header";
+import SocialApps from "./components/SocialApps";
 import Stepper from "./components/Stepper";
+import WindowOpener from "./components/WindowOpener";
+import { closed, opened } from "./features/windowOpener";
+import "./styles/App.scss";
+import "./styles/reset.css";
 
 function App(): JSX.Element {
   const { target, isOpened } = useAppSelector((state) => state.windowOpener);
@@ -40,6 +41,17 @@ function App(): JSX.Element {
     }
   };
 
+  const renderSwitch = () => {
+    switch (curStepName) {
+      case "final":
+        return <FinalStep />;
+      case "finished":
+        return <Finished />;
+      default:
+        return <SocialApps />;
+    }
+  };
+
   return (
     <div className="App">
       <Header />
@@ -47,7 +59,7 @@ function App(): JSX.Element {
         steps={Object.values(stepsByOrder)}
         curStep={curStep}
       />
-      {curStepName === "final" ? <FinalStep /> : <SocialApps />}
+      {renderSwitch()}
       <WindowOpener
         target={target}
         onOpen={onWindowOpen}
