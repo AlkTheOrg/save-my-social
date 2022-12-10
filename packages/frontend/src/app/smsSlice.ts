@@ -32,6 +32,7 @@ export interface SmsState {
   activeApps: SmsApp[];
   tokens: [toExport: string, toImport: string];
   isLoading: boolean;
+  isError: boolean;
   message: string;
   finalURL: string;
   // -- steps --
@@ -114,11 +115,13 @@ export const smsSlice = createSlice({
         smsSlice.caseReducers.resetMessage(state);
       })
       .addCase(getRedditAuthURL.pending, (state) => {
+        state.isError = false;
         state.isLoading = true;
         state.message = "Getting Reddit redirection URL.";
       })
       .addCase(getRedditAuthURL.rejected, (state) => {
         state.isLoading = false;
+        state.isError = true;
         state.message = "Error on getting the Auth URL for Reddit";
       })
       .addCase(getNotionAuthURL.fulfilled, (state) => {
@@ -127,10 +130,12 @@ export const smsSlice = createSlice({
       })
       .addCase(getNotionAuthURL.pending, (state) => {
         state.isLoading = true;
+        state.isError = false;
         state.message = "Getting Notion redirection URL.";
       })
       .addCase(getNotionAuthURL.rejected, (state) => {
         state.isLoading = false;
+        state.isError = true;
         state.message = "Error on getting the Auth URL for Notion";
       });
   },
