@@ -1,3 +1,4 @@
+import { ToastContainer } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { setToken } from "./app/smsSlice";
 import { stepsByOrder } from "./app/steps";
@@ -10,6 +11,7 @@ import WindowOpener from "./components/WindowOpener";
 import { closed, opened } from "./features/windowOpener";
 import "./styles/App.scss";
 import "./styles/reset.css";
+import "react-toastify/dist/ReactToastify.css";
 
 function App(): JSX.Element {
   const { target, isOpened } = useAppSelector((state) => state.windowOpener);
@@ -67,6 +69,7 @@ function App(): JSX.Element {
         onMessage={onWindowMessage}
         shouldBeOpened={isOpened}
       />
+      <ToastContainer />
     </div>
   );
 }
