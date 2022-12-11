@@ -1,6 +1,10 @@
+import { toast } from "react-toastify";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getAuthURL as getRedditAuthURL } from "../features/reddit/redditSlice";
-import { getAuthURL as getNotionAuthURL } from "../features/notion/notionSlice";
+import {
+  getAuthURL as getNotionAuthURL,
+  importItems,
+} from "../features/notion/notionSlice";
 import { getExportableTargetsOfCurApp } from "../features/socialApp/socialAppConstants";
 import {
   Steps,
@@ -65,6 +69,7 @@ const initialState: SmsState = {
   activeApps: appsToExportFrom,
   tokens: ["", ""],
   isLoading: false,
+  isError: false,
   message: "",
   steps: stepsByOrder,
   finalURL: "",
@@ -137,6 +142,21 @@ export const smsSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = "Error on getting the Auth URL for Notion";
+      })
+      .addCase(importItems.pending, (state) => {
+        state.isError = false;
+        state.isLoading = true;
+      })
+      .addCase(importItems.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.curStep += 1;
+        state.finalURL = payload;
+      })
+      .addCase(importItems.rejected, (state, result) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = result.error.message || "Something went wrong";
+        toast.error(state.message);
       });
   },
 });
