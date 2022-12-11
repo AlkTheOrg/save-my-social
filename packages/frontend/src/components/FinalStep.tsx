@@ -9,6 +9,7 @@ const FinalStep = (): JSX.Element => {
     exportFrom,
     exportTo,
     isLoading,
+    isError,
     message,
   } = useAppSelector((state) => state.sms);
 
@@ -52,7 +53,7 @@ const FinalStep = (): JSX.Element => {
       ) : (
         <div className="final__buttons">
           <button id="start" type="button" onClick={handleClick} disabled={isLoading}>
-            Start Process
+            { isError ? "Try again" : "Start" }
           </button>
           <button id="reset" type="button" onClick={handleClick} disabled>
             Reset
