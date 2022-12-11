@@ -1,15 +1,15 @@
 import { AsyncThunk } from "@reduxjs/toolkit";
-import { useAppDispatch } from "../app/hooks";
+import { useAppDispatch } from "../../app/hooks";
 import {
   setExportFrom,
   SmsApp,
   appsToExportFrom,
   ExportFrom,
   setExportTo,
-} from "../app/smsSlice";
-import SocialAppBtn from "../components/SocialAppBtn";
-import { getAuthURL as getRedditAuthURL } from "./reddit/redditSlice";
-import { getAuthURL as getNotionAuthURL } from "./notion/notionSlice";
+} from "../../app/smsSlice";
+import SocialAppBtn from "../../components/SocialAppBtn";
+import { getAuthURL as getRedditAuthURL } from "../reddit/redditSlice";
+import { getAuthURL as getNotionAuthURL } from "../notion/notionSlice";
 
 type Props = {
   appName: SmsApp;

@@ -1,5 +1,5 @@
 import { useAppSelector } from "../app/hooks";
-import SocialApp from "../features/SocialApp";
+import SocialApp from "../features/socialApp/SocialApp";
 import "../styles/SocialApps.scss";
 
 const SocialApps = (): JSX.Element => {
