@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { setMessage } from "../../app/smsSlice";
-import { AppDispatch, RootState } from "../../app/store";
+import { ThunkAPI } from "../../app/store";
 import { ImportItemsToNotionPayload } from "./endpointTypes";
 import {
   fetchAuthURL,
@@ -34,11 +34,7 @@ const importItemsPayloadCreator = (
 export const importItems = createAsyncThunk<
   string, // return type
   ExportPropsGetter, // type of first argument
-  {
-    dispatch: AppDispatch;
-    state: RootState;
-    // extra: { },
-  }
+  ThunkAPI
 >(
   "notion/importItems",
   async (exportPropsGetter, { getState, dispatch }) => {
