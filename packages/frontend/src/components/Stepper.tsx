@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { combineClassNames } from "../lib/utils";
+import { combineClassNames } from "../util";
 import "../styles/Stepper.scss";
 
 type Props = {
