@@ -1,7 +1,11 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@babel/core': ^7.0.0
+  '@babel/plugin-syntax-flow': ^7.14.5
+  '@babel/plugin-transform-react-jsx': ^7.14.901
   '@reduxjs/toolkit': ^1.8.3
+  '@testing-library/dom': ^7.21.4
   '@testing-library/jest-dom': ^5.16.4
   '@testing-library/react': ^13.3.0
   '@testing-library/user-event': ^14.2.1
@@ -25,15 +29,20 @@ specifiers:
   react-dom: ^18.2.0
   react-redux: ^8.0.2
   react-scripts: 5.0.1
+  react-toastify: ^9.1.1
   sass: ^1.53.0
   typescript: ^4.7.4
   web-vitals: ^2.1.4
 
 dependencies:
+  '@babel/core': 7.19.0
+  '@babel/plugin-syntax-flow': 7.18.6_@babel+core@7.19.0
+  '@babel/plugin-transform-react-jsx': 7.19.0_@babel+core@7.19.0
   '@reduxjs/toolkit': 1.8.5_kkwg4cbsojnjnupd3btipussee
+  '@testing-library/dom': 7.31.2
   '@testing-library/jest-dom': 5.16.5
   '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
-  '@testing-library/user-event': 14.4.3
+  '@testing-library/user-event': 14.4.3_7izb363m7fjrh7ob6q4a2yqaqe
   '@types/jest': 27.5.2
   '@types/node': 17.0.45
   '@types/react': 18.0.18
@@ -43,7 +52,8 @@ dependencies:
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-redux: 8.0.2_5d4wf3yo6k5smpa3kasqkeetaq
-  react-scripts: 5.0.1_4oaxnnjr4ro2y2dd33edb26swq
+  react-scripts: 5.0.1_ou2owkcry3jfeiekimwoh4mag4
+  react-toastify: 9.1.1_biqbaboplfbrettd7655fr4n2y
   sass: 1.54.9
   typescript: 4.8.3
   web-vitals: 2.1.4
@@ -1870,6 +1880,17 @@ packages:
       - supports-color
     dev: false
 
+  /@jest/types/26.6.2:
+    resolution: {integrity: sha512-fC6QCp7Sc5sX6g8Tvbmj4XUTbyrik0akgRy03yjXbQaBWWNWGE7SGtJk98m0N8nzegD/7SggrUlivxo5ax4KWQ==}
+    engines: {node: '>= 10.14.2'}
+    dependencies:
+      '@types/istanbul-lib-coverage': 2.0.4
+      '@types/istanbul-reports': 3.0.1
+      '@types/node': 17.0.45
+      '@types/yargs': 15.0.14
+      chalk: 4.1.2
+    dev: false
+
   /@jest/types/27.5.1:
     resolution: {integrity: sha512-Cx46iJ9QpwQTjIdq5VJu2QTMMs3QlEjI0x1QbBP5W1+nMzyc2XmimiRR/CbX9TO0cPTeUlxWMOu8mslYsJ8DEw==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
@@ -2222,6 +2243,20 @@ packages:
       - supports-color
     dev: false
 
+  /@testing-library/dom/7.31.2:
+    resolution: {integrity: sha512-3UqjCpey6HiTZT92vODYLPxTBWlM8ZOOjr3LX5F37/VRipW2M1kX6I/Cm4VXzteZqfGfagg8yXywpcOgQBlNsQ==}
+    engines: {node: '>=10'}
+    dependencies:
+      '@babel/code-frame': 7.18.6
+      '@babel/runtime': 7.19.0
+      '@types/aria-query': 4.2.2
+      aria-query: 4.2.2
+      chalk: 4.1.2
+      dom-accessibility-api: 0.5.14
+      lz-string: 1.4.4
+      pretty-format: 26.6.2
+    dev: false
+
   /@testing-library/dom/8.17.1:
     resolution: {integrity: sha512-KnH2MnJUzmFNPW6RIKfd+zf2Wue8mEKX0M3cpX6aKl5ZXrJM1/c/Pc8c2xDNYQCnJO48Sm5ITbMXgqTr3h4jxQ==}
     engines: {node: '>=12'}
@@ -2265,11 +2300,13 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
-  /@testing-library/user-event/14.4.3:
+  /@testing-library/user-event/14.4.3_7izb363m7fjrh7ob6q4a2yqaqe:
     resolution: {integrity: sha512-kCUc5MEwaEMakkO5x7aoD+DLi02ehmEM2QCGWvNqAS1dV/fAvORWEjnjsEIvml59M7Y5kCkWN6fCCyPOe8OL6Q==}
     engines: {node: '>=12', npm: '>=6'}
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
+    dependencies:
+      '@testing-library/dom': 7.31.2
     dev: false
 
   /@tootallnate/once/1.1.2:
@@ -2541,6 +2578,12 @@ packages:
 
   /@types/yargs-parser/21.0.0:
     resolution: {integrity: sha512-iO9ZQHkZxHn4mSakYV0vFHAVDyEOIJQrV2uZ06HxEPcx+mt8swXoZHIbaaJ2crJYFfErySgktuTZ3BeLz+XmFA==}
+    dev: false
+
+  /@types/yargs/15.0.14:
+    resolution: {integrity: sha512-yEJzHoxf6SyQGhBhIYGXQDSCkJjB6HohDShto7m8vaKg9Yp0Yn8+71J9eakh2bnPg6BfsH9PRMhiRTZnd4eXGQ==}
+    dependencies:
+      '@types/yargs-parser': 21.0.0
     dev: false
 
   /@types/yargs/16.0.4:
@@ -3527,6 +3570,11 @@ packages:
       wrap-ansi: 7.0.0
     dev: false
 
+  /clsx/1.2.1:
+    resolution: {integrity: sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==}
+    engines: {node: '>=6'}
+    dev: false
+
   /co/4.6.0:
     resolution: {integrity: sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==}
     engines: {iojs: '>= 1.0.0', node: '>= 0.12.0'}
@@ -4395,7 +4443,7 @@ packages:
       object.entries: 1.1.5
     dev: true
 
-  /eslint-config-react-app/7.0.1_iavgwfbvealm4msuaddhelfe7q:
+  /eslint-config-react-app/7.0.1_hovt6mv6c2vbnuxb5di2yxdbqu:
     resolution: {integrity: sha512-K6rNzvkIeHaTd8m/QEh1Zko0KI7BACWkkneSs6s9cKZC/J27X3eZR6Upt1jkmZ/4FK+XUOPPxMEN7+lbUXfSlA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -4413,7 +4461,7 @@ packages:
       babel-preset-react-app: 10.0.1
       confusing-browser-globals: 1.0.11
       eslint: 8.23.0
-      eslint-plugin-flowtype: 8.0.3_eslint@8.23.0
+      eslint-plugin-flowtype: 8.0.3_xask6tlneowrocs2vivl7lslyy
       eslint-plugin-import: 2.26.0_ikxfxf6lcdzwf3sfhs76tj4x7m
       eslint-plugin-jest: 25.7.0_vjcca3rd4ounwli5vd2f5dfc7y
       eslint-plugin-jsx-a11y: 6.6.1_eslint@8.23.0
@@ -4486,7 +4534,7 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /eslint-plugin-flowtype/8.0.3_eslint@8.23.0:
+  /eslint-plugin-flowtype/8.0.3_xask6tlneowrocs2vivl7lslyy:
     resolution: {integrity: sha512-dX8l6qUL6O+fYPtpNRideCFSpmWOUVx5QcaGLVqe/vlDiBSe4vYljDWDETwnyFzpl7By/WVIu6rcrniCgH9BqQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -4494,6 +4542,8 @@ packages:
       '@babel/plugin-transform-react-jsx': ^7.14.9
       eslint: ^8.1.0
     dependencies:
+      '@babel/plugin-syntax-flow': 7.18.6_@babel+core@7.19.0
+      '@babel/plugin-transform-react-jsx': 7.19.0_@babel+core@7.19.0
       eslint: 8.23.0
       lodash: 4.17.21
       string-natural-compare: 3.0.1
@@ -7864,6 +7914,16 @@ packages:
       renderkid: 3.0.0
     dev: false
 
+  /pretty-format/26.6.2:
+    resolution: {integrity: sha512-7AeGuCYNGmycyQbCqd/3PWH4eOoX/OiCa0uphp57NVTeAGdJGaAliecxwBDHYQCIvrW7aDBZCYeNTP/WX69mkg==}
+    engines: {node: '>= 10'}
+    dependencies:
+      '@jest/types': 26.6.2
+      ansi-regex: 5.0.1
+      ansi-styles: 4.3.0
+      react-is: 17.0.2
+    dev: false
+
   /pretty-format/27.5.1:
     resolution: {integrity: sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
@@ -8092,7 +8152,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: false
 
-  /react-scripts/5.0.1_4oaxnnjr4ro2y2dd33edb26swq:
+  /react-scripts/5.0.1_ou2owkcry3jfeiekimwoh4mag4:
     resolution: {integrity: sha512-8VAmEm/ZAwQzJ+GOMLbBsTdDKOpuZh7RPs0UymvBR2vRk4iZWCskjbFnxqjrzoIvlNNRZ3QJFx6/qDSi6zSnaQ==}
     engines: {node: '>=14.0.0'}
     hasBin: true
@@ -8120,7 +8180,7 @@ packages:
       dotenv: 10.0.0
       dotenv-expand: 5.1.0
       eslint: 8.23.0
-      eslint-config-react-app: 7.0.1_iavgwfbvealm4msuaddhelfe7q
+      eslint-config-react-app: 7.0.1_hovt6mv6c2vbnuxb5di2yxdbqu
       eslint-webpack-plugin: 3.2.0_skpnekq7gq3zdkwzxpcrmjcczy
       file-loader: 6.2.0_webpack@5.74.0
       fs-extra: 10.1.0
@@ -8187,6 +8247,17 @@ packages:
       - webpack-cli
       - webpack-hot-middleware
       - webpack-plugin-serve
+    dev: false
+
+  /react-toastify/9.1.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-pkFCla1z3ve045qvjEmn2xOJOy4ZciwRXm1oMPULVkELi5aJdHCN/FHnuqXq8IwGDLB7PPk2/J6uP9D8ejuiRw==}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      clsx: 1.2.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /react/18.2.0:
