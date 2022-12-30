@@ -66,7 +66,7 @@ const logged = async (req: Request, res: Response) => {
       REDDIT_SECRET,
     );
 
-    await Axios.post(authOptions.url, encodeURIOptions(authOptions.form), authOptions.axiosConfig)
+    Axios.post(authOptions.url, encodeURIOptions(authOptions.form), authOptions.axiosConfig)
       .then((response: AxiosResponse<AccessTokenResponse> )=> {
         res.send(getWindowAccessTokenPosterHTML(response.data.access_token));
       })
