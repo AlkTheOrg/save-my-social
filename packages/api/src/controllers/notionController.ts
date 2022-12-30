@@ -78,10 +78,10 @@ const logged = async (req: Request, res: Response) => {
       NOTION_SECRET,
     );
 
-    await Axios.post(authOptions.url, authOptions.form, authOptions.axiosConfig)
-      .then((response: AxiosResponse<AccessTokenResponse>) => {
-        res.send(getWindowAccessTokenPosterHTML(response.data.access_token));
-      })
+    Axios.post(authOptions.url, authOptions.form, authOptions.axiosConfig)
+    .then((response: AxiosResponse<AccessTokenResponse>) => {
+      res.send(getWindowAccessTokenPosterHTML(response.data.access_token));
+    })
       .catch((error: AxiosError) => {
         console.log(error);
         res.send(getWindowErrorPosterHTML('Error while getting access token'));
