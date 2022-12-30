@@ -1,4 +1,4 @@
-{
+export default {
   "env": {
     "browser": false,
     "es6": true,
@@ -8,7 +8,8 @@
   "parserOptions": {
     "project": "tsconfig.json",
     "sourceType": "module",
-    "ecmaVersion": 2020
+    "ecmaVersion": 2020,
+    "tsconfigRootDir": __dirname
   },
   "plugins": ["@typescript-eslint", "jest"],
   "extends": [
