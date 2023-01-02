@@ -1,4 +1,5 @@
 import { Response } from "express";
+import { ExportFrom, FeaturesOfSocialAppExport } from "../controllers/types.js";
 
 export const encodeURIOptions = (options: Record<string, string>): string => {
   return Object.keys(options)
@@ -60,3 +61,19 @@ export const sendMsgResponse = (
   status: number,
   msg: string,
 ) => res.status(status).send({ msg });
+
+// get the export feature (saved, playlist etc.) that is made from the app
+export const getAppExportFeatureKey = (
+  exportProps: FeaturesOfSocialAppExport,
+  appName: ExportFrom
+): string => {
+  const propertiesOfAppExport = exportProps[appName];
+  const featureKey = 
+    Object.keys(propertiesOfAppExport).length < 1
+      ? null // no feature object found in this app's export props
+      : Object.keys(propertiesOfAppExport)[0]; // get the first found feature for now
+  // if featureKey is null or an unsupported feature, it will considered invalid
+  return featureKey;
+};
+
+

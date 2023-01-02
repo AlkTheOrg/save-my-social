@@ -1,9 +1,7 @@
 import { Client } from "@notionhq/client";
 import {
   AccessTokenReqConfig,
-  ExportFrom,
   FeaturesOfRedditExport,
-  FeaturesOfSocialAppExport
 } from "../../controllers/types.js";
 import { fetchSavedModels } from "../reddit/index.js";
 import { ProcessedSavedChildren } from "../reddit/types.js";
@@ -61,20 +59,6 @@ export const updateDBTitle = (notion: Client, title: string, dbID: string) => {
       },
     ],
   });
-};
-
-// get the export feature (saved, playlist etc.) that is made from the app
-export const getAppExportFeatureKey = (
-  exportProps: FeaturesOfSocialAppExport,
-  appName: ExportFrom
-): string => {
-  const propertiesOfAppExport = exportProps[appName];
-  const featureKey = 
-    Object.keys(propertiesOfAppExport).length < 1
-      ? null // no feature object found in this app's export props
-      : Object.keys(propertiesOfAppExport)[0]; // get the first found feature for now
-  // if featureKey is null or an unsupported feature, it will considered invalid
-  return featureKey;
 };
 
 export const retrieveDB = (notion: Client, dbID: string) =>

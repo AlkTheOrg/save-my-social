@@ -4,6 +4,7 @@ import { Request, Response } from 'express';
 import { Client } from '@notionhq/client';
 import {
   encodeURIOptions,
+  getAppExportFeatureKey,
   getWindowAccessTokenPosterHTML,
   getWindowErrorPosterHTML,
   sendMsgResponse,
@@ -17,7 +18,6 @@ import {
 import {
   createDB,
   createPagesFromRedditExportProps,
-  getAppExportFeatureKey,
   getAuthOptions,
   getLastEditedPage,
   retrieveDB,
