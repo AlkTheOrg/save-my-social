@@ -71,7 +71,7 @@ export const getAppExportFeatureKey = (
   const featureKey = 
     Object.keys(propertiesOfAppExport).length < 1
       ? null // no feature object found in this app's export props
-      : Object.keys(propertiesOfAppExport)[0]; // get the first found feature for now
+      : Object.keys(propertiesOfAppExport)[0]; // get the first found feature
   // if featureKey is null or an unsupported feature, it will considered invalid
   return featureKey;
 };
