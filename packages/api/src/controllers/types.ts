@@ -69,41 +69,47 @@ export type ExportFrom = Exclude<
 >;
 export type ExportTo = SmsApp;
 
-export type FeaturesOfRedditExport = {
-  reddit: {
-    saved: {
-      lastItemID: string,
-    }
+// REDDIT
+type RedditSavedModelsExport = {
+  saved: {
+    lastItemID: string,
   }
 }
+export type FeaturesOfRedditExport = {
+  reddit: RedditSavedModelsExport
+}
+
+// SPOTIFY
+type SpotifyPlaylistExport = {
+  playlist: {
+    id: string,
+    lastTrackID: string,
+  }
+};
 
 export type FeaturesOfSpotifyExport = {
-  spotify: {
-    playlist: {
-      id: string,
-      lastTrackID: string,
-    },
-    likedSongs: {
-      lastTrackID: string,
-    }
-  }
+  spotify: SpotifyPlaylistExport
 }
 
+// YOUTUBE
+type YoutubePlaylistExport = {
+  playlist: {
+    id: string,
+    lastVideoID: string,
+  }
+}
 export type FeaturesOfYoutubeExport = {
-  youtube: {
-    playlist: {
-      id: string,
-      lastVideoID: string,
-    }
-  }
+  youtube: YoutubePlaylistExport
 }
 
-export type FeaturesOfTwitterExport = {
-  twitter: {
-    bookmarks: {
-      lastTweetID: string,
-    }
+// TWITTER
+type TwitterBookmarkExport = {
+  bookmarks: {
+    lastTweetID: string,
   }
+}
+export type FeaturesOfTwitterExport = {
+  twitter: TwitterBookmarkExport
 }
 
 export type FeaturesOfSocialAppExport =
