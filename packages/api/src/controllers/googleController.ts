@@ -1,20 +1,24 @@
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
-import { ScopeVariables } from '../controllers/types.js';
+import { CustomRequest, FeaturesOfSpotifyExport, ScopeVariables } from '../controllers/types.js';
 // import drive from '@googleapis/drive'; //TODO uninstall these packages if there is no way to setCredentials with them
 // import sheets from '@googleapis/sheets';
 // import youtube from '@googleapis/youtube';
 import { google } from "googleapis";
-import { getWindowErrorPosterHTML } from './../lib/index.js';
+import { getAppExportFeatureKey, getWindowErrorPosterHTML, sendMsgResponse } from './../lib/index.js';
 import { getWindowAccessTokenPosterHTML } from '../lib/index.js';
+import { ReqBodyWithLastEditedSpreadsheetID } from '../lib/sheets/types.js';
+import { createSpreadSheet, getSpreadSheet, importSpotifyDataIntoSheet } from '../lib/sheets/index.js';
+import { appsToExportFrom } from '../lib/constants.js';
 dotenv.config();
 
-const { GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI, GOOGLE_SECRET, GOOGLE_STATE } = process.env;
+const { GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI, GOOGLE_SECRET, GOOGLE_STATE } =
+  process.env;
 const oauth2Client = new google.auth.OAuth2(
-    GOOGLE_CLIENT_ID,
-    GOOGLE_SECRET,
-    GOOGLE_REDIRECT_URI,
-  );
+  GOOGLE_CLIENT_ID,
+  GOOGLE_SECRET,
+  GOOGLE_REDIRECT_URI,
+);
 
 const login = (_: Request, res: Response) => {
   const scopes: ScopeVariables = [
@@ -36,10 +40,10 @@ const logged = async (req: Request, res: Response) => {
 
   if (error) {
     console.log(error);
-    res.send(getWindowErrorPosterHTML(error))
-  // } else if (state === null) {
-  //   console.log('state is missing');
-  //   res.send(getWindowErrorPosterHTML('State missing'))
+    res.send(getWindowErrorPosterHTML(error));
+    // } else if (state === null) {
+    //   console.log('state is missing');
+    //   res.send(getWindowErrorPosterHTML('State missing'))
   } else {
     // const oauth2Client = new google.auth.OAuth2(
     //   GOOGLE_CLIENT_ID,
@@ -47,19 +51,93 @@ const logged = async (req: Request, res: Response) => {
     //   GOOGLE_REDIRECT_URI,
     // );
 
-    oauth2Client.getToken(code)
-      .then(response => {
+    oauth2Client
+      .getToken(code)
+      .then((response) => {
         console.log(response.tokens.access_token);
         res.send(getWindowAccessTokenPosterHTML(response.tokens.access_token));
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
-        res.send(getWindowErrorPosterHTML('Error while getting the access token'));
+        res.send(
+          getWindowErrorPosterHTML('Error while getting the access token'),
+        );
       });
+  }
+};
+
+const importItemsToSheets = async (
+  req: CustomRequest<ReqBodyWithLastEditedSpreadsheetID>,
+  res: Response,
+) => {
+  try {
+    const {
+      accessToken,
+      accessTokenSocial,
+      exportProps,
+      lastSpreadsheetID,
+      lastSheetName,
+    } = req.body;
+    if (!accessTokenSocial || !exportProps || Object.keys(exportProps).length < 1) {
+      sendMsgResponse(res, 400, 'One of the required parameters is missing.');
+      return;
+    }
+
+    //* below and above blocks are common with notionController. So move them to utils
+    const appName = appsToExportFrom.find(app => app === Object.keys(exportProps)[0]);
+    if (!appName) {
+      sendMsgResponse(res, 400, 'Invalid app name... bruh...');
+      return;
+    }
+    const featureKey = getAppExportFeatureKey(exportProps, appName);
+    const exportType = `${appName}_${featureKey}`;
+
+    oauth2Client.setCredentials({ access_token: accessToken });
+    const sheetsApi = google.sheets({ version: "v4", auth: oauth2Client });
+
+    const spreadsheet = lastSpreadsheetID
+      ? await getSpreadSheet(sheetsApi, lastSpreadsheetID)
+      : await createSpreadSheet(sheetsApi, exportType);
+    const spreadsheetID = spreadsheet.data.spreadsheetId;
+
+    let lastQueriedItem = '';
+    let numOfImportedItems = 0;
+    switch (appName) {
+      case 'spotify': {
+        [numOfImportedItems, lastQueriedItem] =
+          await importSpotifyDataIntoSheet(
+            sheetsApi,
+            accessTokenSocial,
+            exportProps as FeaturesOfSpotifyExport,
+            spreadsheetID,
+            lastSheetName
+          )
+        break;
+      }
+
+      default:
+        sendMsgResponse(res, 401, 'Invalid social app.');
+        return;
+    }
+
+    // if (numOfImportedItems < 100)
+    //   updateDBTitle(notion, `${appName} ${featureKey} - Completed`, db.id);
+
+    res.send({
+      // sheetURL: sheet.url,
+      // sheetID: sheet.id,
+      numOfImportedItems,
+      lastQueriedItem,
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(404).send('something went wrong');
   }
 };
 
 export default {
   login,
   logged,
+  importItemsToSheets,
 };
