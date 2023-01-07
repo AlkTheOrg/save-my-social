@@ -1,9 +1,11 @@
+import SpotifyWebApi from 'spotify-web-api-node';
 import dotenv from 'dotenv';
 dotenv.config();
 import axios, { AxiosResponse, AxiosError } from 'axios';
 const Axios = axios.default;
 import { Request, Response } from 'express';
 import { concatWithEmptySpace, encodeURIOptions } from '../lib/index.js';
+import { getPlaylistIDs } from '../lib/spotify/index.js';
 import { 
   AccessTokenReqConfig,
   AccessTokenResponse,
@@ -89,20 +91,13 @@ const logged = async (req: Request, res: Response) => {
   }
 };
 
-// for testing the oauth flow
 const playlists = async (req: Request, res: Response) => {
-  const { access_token } = req.query;
-  const url = 'https://api.spotify.com/v1/me/playlists';
-  const headers = {
-    Authorization: `Bearer ${access_token}`,
-  };
-  await Axios.get(url, { headers })
-    .then((response: AxiosResponse) => {
-      res.send(response.data.items);
-    })
-    .catch((error: AxiosError) => {
-      res.status(404).send(error);
-    });
+  const { accessToken } = req.body;
+  const spotifyApi = new SpotifyWebApi();
+  spotifyApi.setAccessToken(accessToken);
+  await getPlaylistIDs(spotifyApi)
+    .then(ids => res.send(ids))
+    .catch(err => res.status(err.status || 500).send(err));
 };
 
 export default { login, logged, playlists };
