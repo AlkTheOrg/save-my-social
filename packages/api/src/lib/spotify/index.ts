@@ -1,4 +1,4 @@
-// import SpotifyWebApi from 'spotify-web-api-node';
+import SpotifyWebApi from 'spotify-web-api-node';
 import {
   FetchPlaylistTracksReponse,
   GetPlaylistTracksResponse,
@@ -6,7 +6,22 @@ import {
   Playlist,
   TrackItem,
 } from './types.js';
-// const spptifyApi = new SpotifyWebApi();
+
+export const spotifyPlaylistColumnNames: {
+  [P in keyof MappedTrackItem]: any;
+} = {
+  id: 1,
+  name: 1,
+  artists: 1,
+  album: 1,
+  uri: 1,
+  duration: 1,
+  explicit: 1,
+  popularity: 1,
+  preview_url: 1,
+  album_cover: 1,
+  added_at: 1,
+};
 
 const spotifyTrackMapper = (item: TrackItem): MappedTrackItem => {
   return {
@@ -37,7 +52,11 @@ const spotifyPlaylistMapper = (playlist: Playlist) => ({
   images: playlist.images.map((image) => image.url).join('|'),
 });
 
-export const getPlaylistIDs = async (spotifyApi, limit = 50, offset = 0) => {
+export const getPlaylistIDs = async (
+  spotifyApi,
+  limit = 50,
+  offset = 0,
+): Promise<string[]> => {
   const {
     body: { items, next },
   } = await spotifyApi.getUserPlaylists({ limit, offset });
@@ -51,21 +70,24 @@ export const getPlaylistIDs = async (spotifyApi, limit = 50, offset = 0) => {
 };
 
 export const fetchPlaylistTracks = async (
-  spotifyApi,
+  accessToken,
   playlistId,
-  limit = 100,
   offset = 0,
 ): Promise<FetchPlaylistTracksReponse> => {
+  const spotifyApi = new SpotifyWebApi();
+  spotifyApi.setAccessToken(accessToken);
   const {
     body: { items, next },
   }: GetPlaylistTracksResponse = await spotifyApi.getPlaylistTracks(
     playlistId,
-    { limit, offset },
+    { limit: 100, offset },
   );
+
   const result = {
     tracks: [],
     lastQueried: '',
   } as FetchPlaylistTracksReponse;
+
   result.tracks.push(...items.map(spotifyTrackMapper));
   const lastModel = result.tracks[result.tracks.length - 1] || null;
   if (lastModel && lastModel.id) {
