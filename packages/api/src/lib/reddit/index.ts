@@ -17,6 +17,19 @@ export const processSavedChildren = (children: SavedChildren[]): ProcessedSavedC
     // category: child.data.category
   }));
 
+export const redditSavedModelColumnNames: {
+  [P in keyof ProcessedSavedChildren]: any;
+} = {
+  id: 1,
+  kind: 1,
+  kindID: 1,
+  subreddit: 1,
+  title: 1,
+  over_18: 1,
+  permalink: 1,
+  link: 1,
+};
+
 export const getAuthHeaders = (accessToken: string): AuthHeaders => ({
   Authorization: `Bearer ${accessToken}`,
   Accept: "*/*",

@@ -4,4 +4,5 @@ export interface ReqBodyWithLastEditedSpreadsheetID extends ReqBodyWithExportPro
   accessTokenSocial: string,
   lastSpreadsheetID?: string,
   lastSheetName?: string,
+  totalNumOfImportedItems?: number
 };

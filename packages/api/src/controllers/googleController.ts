@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
-import { CustomRequest, FeaturesOfSpotifyExport, ScopeVariables } from '../controllers/types.js';
+import { CustomRequest, FeaturesOfRedditExport, FeaturesOfSpotifyExport, ScopeVariables } from '../controllers/types.js';
 // import drive from '@googleapis/drive'; //TODO uninstall these packages if there is no way to setCredentials with them
 // import sheets from '@googleapis/sheets';
 // import youtube from '@googleapis/youtube';
@@ -8,7 +8,12 @@ import { google } from "googleapis";
 import { getAppExportFeatureKey, getWindowErrorPosterHTML, sendMsgResponse } from './../lib/index.js';
 import { getWindowAccessTokenPosterHTML } from '../lib/index.js';
 import { ReqBodyWithLastEditedSpreadsheetID } from '../lib/sheets/types.js';
-import { createSpreadSheet, getSpreadSheet, importSpotifyDataIntoSheet } from '../lib/sheets/index.js';
+import {
+  createSpreadSheet,
+  getSpreadSheet,
+  importSpotifyDataIntoSheet,
+  importRedditDataIntoSheet
+} from '../lib/sheets/index.js';
 import { appsToExportFrom } from '../lib/constants.js';
 dotenv.config();
 
@@ -77,6 +82,7 @@ const importItemsToSheets = async (
       exportProps,
       lastSpreadsheetID,
       lastSheetName,
+      totalNumOfImportedItems = 0
     } = req.body;
     if (!accessTokenSocial || !exportProps || Object.keys(exportProps).length < 1) {
       sendMsgResponse(res, 400, 'One of the required parameters is missing.');
@@ -95,29 +101,52 @@ const importItemsToSheets = async (
     oauth2Client.setCredentials({ access_token: accessToken });
     const sheetsApi = google.sheets({ version: "v4", auth: oauth2Client });
 
-    const { data: { spreadsheetId, sheets }} = lastSpreadsheetID
+    const { data: { spreadsheetId, sheets, spreadsheetUrl }} = lastSpreadsheetID
       ? await getSpreadSheet(sheetsApi, lastSpreadsheetID)
       : await createSpreadSheet(sheetsApi, exportType.toUpperCase());
     const firstSheetId = sheets[0].properties.sheetId;
+    
+    const isImportingForTheFirstTime = lastSpreadsheetID ? false : true;
 
     switch (appName) {
       case 'spotify': {
-        const { numOfImportedItems, lastQueried, lastSheetName: newLastSheetName, numOfTotalTracks } =
+        const { numOfImportedItems, lastQueried, lastSheetName: newLastSheetName, totalNumOfTracks } =
           await importSpotifyDataIntoSheet(
             sheetsApi,
             accessTokenSocial,
             exportProps as FeaturesOfSpotifyExport,
             spreadsheetId,
             lastSheetName,
-            lastSpreadsheetID ? false : true,
-            firstSheetId
+            isImportingForTheFirstTime,
+            firstSheetId,
+            totalNumOfImportedItems
           );
           res.send({
+            spreadsheetId,
             numOfImportedItems,
             lastQueried,
             newLastSheetName,
-            numOfTotalTracks
+            totalNumOfTracks
           });
+        return;
+      }
+      
+      case 'reddit': {
+        const { numOfImportedItems, lastQueried } = await importRedditDataIntoSheet(
+          sheetsApi,
+          accessTokenSocial,
+          exportProps as FeaturesOfRedditExport,
+          spreadsheetId,
+          isImportingForTheFirstTime,
+          firstSheetId,
+          totalNumOfImportedItems
+        );
+        res.send({
+          spreadsheetId,
+          spreadsheetUrl,
+          numOfImportedItems,
+          lastQueried
+        });
         return;
       }
 

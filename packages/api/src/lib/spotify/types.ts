@@ -102,5 +102,5 @@ export type ImportSpotifyDataIntoSheetResponse = {
     numOfImportedItems: number,
     lastQueried: string,
     lastSheetName: string,
-    numOfTotalTracks: number,
+    totalNumOfTracks: number,
 }

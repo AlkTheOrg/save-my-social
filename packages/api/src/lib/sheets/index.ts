@@ -1,6 +1,6 @@
 import SpotifyWebApi from 'spotify-web-api-node';
 import { sheets_v4 } from 'googleapis';
-import { FeaturesOfSpotifyExport } from '../../controllers/types.js';
+import { FeaturesOfRedditExport, FeaturesOfSpotifyExport } from '../../controllers/types.js';
 import {
   fetchPlaylistTracks,
   getPlaylist,
@@ -8,6 +8,7 @@ import {
 } from '../spotify/index.js';
 import { ImportSpotifyDataIntoSheetResponse } from '../spotify/types.js';
 import { INITIAL_SHEET_NAME } from '../constants.js';
+import { fetchSavedModels as fetchSavedRedditModels, redditSavedModelColumnNames } from '../reddit/index.js';
 
 const freezeRowRequest = (frozenRowCount = 1) => ({
   gridProperties: {
@@ -128,6 +129,7 @@ export const importSpotifyDataIntoSheet = async (
   lastSheetName: string,
   isImportingForTheFirstTime: boolean,
   firstSheetId: number,
+  totalNumOfImportedItems: number, // resets for each sheet
 ): Promise<ImportSpotifyDataIntoSheetResponse> => {
   const {
     spotify: {
@@ -141,7 +143,7 @@ export const importSpotifyDataIntoSheet = async (
   const {
     body: {
       name: playlistName,
-      tracks: { total: numOfTotalTracks },
+      tracks: { total: totalNumOfTracks },
     },
   } = await getPlaylist(spotifyApi, playlistId);
 
@@ -173,7 +175,8 @@ export const importSpotifyDataIntoSheet = async (
     sheetsApi,
     data,
     spreadsheetID,
-    shouldImportColumnData ? 1 : 2,
+    // first time check is to avoid overwriting column data
+    totalNumOfImportedItems + 1 + (shouldImportColumnData ? 0 : 1),
     lastSheetName,
   );
 
@@ -181,6 +184,40 @@ export const importSpotifyDataIntoSheet = async (
     numOfImportedItems: tracks.length,
     lastQueried,
     lastSheetName: sheetName,
-    numOfTotalTracks,
+    totalNumOfTracks,
   });
 };
+
+export const importRedditDataIntoSheet = async (
+  sheetsApi: sheets_v4.Sheets,
+  redditAccessToken: string,
+  exportProps: FeaturesOfRedditExport,
+  spreadsheetId: string,
+  isImportingForTheFirstTime: boolean,
+  firstSheetId: number,
+  totalNumOfImportedItems: number,
+) => {
+  const { reddit: { saved: { lastItemID } }} = exportProps;
+  
+  const { models, lastQueried } = await fetchSavedRedditModels(redditAccessToken, lastItemID);
+  await renameSheet(sheetsApi, 'Saved Models', spreadsheetId, firstSheetId);
+
+  const modelsData = models.map(Object.values);
+  const data = isImportingForTheFirstTime
+    ? [Object.keys(redditSavedModelColumnNames), ...modelsData]
+    : modelsData;
+
+  await importRowsIntoSheet(
+    sheetsApi,
+    data,
+    spreadsheetId,
+    // first time check is to avoid overwriting column data
+    totalNumOfImportedItems + 1 + (isImportingForTheFirstTime ? 0 : 1),
+  );
+  
+  return ({
+    numOfImportedItems: models.length,
+    lastQueried,
+    // lastSheetName: sheetName,
+  })
+}
