@@ -59,6 +59,28 @@ export const createNewSheet = (
     },
   });
 
+export const renameSheet = (
+  sheetsApi: sheets_v4.Sheets,
+  title: string,
+  spreadsheetId: string,
+  sheetId: number,
+) =>
+  sheetsApi.spreadsheets.batchUpdate({
+    spreadsheetId,
+    requestBody: {
+      requests: [
+        {
+          updateSheetProperties: {
+            properties: {
+              title,
+              sheetId
+            }
+          }
+        },
+      ],
+    },
+  });
+
 export const importRowsIntoSheet = async (
   sheetsApi: sheets_v4.Sheets,
   data: Array<Array<string | number | boolean>>,
