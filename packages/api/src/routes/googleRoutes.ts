@@ -6,7 +6,7 @@ const router = Router();
 router.use('/login', googleController.login);
 router.use('/logged', googleController.logged);
 router.post(
-  '/importItems',
+  '/importItems/sheets',
   requireAccessTokenInBody,
   googleController.importItemsToSheets
 );
