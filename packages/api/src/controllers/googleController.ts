@@ -109,7 +109,7 @@ const importItemsToSheets = async (
             exportProps as FeaturesOfSpotifyExport,
             spreadsheetId,
             lastSheetName,
-            !!lastSpreadsheetID,
+            lastSpreadsheetID ? false : true,
             firstSheetId
           );
           res.send({

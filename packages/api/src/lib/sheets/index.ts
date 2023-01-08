@@ -79,6 +79,7 @@ export const renameSheet = (
               title,
               sheetId,
             },
+            fields: 'title'
           },
         },
       ],
@@ -95,7 +96,7 @@ export const importRowsIntoSheet = async (
   const range = sheetName
     ? `${sheetName}!A${startingRowNum}`
     : `A${startingRowNum}`;
-  sheetsApi.spreadsheets.values.update({
+  return sheetsApi.spreadsheets.values.update({
     spreadsheetId,
     range,
     valueInputOption: 'RAW',
@@ -117,37 +118,6 @@ export const sheetExists = async (
   }
   return false;
 };
-
-// const getTextFormatRequest = (
-//   fontColor,
-//   startRowIndex,
-//   endRowIndex,
-//   startColumnIndex,
-//   endColumnIndex,
-//   isBold = true
-// ) => ({
-//   repeatCell: {
-//     range: {
-//       startRowIndex,
-//       endRowIndex,
-//       startColumnIndex,
-//       endColumnIndex,
-//     },
-//     cell: {
-//       userEnteredFormat: {
-//         textFormat: {
-//           bold: isBold,
-//           foregroundColor: {
-//             red: fontColor[0],
-//             green: fontColor[1],
-//             blue: fontColor[2],
-//           },
-//         },
-//       },
-//     },
-//     fields: "userEnteredFormat(textFormat)",
-//   },
-// });
 
 // for now only targets playlist export
 export const importSpotifyDataIntoSheet = async (
@@ -190,7 +160,7 @@ export const importSpotifyDataIntoSheet = async (
   }
   
   const { lastQueried, tracks } = await fetchPlaylistTracks(
-    spotifyAccessToken,
+    spotifyApi,
     playlistId,
   );
 
@@ -200,7 +170,7 @@ export const importSpotifyDataIntoSheet = async (
     : tracksData;
 
   await importRowsIntoSheet(
-    spotifyApi,
+    sheetsApi,
     data,
     spreadsheetID,
     shouldImportColumnData ? 1 : 2,

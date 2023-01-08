@@ -25,6 +25,9 @@ type Track = {
   explicit: boolean,
   popularity: number,
   preview_url: string,
+  external_urls: {
+    spotify: string
+  }
 }
 
 export type TrackItem = {
@@ -37,7 +40,7 @@ export type MappedTrackItem = {
     name: string,
     artists: string,
     album: string,
-    uri: string,
+    url: string,
     duration: number,
     explicit: boolean,
     popularity: number,
