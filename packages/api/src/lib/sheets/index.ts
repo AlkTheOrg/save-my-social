@@ -5,6 +5,12 @@ import {
   spotifyPlaylistColumnNames,
 } from '../spotify/index.js';
 
+const freezeRowRequest = (frozenRowCount = 1) => ({
+  gridProperties: {
+    frozenRowCount,
+  },
+});
+
 export const getSpreadSheet = (sheetsApi: sheets_v4.Sheets, id: string) =>
   sheetsApi.spreadsheets.get({
     spreadsheetId: id,
@@ -16,6 +22,14 @@ export const createSpreadSheet = (sheetsApi: sheets_v4.Sheets, title: string) =>
       properties: {
         title,
       },
+      sheets: [
+        {
+          properties: {
+            title,
+            ...freezeRowRequest()
+          },
+        },
+      ],
     },
   });
 
@@ -32,6 +46,7 @@ export const createNewSheet = (
           addSheet: {
             properties: {
               title,
+              ...freezeRowRequest(),
               // "tabColor": {
               //   "red": 1.0,
               //   "green": 0.3,
