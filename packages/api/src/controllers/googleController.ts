@@ -95,41 +95,38 @@ const importItemsToSheets = async (
     oauth2Client.setCredentials({ access_token: accessToken });
     const sheetsApi = google.sheets({ version: "v4", auth: oauth2Client });
 
-    const spreadsheet = lastSpreadsheetID
+    const { data: { spreadsheetId, sheets }} = lastSpreadsheetID
       ? await getSpreadSheet(sheetsApi, lastSpreadsheetID)
-      : await createSpreadSheet(sheetsApi, exportType);
-    const spreadsheetID = spreadsheet.data.spreadsheetId;
+      : await createSpreadSheet(sheetsApi, exportType.toUpperCase());
+    const firstSheetId = sheets[0].properties.sheetId;
 
-    let lastQueriedItem = '';
-    let numOfImportedItems = 0;
     switch (appName) {
       case 'spotify': {
-        [numOfImportedItems, lastQueriedItem] =
+        const { numOfImportedItems, lastQueried, lastSheetName: newLastSheetName, numOfTotalTracks } =
           await importSpotifyDataIntoSheet(
             sheetsApi,
             accessTokenSocial,
             exportProps as FeaturesOfSpotifyExport,
-            spreadsheetID,
-            lastSheetName
-          )
-        break;
+            spreadsheetId,
+            lastSheetName,
+            !!lastSpreadsheetID,
+            firstSheetId
+          );
+          res.send({
+            numOfImportedItems,
+            lastQueried,
+            newLastSheetName,
+            numOfTotalTracks
+          });
+        return;
       }
 
       default:
         sendMsgResponse(res, 401, 'Invalid social app.');
         return;
     }
-
     // if (numOfImportedItems < 100)
     //   updateDBTitle(notion, `${appName} ${featureKey} - Completed`, db.id);
-
-    res.send({
-      // sheetURL: sheet.url,
-      // sheetID: sheet.id,
-      numOfImportedItems,
-      lastQueriedItem,
-    });
-
   } catch (err) {
     console.log(err);
     res.status(404).send('something went wrong');

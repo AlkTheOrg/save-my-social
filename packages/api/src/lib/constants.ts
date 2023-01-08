@@ -6,3 +6,5 @@ export const appsToExportFrom = [
   "twitter",
   "youtube",
 ] as ExportFrom[];
+
+export const INITIAL_SHEET_NAME = "Inserting into this sheet.";

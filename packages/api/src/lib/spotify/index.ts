@@ -1,6 +1,6 @@
-import SpotifyWebApi from 'spotify-web-api-node';
 import {
   FetchPlaylistTracksReponse,
+  GetPlaylistReponse,
   GetPlaylistTracksResponse,
   MappedTrackItem,
   Playlist,
@@ -52,6 +52,8 @@ const spotifyPlaylistMapper = (playlist: Playlist) => ({
   images: playlist.images.map((image) => image.url).join('|'),
 });
 
+export const getPlaylist = (spotifyApi, id: string): Promise<GetPlaylistReponse> => spotifyApi.getPlaylist(id);
+
 export const getPlaylistIDs = async (
   spotifyApi,
   limit = 50,
@@ -70,12 +72,10 @@ export const getPlaylistIDs = async (
 };
 
 export const fetchPlaylistTracks = async (
-  accessToken,
+  spotifyApi,
   playlistId,
   offset = 0,
 ): Promise<FetchPlaylistTracksReponse> => {
-  const spotifyApi = new SpotifyWebApi();
-  spotifyApi.setAccessToken(accessToken);
   const {
     body: { items, next },
   }: GetPlaylistTracksResponse = await spotifyApi.getPlaylistTracks(

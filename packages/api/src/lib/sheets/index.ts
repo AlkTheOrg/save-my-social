@@ -1,9 +1,13 @@
+import SpotifyWebApi from 'spotify-web-api-node';
 import { sheets_v4 } from 'googleapis';
 import { FeaturesOfSpotifyExport } from '../../controllers/types.js';
 import {
   fetchPlaylistTracks,
+  getPlaylist,
   spotifyPlaylistColumnNames,
 } from '../spotify/index.js';
+import { ImportSpotifyDataIntoSheetResponse } from '../spotify/types.js';
+import { INITIAL_SHEET_NAME } from '../constants.js';
 
 const freezeRowRequest = (frozenRowCount = 1) => ({
   gridProperties: {
@@ -25,8 +29,8 @@ export const createSpreadSheet = (sheetsApi: sheets_v4.Sheets, title: string) =>
       sheets: [
         {
           properties: {
-            title,
-            ...freezeRowRequest()
+            title: INITIAL_SHEET_NAME,
+            ...freezeRowRequest(),
           },
         },
       ],
@@ -73,9 +77,9 @@ export const renameSheet = (
           updateSheetProperties: {
             properties: {
               title,
-              sheetId
-            }
-          }
+              sheetId,
+            },
+          },
         },
       ],
     },
@@ -151,38 +155,62 @@ export const importSpotifyDataIntoSheet = async (
   spotifyAccessToken: string,
   exportProps: FeaturesOfSpotifyExport,
   spreadsheetID: string,
-  title2: string, // TODO use this
-): Promise<[number, string]> => {
+  lastSheetName: string,
+  isImportingForTheFirstTime: boolean,
+  firstSheetId: number,
+): Promise<ImportSpotifyDataIntoSheetResponse> => {
   const {
     spotify: {
-      playlist: { id, lastTrackID },
+      playlist: { id: playlistId, lastTrackID },
     },
   } = exportProps;
-  const title = "test sheet";
-  if (!lastTrackID) {
-    // first time importing this playlist
-    await createNewSheet(sheetsApi, title, spreadsheetID);
-    await importRowsIntoSheet(
-      sheetsApi,
-      [Object.keys(spotifyPlaylistColumnNames)],
-      spreadsheetID,
-      1,
-      title,
-    );
-    console.log('imported rows into the sheet');
-  }
 
+  const spotifyApi = new SpotifyWebApi();
+  spotifyApi.setAccessToken(spotifyAccessToken);
+
+  const {
+    body: {
+      name: playlistName,
+      tracks: { total: numOfTotalTracks },
+    },
+  } = await getPlaylist(spotifyApi, playlistId);
+
+  const shouldImportColumnData = isImportingForTheFirstTime || !!lastTrackID;
+  let sheetName = lastSheetName;
+  
+  // first time importing this playlist
+  if (!lastTrackID) {
+    if (isImportingForTheFirstTime) {
+      // as we create spreadsheet in GoogleController, we rename the default sheet and use it
+      await renameSheet(sheetsApi, playlistName, spreadsheetID, firstSheetId);
+    } else {
+      await createNewSheet(sheetsApi, playlistName, spreadsheetID);
+    }
+    sheetName = playlistName;
+  }
+  
   const { lastQueried, tracks } = await fetchPlaylistTracks(
     spotifyAccessToken,
-    id,
-  );
-  await importRowsIntoSheet(
-    sheetsApi,
-    tracks.map(Object.values),
-    spreadsheetID,
-    2,
-    title,
+    playlistId,
   );
 
-  return [tracks.length, lastQueried];
+  const tracksData = tracks.map(Object.values);
+  const data = shouldImportColumnData
+    ? [Object.keys(spotifyPlaylistColumnNames), ...tracksData]
+    : tracksData;
+
+  await importRowsIntoSheet(
+    spotifyApi,
+    data,
+    spreadsheetID,
+    shouldImportColumnData ? 1 : 2,
+    lastSheetName,
+  );
+
+  return ({
+    numOfImportedItems: tracks.length,
+    lastQueried,
+    lastSheetName: sheetName,
+    numOfTotalTracks,
+  });
 };
