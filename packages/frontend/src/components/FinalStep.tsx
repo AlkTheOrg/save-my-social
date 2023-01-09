@@ -1,26 +1,24 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { importItems } from "../features/notion/notionSlice";
+import { reset } from "../app/smsSlice";
 import "../styles/FinalStep.scss";
+import { getExportThunkAction } from "../util/thunkMappings";
 import Loader from "./Loader";
 
 const FinalStep = (): JSX.Element => {
   const dispatch = useAppDispatch();
   const {
-    exportFrom,
-    exportTo,
-    isLoading,
-    isError,
-    message,
-  } = useAppSelector((state) => state.sms);
+    exportFrom, exportTo, isLoading, isError, message,
+  } = useAppSelector(
+    (state) => state.sms,
+  );
 
   const handleClick = () => {
-    dispatch(
-      // TODO dynamically decide dispatch type from import type
-      importItems(
-        // TODO dynamically decide this from export type
-        (lastItemID: string) => ({ reddit: { saved: { lastItemID } } }),
-      ),
-    );
+    if (exportFrom && exportTo) {
+      const exportPropsGetter = (lastItemID: string) => ({
+        reddit: { saved: { lastItemID } },
+      });
+      dispatch(getExportThunkAction(exportFrom, exportTo, exportPropsGetter));
+    }
   };
 
   return (
@@ -45,17 +43,22 @@ const FinalStep = (): JSX.Element => {
         </div>
       </div>
 
-      { isLoading ? (
+      {isLoading ? (
         <div className="final__process__info">
           <Loader />
           <h2>{message}</h2>
         </div>
       ) : (
         <div className="final__buttons">
-          <button id="start" type="button" onClick={handleClick} disabled={isLoading}>
-            { isError ? "Try again" : "Start" }
+          <button
+            id="start"
+            type="button"
+            onClick={handleClick}
+            disabled={isLoading}
+          >
+            {isError ? "Try again" : "Start"}
           </button>
-          <button id="reset" type="button" onClick={handleClick} disabled>
+          <button id="reset" type="button" onClick={() => dispatch(reset())} disabled>
             Reset
           </button>
         </div>

@@ -5,12 +5,19 @@ import "../styles/Finished.scss";
 
 function Finished() {
   const dispatch = useAppDispatch();
-  const { finalURL, exportFrom, exportTo } = useAppSelector(
+  const {
+    finalURL, finalFileName, exportFrom, exportTo,
+  } = useAppSelector(
     (state) => state.sms,
   );
 
   useEffect(() => {
-    (document.querySelector("#final-link>a") as HTMLAnchorElement)?.click();
+    const finalLinkElement = document.querySelector(
+      "#final-link>a",
+    ) as HTMLAnchorElement;
+    finalLinkElement?.click();
+    if (exportTo === "download") finalLinkElement.download = finalFileName;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
