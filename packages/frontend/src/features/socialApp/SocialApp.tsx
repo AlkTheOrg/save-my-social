@@ -6,6 +6,7 @@ import {
   appsToExportFrom,
   ExportFrom,
   setExportTo,
+  incrementCurStep,
 } from "../../app/smsSlice";
 import SocialAppBtn from "../../components/SocialAppBtn";
 import { getAuthURL as getRedditAuthURL } from "../reddit/redditSlice";
@@ -42,6 +43,8 @@ const SocialApp: (props: Props) => JSX.Element = ({ appName }) => {
     } else {
       dispatch(setExportTo(appName));
     }
+
+    if (appName === "download") dispatch(incrementCurStep());
   };
 
   return (
