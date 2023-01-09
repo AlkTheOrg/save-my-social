@@ -111,6 +111,18 @@ export const smsSlice = createSlice({
     incrementCurStep: (state) => {
       state.curStep = getNextStep(state.curStep);
     },
+    clickOnFinishedStepLink: (
+      { exportTo, finalURL, finalFileName },
+      action: PayloadAction<string>,
+    ) => {
+      const finalLinkElement = document.querySelector(
+        action.payload,
+      ) as HTMLAnchorElement;
+      if (!finalLinkElement) return; // !ERROR
+      finalLinkElement.href = finalURL;
+      if (exportTo === "download") finalLinkElement.download = finalFileName;
+      finalLinkElement.click();
+    },
     reset: ({ finalURL, exportTo }) => {
       if (finalURL && exportTo === "download") {
         URL.revokeObjectURL(finalURL);
@@ -191,6 +203,7 @@ export const {
   setMessage,
   resetMessage,
   incrementCurStep,
+  clickOnFinishedStepLink,
   reset,
 } = smsSlice.actions;
 
