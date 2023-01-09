@@ -1,9 +1,9 @@
 import { toast } from "react-toastify";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAuthURL as getRedditAuthURL } from "../features/reddit/redditSlice";
+import { getAuthURL as getRedditAuthURL, getSavedModels } from "../features/reddit/redditSlice";
 import {
   getAuthURL as getNotionAuthURL,
-  importItems,
+  importItems as importItemsToNotion,
 } from "../features/notion/notionSlice";
 import { getExportableTargetsOfCurApp } from "../features/socialApp/socialAppConstants";
 import {
@@ -39,6 +39,7 @@ export interface SmsState {
   isError: boolean;
   message: string;
   finalURL: string;
+  finalFileName: string;
   // -- steps --
   steps: Steps,
   curStep: number,
@@ -73,6 +74,7 @@ const initialState: SmsState = {
   message: "",
   steps: stepsByOrder,
   finalURL: "",
+  finalFileName: "",
   curStep: 0,
   numOfSteps,
 };
@@ -109,7 +111,10 @@ export const smsSlice = createSlice({
     incrementCurStep: (state) => {
       state.curStep = getNextStep(state.curStep);
     },
-    reset: () => {
+    reset: ({ finalURL, exportTo }) => {
+      if (finalURL && exportTo === "download") {
+        URL.revokeObjectURL(finalURL);
+      }
       return initialState;
     },
   },
@@ -143,16 +148,33 @@ export const smsSlice = createSlice({
         state.isError = true;
         state.message = "Error on getting the Auth URL for Notion";
       })
-      .addCase(importItems.pending, (state) => {
+      .addCase(importItemsToNotion.pending, (state) => {
         state.isError = false;
         state.isLoading = true;
       })
-      .addCase(importItems.fulfilled, (state, { payload }) => {
+      .addCase(importItemsToNotion.fulfilled, (state, { payload }) => {
         state.isLoading = false;
         state.curStep += 1;
         state.finalURL = payload;
       })
-      .addCase(importItems.rejected, (state, result) => {
+      .addCase(importItemsToNotion.rejected, (state, result) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = result.error.message || "Something went wrong";
+        toast.error(state.message);
+      })
+      .addCase(getSavedModels.pending, (state) => {
+        state.isError = false;
+        state.isLoading = true;
+      })
+      .addCase(getSavedModels.fulfilled, (state, result) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.curStep += 1;
+        state.finalURL = result.payload.url;
+        state.finalFileName = result.payload.fileName;
+      })
+      .addCase(getSavedModels.rejected, (state, result) => {
         state.isLoading = false;
         state.isError = true;
         state.message = result.error.message || "Something went wrong";
