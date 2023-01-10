@@ -25,6 +25,18 @@ const oauth2Client = new google.auth.OAuth2(
   GOOGLE_REDIRECT_URI,
 );
 
+const redirectUrl = (_: Request, res: Response) => {
+  const scopes: ScopeVariables = [
+    'https://www.googleapis.com/auth/drive',
+    'https://www.googleapis.com/auth/youtube',
+    'https://www.googleapis.com/auth/spreadsheets',
+  ];
+  const url = oauth2Client.generateAuthUrl({
+    scope: scopes,
+  });
+  res.send({ url });
+};
+
 const login = (_: Request, res: Response) => {
   const scopes: ScopeVariables = [
     'https://www.googleapis.com/auth/drive',
@@ -163,6 +175,7 @@ const importItemsToSheets = async (
 };
 
 export default {
+  redirectUrl,
   login,
   logged,
   importItemsToSheets,
