@@ -1,38 +1,44 @@
-type FeaturesOfRedditExport = {
-  reddit: {
-    saved: {
-      lastItemID: string,
-    }
+// REDDIT
+type RedditSavedModelsExport = {
+  saved: {
+    lastItemID: string,
   }
 }
-
-type FeaturesOfSpotifyExport = {
-  spotify: {
-    playlist: {
-      id: string,
-      lastTrackID: string,
-    },
-    likedSongs: {
-      lastTrackID: string,
-    }
-  }
+export type FeaturesOfRedditExport = {
+  reddit: RedditSavedModelsExport
 }
 
-type FeaturesOfYoutubeExport = {
-  youtube: {
-    playlist: {
-      id: string,
-      lastVideoID: string,
-    }
+// SPOTIFY
+type SpotifyPlaylistExport = {
+  playlist: {
+    id: string,
+    lastTrackID: string,
   }
+};
+
+export type FeaturesOfSpotifyExport = {
+  spotify: SpotifyPlaylistExport
 }
 
-type FeaturesOfTwitterExport = {
-  twitter: {
-    bookmarks: {
-      lastTweetID: string,
-    }
+// YOUTUBE
+type YoutubePlaylistExport = {
+  playlist: {
+    id: string,
+    lastVideoID: string,
   }
+}
+export type FeaturesOfYoutubeExport = {
+  youtube: YoutubePlaylistExport
+}
+
+// TWITTER
+type TwitterBookmarkExport = {
+  bookmarks: {
+    lastTweetID: string,
+  }
+}
+export type FeaturesOfTwitterExport = {
+  twitter: TwitterBookmarkExport
 }
 
 export type FeaturesOfSocialAppExport =
