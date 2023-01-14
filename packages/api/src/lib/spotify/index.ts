@@ -84,10 +84,11 @@ export const fetchPlaylistTracks = async (
     { limit: 100, offset },
   );
 
-  const result = {
+  const result: FetchPlaylistTracksReponse = {
     tracks: [],
     lastQueried: '',
-  } as FetchPlaylistTracksReponse;
+    next,
+  };
 
   result.tracks.push(...items.map(spotifyTrackMapper));
   const lastModel = result.tracks[result.tracks.length - 1] || null;
