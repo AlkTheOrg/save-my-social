@@ -2,9 +2,9 @@ import { AsyncThunkAction } from "@reduxjs/toolkit";
 import { ExportFrom, ExportTo } from "../app/smsSlice";
 import { ThunkAPI } from "../app/store";
 import { importItems as importItemsToNotion } from "../features/notion/notionSlice";
-import { ExportPropsGetter } from "../features/notion/types";
 import { getSavedModels } from "../features/reddit/redditSlice";
 import { GetSavedModelsThunkResponse } from "../features/reddit/types";
+import { FeaturesOfSocialAppExport } from "../features/types";
 
 export type GenuineExportFrom = Exclude<ExportFrom, "">;
 export type GenuineExportTo = Exclude<ExportTo, "">;
@@ -22,13 +22,13 @@ const getDownloadThunk = (appType: GenuineExportFrom) =>
 export const getExportThunkAction = (
   exportFrom: GenuineExportFrom,
   exportTo: GenuineExportTo,
-  exportPropsGetter: ExportPropsGetter,
+  initialExportProps: FeaturesOfSocialAppExport,
 ): AsyncThunkAction<
   GetSavedModelsThunkResponse | string,
-  ExportPropsGetter | void,
+  FeaturesOfSocialAppExport | void,
   ThunkAPI
 > => {
   if (exportTo === "download") return getDownloadThunk(exportFrom)();
   // TODO: Whenn all exports are supported, abstract here to a mapping obj
-  return importItemsToNotion(exportPropsGetter);
+  return importItemsToNotion(initialExportProps);
 };

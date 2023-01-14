@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { reset } from "../app/smsSlice";
 import "../styles/FinalStep.scss";
+import exportPropsGetter from "../util/exportPropsGetter";
 import { getExportThunkAction } from "../util/thunkMappings";
 import Loader from "./Loader";
 
@@ -14,10 +15,10 @@ const FinalStep = (): JSX.Element => {
 
   const handleClick = () => {
     if (exportFrom && exportTo) {
-      const exportPropsGetter = (lastItemID: string) => ({
-        reddit: { saved: { lastItemID } },
-      });
-      dispatch(getExportThunkAction(exportFrom, exportTo, exportPropsGetter));
+      if (exportFrom === "reddit" || exportFrom === "spotify") {
+        const exportProps = exportPropsGetter(exportFrom);
+        dispatch(getExportThunkAction(exportFrom, exportTo, exportProps));
+      }
     }
   };
 

@@ -4,7 +4,7 @@ export type ImportItemsToNotionResponse = {
   dbURL: string,
   dbID: string,
   numOfImportedItems: number,
-  lastQueriedItem: string,
+  newExportProps: FeaturesOfSocialAppExport,
 };
 
 export type ImportItemsToNotionPayload = {

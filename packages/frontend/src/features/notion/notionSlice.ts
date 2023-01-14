@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { FeaturesOfSocialAppExport } from "../types";
 import { setMessage } from "../../app/smsSlice";
 import { ThunkAPI } from "../../app/store";
 import { ImportItemsToNotionPayload } from "./endpointTypes";
@@ -6,7 +7,6 @@ import {
   fetchAuthURL,
   importItemsToNotion,
 } from "./notionApiService";
-import { ExportPropsGetter } from "./types";
 
 const initialState: { name: string } = {
   name: "notion",
@@ -18,26 +18,13 @@ export const getAuthURL = createAsyncThunk("notion/fetchOtt", async () => {
   return response.data.url;
 });
 
-const importItemsPayloadCreator = (
-  accessToken: string,
-  accessTokenSocial: string,
-  exportPropsGetter: ExportPropsGetter,
-  lastEditedDBID: string,
-  lastItemID: string,
-): ImportItemsToNotionPayload => ({
-  exportProps: exportPropsGetter(lastItemID),
-  accessToken,
-  accessTokenSocial,
-  lastEditedDBID,
-});
-
 export const importItems = createAsyncThunk<
   string, // return type
-  ExportPropsGetter, // type of first argument
+  FeaturesOfSocialAppExport, // type of first argument
   ThunkAPI
 >(
   "notion/importItems",
-  async (exportPropsGetter, { getState, dispatch }) => {
+  async (initialExportProps, { getState, dispatch }) => {
     const {
       sms: {
         tokens: [toExport, toImport],
@@ -47,23 +34,24 @@ export const importItems = createAsyncThunk<
     let importedDBURL = "";
 
     const recursivelyImportToNotion = async (
-      lastItemID = "",
+      exportProps: FeaturesOfSocialAppExport,
       lastEditedDBID = "",
       totalFetchedAmount = 0,
     ) => {
       dispatch(setMessage(
         `Importing items from ${totalFetchedAmount} to ${totalFetchedAmount + 100}`,
       ));
-      const payload = importItemsPayloadCreator(
-        toImport,
-        toExport,
-        exportPropsGetter,
+
+      const payload: ImportItemsToNotionPayload = {
+        accessToken: toImport,
+        accessTokenSocial: toExport,
         lastEditedDBID,
-        lastItemID,
-      );
+        exportProps,
+      };
+
       const {
         data: {
-          dbURL, dbID, numOfImportedItems, lastQueriedItem,
+          dbURL, dbID, numOfImportedItems, newExportProps,
         },
       } = await importItemsToNotion(payload);
 
@@ -76,7 +64,7 @@ export const importItems = createAsyncThunk<
       // if (lastQueriedItem) {
       if (numOfImportedItems === 100) {
         await recursivelyImportToNotion(
-          lastQueriedItem,
+          newExportProps,
           dbID,
           totalFetchedAmount + numOfImportedItems,
         );
@@ -84,7 +72,7 @@ export const importItems = createAsyncThunk<
         importedDBURL = dbURL;
       }
     };
-    await recursivelyImportToNotion("", "", 0);
+    await recursivelyImportToNotion(initialExportProps, "", 0);
 
     return importedDBURL;
   },
