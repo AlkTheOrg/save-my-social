@@ -4,7 +4,7 @@ dotenv.config();
 import axios, { AxiosResponse, AxiosError } from 'axios';
 const Axios = axios.default;
 import { Request, Response } from 'express';
-import { concatWithEmptySpace, encodeURIOptions } from '../lib/index.js';
+import { concatWithEmptySpace, encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowErrorPosterHTML } from '../lib/index.js';
 import { getPlaylistIDs } from '../lib/spotify/index.js';
 import { 
   AccessTokenReqConfig,
@@ -40,6 +40,12 @@ const options: OTTReqOptions = {
   response_type: 'code',
   show_dialog: 'true',
   state: SPOTIFY_STATE,
+};
+
+const redirectUrl = (_: Request, res: Response) => {
+  const url =
+    'https://accounts.spotify.com/authorize?' + encodeURIOptions(options);
+  res.send({ url });
 };
 
 const login = (_: Request, res: Response) => {
@@ -82,11 +88,11 @@ const logged = async (req: Request, res: Response) => {
       authOptions.axiosConfig,
     )
       .then((response: AxiosResponse<AccessTokenResponse>) => {
-        res.send({ access_token: response.data.access_token });
+        res.send(getWindowAccessTokenPosterHTML(response.data.access_token));
       })
       .catch((error: AxiosError) => {
         console.log(error);
-        res.status(404).send({ error: 'Invalid request' });
+        res.send(getWindowErrorPosterHTML('Error while getting access token'));
       });
   }
 };
@@ -100,4 +106,4 @@ const playlists = async (req: Request, res: Response) => {
     .catch(err => res.status(err.status || 500).send(err));
 };
 
-export default { login, logged, playlists };
+export default { login, logged, playlists, redirectUrl };
