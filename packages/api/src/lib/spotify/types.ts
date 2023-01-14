@@ -60,6 +60,7 @@ export type GetPlaylistTracksResponse = {
 export type FetchPlaylistTracksReponse = {
   tracks: Array<MappedTrackItem>,
   lastQueried: string,
+  next: string | null,
 }
 
 export type GetPlaylistReponse = {
@@ -97,10 +98,3 @@ export type GetPlaylistReponse = {
     uri: string,
   }
 };
-
-export type ImportSpotifyDataIntoSheetResponse = {
-    numOfImportedItems: number,
-    lastQueried: string,
-    lastSheetName: string,
-    totalNumOfTracks: number,
-}
