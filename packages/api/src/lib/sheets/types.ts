@@ -1,4 +1,4 @@
-import { ReqBodyWithExportProps } from "../../controllers/types.js";
+import { FeaturesOfSocialAppExport, ReqBodyWithExportProps } from "../../controllers/types.js";
 
 export interface ReqBodyWithLastEditedSpreadsheetID extends ReqBodyWithExportProps {
   accessTokenSocial: string,
@@ -6,3 +6,11 @@ export interface ReqBodyWithLastEditedSpreadsheetID extends ReqBodyWithExportPro
   lastSheetName?: string,
   totalNumOfImportedItems?: number
 };
+
+export type ImportDataIntoToSheetResponse = {
+  spreadsheetId: string,
+  lastSheetName: string,
+  numOfImportedItems: number,
+  totalNumOfItems: number, // -1 represents unknown
+  newExportProps: FeaturesOfSocialAppExport,
+}
