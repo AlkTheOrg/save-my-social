@@ -2,6 +2,7 @@ import { AsyncThunkAction } from "@reduxjs/toolkit";
 import { ExportFrom, ExportTo } from "../app/smsSlice";
 import { ThunkAPI } from "../app/store";
 import { importItems as importItemsToNotion } from "../features/notion/notionSlice";
+import { importItems as importItemsToSheets } from "../features/sheets/sheetsSlice";
 import { getSavedModels } from "../features/reddit/redditSlice";
 import { GetSavedModelsThunkResponse } from "../features/reddit/types";
 import { FeaturesOfSocialAppExport } from "../features/types";
@@ -29,6 +30,7 @@ export const getExportThunkAction = (
   ThunkAPI
 > => {
   if (exportTo === "download") return getDownloadThunk(exportFrom)();
+  if (exportTo === "sheets") return importItemsToSheets(initialExportProps);
   // TODO: Whenn all exports are supported, abstract here to a mapping obj
   return importItemsToNotion(initialExportProps);
 };

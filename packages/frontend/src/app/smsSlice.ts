@@ -5,6 +5,10 @@ import {
   getAuthURL as getNotionAuthURL,
   importItems as importItemsToNotion,
 } from "../features/notion/notionSlice";
+import {
+  getAuthURL as getSheetsAuthURL,
+  importItems as importItemsToSheets,
+} from "../features/sheets/sheetsSlice";
 import { getExportableTargetsOfCurApp } from "../features/socialApp/socialAppConstants";
 import {
   Steps,
@@ -187,6 +191,35 @@ export const smsSlice = createSlice({
         state.finalFileName = result.payload.fileName;
       })
       .addCase(getSavedModels.rejected, (state, result) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = result.error.message || "Something went wrong";
+        toast.error(state.message);
+      })
+      .addCase(getSheetsAuthURL.fulfilled, (state) => {
+        state.isLoading = false;
+        smsSlice.caseReducers.resetMessage(state);
+      })
+      .addCase(getSheetsAuthURL.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.message = "Getting Sheets redirection URL.";
+      })
+      .addCase(getSheetsAuthURL.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = "Error on getting the Auth URL for Sheets";
+      })
+      .addCase(importItemsToSheets.pending, (state) => {
+        state.isError = false;
+        state.isLoading = true;
+      })
+      .addCase(importItemsToSheets.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.curStep += 1;
+        state.finalURL = payload;
+      })
+      .addCase(importItemsToSheets.rejected, (state, result) => {
         state.isLoading = false;
         state.isError = true;
         state.message = result.error.message || "Something went wrong";

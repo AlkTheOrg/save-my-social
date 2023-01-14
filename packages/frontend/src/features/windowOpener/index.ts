@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getAuthURL as getRedditAuthURL } from "../reddit/redditSlice";
 import { getAuthURL as getNotionAuthURL } from "../notion/notionSlice";
+import { getAuthURL as getSheetsAuthURL } from "../sheets/sheetsSlice";
 
 export const windowSlice = createSlice({
   name: "windowOpener",
@@ -28,6 +29,10 @@ export const windowSlice = createSlice({
         state.target = action.payload;
       })
       .addCase(getNotionAuthURL.fulfilled, (state, action) => {
+        state.isOpened = true;
+        state.target = action.payload;
+      })
+      .addCase(getSheetsAuthURL.fulfilled, (state, action) => {
         state.isOpened = true;
         state.target = action.payload;
       });
