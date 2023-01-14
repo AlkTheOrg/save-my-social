@@ -8,7 +8,7 @@ import { ProcessedSavedChildren } from "../reddit/types.js";
 import DBCreator from "./dbCreator.js";
 import PageCreator,
 { createRedditPropsForDBPage } from "./pageCreator.js";
-import { CreateDBPropArguments } from "./types.js";
+import { CreateDBPropArguments, CreatePagesFromRedditExportPropsResponse } from "./types.js";
 
 export const getAuthOptions = (
   code: string,
@@ -93,9 +93,18 @@ export const createPagesFromRedditExportProps = async (
   redditAccessToken,
   dbID: string,
   exportProps: FeaturesOfRedditExport,
-): Promise<[number, string]> => {
+): CreatePagesFromRedditExportPropsResponse => {
   const { reddit: { saved: { lastItemID }}} = exportProps as FeaturesOfRedditExport;
   const { models, lastQueried } = await fetchSavedModels(redditAccessToken, lastItemID);
   await createPagesFromRedditModels(notion, dbID, models);
-  return [models.length, lastQueried];
-}
+  return {
+    numOfImportedItems: models.length,
+    newExportProps: {
+      reddit: {
+        saved: {
+          lastItemID: lastQueried
+        }
+      }
+    }
+  };
+};

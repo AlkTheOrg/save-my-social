@@ -137,17 +137,22 @@ const importItems = async (
       );
     }
 
-    let lastQueriedItem = '';
-    let numOfImportedItems = 0;
+    const response = {
+      numOfImportedItems: 0,
+      newExportProps: {},
+    };
+
     switch (appName) {
       case 'reddit': {
-        [numOfImportedItems, lastQueriedItem] =
+        const { newExportProps, numOfImportedItems } =
           await createPagesFromRedditExportProps(
             notion,
             accessTokenSocial,
             db.id,
             exportProps as FeaturesOfRedditExport,
           );
+        response.newExportProps = newExportProps;
+        response.numOfImportedItems = numOfImportedItems;
         break;
       }
 
@@ -156,14 +161,14 @@ const importItems = async (
         return;
     }
 
-    if (numOfImportedItems < 100)
+    if (response.numOfImportedItems < 100)
       updateDBTitle(notion, `${appName} ${featureKey} - Completed`, db.id);
 
     res.send({
       dbURL: db.url,
       dbID: db.id,
-      numOfImportedItems,
-      lastQueriedItem,
+      numOfImportedItems: response.numOfImportedItems,
+      newExportProps: response.newExportProps,
     });
   } catch (err) {
     console.log(err);

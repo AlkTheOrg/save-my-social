@@ -1,4 +1,4 @@
-import { ExportFrom, ReqBodyWithExportProps } from "../../controllers/types.js";
+import { ExportFrom, FeaturesOfRedditExport, ReqBodyWithExportProps } from "../../controllers/types.js";
 
 export type EmptyObject = Record<string, never>;
 
@@ -170,3 +170,8 @@ export type CreateDBPagePropArguments =
   }
   | { type: 'number'; key: string, value: number | null }
   | { type: 'checkbox'; key: string, value: boolean };
+
+export type CreatePagesFromRedditExportPropsResponse = Promise<{
+  numOfImportedItems: number,
+  newExportProps: FeaturesOfRedditExport,
+}>
