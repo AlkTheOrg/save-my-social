@@ -11,7 +11,7 @@ const initialState: RedditState = {
   selections: ["saved"],
 };
 
-export const getAuthURL = createAsyncThunk("reddit/fetchOtt", async () => {
+export const getAuthURL = createAsyncThunk("reddit/authURL", async () => {
   const response = await fetchAuthURL();
   console.log("fetchAuthUrl:", response.data);
   return response.data.url;

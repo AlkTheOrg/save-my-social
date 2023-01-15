@@ -12,7 +12,7 @@ const initialState: { name: string } = {
   name: "notion",
 };
 
-export const getAuthURL = createAsyncThunk("notion/fetchOtt", async () => {
+export const getAuthURL = createAsyncThunk("notion/authURL", async () => {
   const response = await fetchAuthURL();
   console.log("fetchAuthURL notion:", response.data);
   return response.data.url;
