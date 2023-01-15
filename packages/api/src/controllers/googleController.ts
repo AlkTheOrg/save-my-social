@@ -7,7 +7,7 @@ import { CustomRequest, FeaturesOfRedditExport, FeaturesOfSpotifyExport, ScopeVa
 import { google } from "googleapis";
 import { getAppExportFeatureKey, getWindowErrorPosterHTML, sendMsgResponse } from './../lib/index.js';
 import { getWindowAccessTokenPosterHTML } from '../lib/index.js';
-import { ReqBodyWithLastEditedSpreadsheetID } from '../lib/sheets/types.js';
+import { ImportDataIntoSheetResponse, ReqBodyWithLastEditedSpreadsheetID } from '../lib/sheets/types.js';
 import {
   createSpreadSheet,
   getSpreadSheet,
@@ -100,7 +100,7 @@ const importItemsToSheets = async (
       sendMsgResponse(res, 400, 'One of the required parameters is missing.');
       return;
     }
-
+    
     //* below and above blocks are common with notionController. So move them to utils
     const appName = appsToExportFrom.find(app => app === Object.keys(exportProps)[0]);
     if (!appName) {
@@ -119,32 +119,26 @@ const importItemsToSheets = async (
     const firstSheetId = sheets[0].properties.sheetId;
     
     const isImportingForTheFirstTime = lastSpreadsheetID ? false : true;
-
+    
+    let importToSheetsRes = {} as ImportDataIntoSheetResponse;
+    
     switch (appName) {
       case 'spotify': {
-        const { numOfImportedItems, lastQueried, lastSheetName: newLastSheetName, totalNumOfTracks } =
-          await importSpotifyDataIntoSheet(
-            sheetsApi,
-            accessTokenSocial,
-            exportProps as FeaturesOfSpotifyExport,
-            spreadsheetId,
-            lastSheetName,
-            isImportingForTheFirstTime,
-            firstSheetId,
-            totalNumOfImportedItems
-          );
-          res.send({
-            spreadsheetId,
-            numOfImportedItems,
-            lastQueried,
-            newLastSheetName,
-            totalNumOfTracks
-          });
-        return;
+        importToSheetsRes = await importSpotifyDataIntoSheet(
+          sheetsApi,
+          accessTokenSocial,
+          exportProps as FeaturesOfSpotifyExport,
+          spreadsheetId,
+          lastSheetName,
+          isImportingForTheFirstTime,
+          firstSheetId,
+          totalNumOfImportedItems
+        );
+        break;
       }
       
       case 'reddit': {
-        const { numOfImportedItems, lastQueried } = await importRedditDataIntoSheet(
+        importToSheetsRes = await importRedditDataIntoSheet(
           sheetsApi,
           accessTokenSocial,
           exportProps as FeaturesOfRedditExport,
@@ -153,13 +147,7 @@ const importItemsToSheets = async (
           firstSheetId,
           totalNumOfImportedItems
         );
-        res.send({
-          spreadsheetId,
-          spreadsheetUrl,
-          numOfImportedItems,
-          lastQueried
-        });
-        return;
+        break;
       }
 
       default:
@@ -168,6 +156,7 @@ const importItemsToSheets = async (
     }
     // if (numOfImportedItems < 100)
     //   updateDBTitle(notion, `${appName} ${featureKey} - Completed`, db.id);
+    res.send(importToSheetsRes);
   } catch (err) {
     console.log(err);
     res.status(404).send('something went wrong');

@@ -7,7 +7,7 @@ export interface ReqBodyWithLastEditedSpreadsheetID extends ReqBodyWithExportPro
   totalNumOfImportedItems?: number
 };
 
-export type ImportDataIntoToSheetResponse = {
+export type ImportDataIntoSheetResponse = {
   spreadsheetId: string,
   lastSheetName: string,
   numOfImportedItems: number,
