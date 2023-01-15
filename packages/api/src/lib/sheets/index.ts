@@ -6,9 +6,9 @@ import {
   getPlaylist,
   spotifyPlaylistColumnNames,
 } from '../spotify/index.js';
-import { ImportSpotifyDataIntoSheetResponse } from '../spotify/types.js';
 import { INITIAL_SHEET_NAME } from '../constants.js';
 import { fetchSavedModels as fetchSavedRedditModels, redditSavedModelColumnNames } from '../reddit/index.js';
+import { ImportDataIntoSheetResponse } from './types.js';
 
 const freezeRowRequest = (frozenRowCount = 1) => ({
   gridProperties: {
@@ -125,12 +125,12 @@ export const importSpotifyDataIntoSheet = async (
   sheetsApi: sheets_v4.Sheets,
   spotifyAccessToken: string,
   exportProps: FeaturesOfSpotifyExport,
-  spreadsheetID: string,
+  spreadsheetId: string,
   lastSheetName: string,
   isImportingForTheFirstTime: boolean,
   firstSheetId: number,
-  totalNumOfImportedItems: number, // resets for each sheet
-): Promise<ImportSpotifyDataIntoSheetResponse> => {
+  totalNumOfImportedItems: number, // should be zero if fetching playlist for the first time
+): Promise<ImportDataIntoSheetResponse> => {
   const {
     spotify: {
       playlist: { id: playlistId, lastTrackID },
@@ -147,23 +147,24 @@ export const importSpotifyDataIntoSheet = async (
     },
   } = await getPlaylist(spotifyApi, playlistId);
 
-  const shouldImportColumnData = isImportingForTheFirstTime || !!lastTrackID;
+  const shouldImportColumnData = lastSheetName ? false : true;
   let sheetName = lastSheetName;
   
   // first time importing this playlist
   if (!lastTrackID) {
     if (isImportingForTheFirstTime) {
       // as we create spreadsheet in GoogleController, we rename the default sheet and use it
-      await renameSheet(sheetsApi, playlistName, spreadsheetID, firstSheetId);
+      await renameSheet(sheetsApi, playlistName, spreadsheetId, firstSheetId);
     } else {
-      await createNewSheet(sheetsApi, playlistName, spreadsheetID);
+      await createNewSheet(sheetsApi, playlistName, spreadsheetId);
     }
     sheetName = playlistName;
   }
   
-  const { lastQueried, tracks } = await fetchPlaylistTracks(
+  const { lastQueried, tracks, next } = await fetchPlaylistTracks(
     spotifyApi,
     playlistId,
+    totalNumOfImportedItems,
   );
 
   const tracksData = tracks.map(Object.values);
@@ -174,17 +175,27 @@ export const importSpotifyDataIntoSheet = async (
   await importRowsIntoSheet(
     sheetsApi,
     data,
-    spreadsheetID,
+    spreadsheetId,
     // first time check is to avoid overwriting column data
     totalNumOfImportedItems + 1 + (shouldImportColumnData ? 0 : 1),
-    lastSheetName,
+    sheetName,
   );
+  
+  const newExportProps: FeaturesOfSpotifyExport = {
+    spotify: {
+      playlist: {
+        id: playlistId,
+        lastTrackID: lastQueried,
+      }
+    }
+  }
 
   return ({
-    numOfImportedItems: tracks.length,
-    lastQueried,
+    spreadsheetId,
     lastSheetName: sheetName,
-    totalNumOfTracks,
+    numOfImportedItems: tracks.length,
+    newExportProps,
+    totalNumOfItems: totalNumOfTracks,
   });
 };
 
@@ -196,16 +207,26 @@ export const importRedditDataIntoSheet = async (
   isImportingForTheFirstTime: boolean,
   firstSheetId: number,
   totalNumOfImportedItems: number,
-) => {
+): Promise<ImportDataIntoSheetResponse> => {
   const { reddit: { saved: { lastItemID } }} = exportProps;
   
   const { models, lastQueried } = await fetchSavedRedditModels(redditAccessToken, lastItemID);
+  const sheetName = 'Saved Models';
   await renameSheet(sheetsApi, 'Saved Models', spreadsheetId, firstSheetId);
 
   const modelsData = models.map(Object.values);
   const data = isImportingForTheFirstTime
     ? [Object.keys(redditSavedModelColumnNames), ...modelsData]
     : modelsData;
+
+
+  const newExportProps: FeaturesOfRedditExport = {
+    reddit: {
+      saved: {
+        lastItemID: lastQueried,
+      }
+    }
+  }
 
   await importRowsIntoSheet(
     sheetsApi,
@@ -216,8 +237,10 @@ export const importRedditDataIntoSheet = async (
   );
   
   return ({
+    spreadsheetId,
+    lastSheetName: sheetName,
     numOfImportedItems: models.length,
-    lastQueried,
-    // lastSheetName: sheetName,
+    newExportProps,
+    totalNumOfItems: -1,
   })
 }
