@@ -21,7 +21,7 @@ export const prepareBlobURL = (
   mimeType: string,
   onURLCreation?: (url: string) => void,
 ) => {
-  const text = Papa.unparse(data);
+  const text = mimeType === "text/csv" ? Papa.unparse(data) : JSON.stringify(data);
   const url = createBlobURL(text, mimeType);
   console.log("blob url is:", url);
   if (onURLCreation) onURLCreation(url);

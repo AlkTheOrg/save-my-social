@@ -7,6 +7,7 @@ import {
   importSpotifyPlaylistsToSheets,
 } from "../features/sheets/sheetsSlice";
 import { getSavedModels } from "../features/reddit/redditSlice";
+import { getPlaylists } from "../features/spotify/spotifySlice";
 import { GetSavedModelsThunkResponse } from "../features/reddit/types";
 import { FeaturesOfSocialAppExport, FeaturesOfSpotifyExport } from "../features/types";
 
@@ -15,8 +16,8 @@ export type GenuineExportTo = Exclude<ExportTo, "">;
 
 const appToDownloadToLocal = {
   reddit: getSavedModels,
-  spotify: getSavedModels, // TODO only for linters until the implementation is done
-  twitter: getSavedModels,
+  spotify: getPlaylists,
+  twitter: getSavedModels, // TODO only for linters until the implementation is done
   youtube: getSavedModels,
 };
 

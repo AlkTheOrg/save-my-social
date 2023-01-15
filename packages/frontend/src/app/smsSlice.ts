@@ -15,6 +15,7 @@ import {
 } from "../features/sheets/sheetsSlice";
 import {
   getAuthURL as getSpotifyAuthURL,
+  getPlaylists,
 } from "../features/spotify/spotifySlice";
 import { getExportableTargetsOfCurApp } from "../features/socialApp/socialAppConstants";
 import {
@@ -198,6 +199,23 @@ export const smsSlice = createSlice({
         state.finalFileName = result.payload.fileName;
       })
       .addCase(getSavedModels.rejected, (state, result) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = result.error.message || "Something went wrong";
+        toast.error(state.message);
+      })
+      .addCase(getPlaylists.pending, (state) => {
+        state.isError = false;
+        state.isLoading = true;
+      })
+      .addCase(getPlaylists.fulfilled, (state, result) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.curStep += 1;
+        state.finalURL = result.payload.url;
+        state.finalFileName = result.payload.fileName;
+      })
+      .addCase(getPlaylists.rejected, (state, result) => {
         state.isLoading = false;
         state.isError = true;
         state.message = result.error.message || "Something went wrong";

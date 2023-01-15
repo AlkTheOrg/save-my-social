@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { setMessage } from "../../app/smsSlice";
 import { ThunkAPI } from "../../app/store";
-import { getPlaylists } from "../spotify/spotifyApiService";
+import { fetchPlaylists } from "../spotify/spotifyApiService";
 import { FeaturesOfSocialAppExport, FeaturesOfSpotifyExport } from "../types";
 import { fetchAuthURL, importItemsToSheets } from "./sheetApiService";
 
@@ -118,7 +118,7 @@ export const importSpotifyPlaylistsToSheets = createAsyncThunk<
       },
     } = getState();
 
-    const { data: playlistIds } = await getPlaylists(toExport);
+    const { data: playlistIds } = await fetchPlaylists(toExport);
 
     const beforeImport = (totalFetchedAmount: number) => dispatch(setMessage(
       `Importing items from ${totalFetchedAmount} to ${totalFetchedAmount + 100}`,
