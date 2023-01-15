@@ -5,13 +5,15 @@ import axios, { AxiosResponse, AxiosError } from 'axios';
 const Axios = axios.default;
 import { Request, Response } from 'express';
 import { concatWithEmptySpace, encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowErrorPosterHTML } from '../lib/index.js';
-import { getPlaylistIDs } from '../lib/spotify/index.js';
+import { fetchPlaylistTracks, getPlaylistIDs } from '../lib/spotify/index.js';
 import { 
   AccessTokenReqConfig,
   AccessTokenResponse,
+  CustomRequest,
   OTTReqOptions,
   ScopeVariables,
 } from './types.js';
+import { ReqBodyOfGetPlaylistTracks } from '../lib/sheets/types.js';
 
 const scopeVariables: ScopeVariables = [
   'playlist-read-collaborative',
@@ -106,4 +108,17 @@ const playlists = async (req: Request, res: Response) => {
     .catch(err => res.status(err.status || 500).send(err));
 };
 
-export default { login, logged, playlists, redirectUrl };
+const getPlaylistTracks = async (req: CustomRequest<ReqBodyOfGetPlaylistTracks>, res: Response) => {
+  const { accessToken, playlistId, offset = 0 } = req.body;
+  const spotifyApi = new SpotifyWebApi();
+  spotifyApi.setAccessToken(accessToken);
+  await fetchPlaylistTracks(
+      spotifyApi,
+      playlistId,
+      offset,
+  )
+  .then(tracks => res.send(tracks))
+  .catch(err => res.status(err.status || 500).send(err));
+};
+
+export default { login, logged, playlists, redirectUrl, getPlaylistTracks };

@@ -7,5 +7,10 @@ router.get('/auth-url', spotifyController.redirectUrl);
 router.get('/login', spotifyController.login);
 router.get('/logged', spotifyController.logged);
 router.post('/playlists', requireAccessTokenInBody, spotifyController.playlists);
+router.post(
+  '/playlistTracks',
+  requireAccessTokenInBody,
+  spotifyController.getPlaylistTracks
+);
 
 export default router;

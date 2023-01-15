@@ -1,4 +1,4 @@
-import { FeaturesOfSocialAppExport, ReqBodyWithExportProps } from "../../controllers/types.js";
+import { FeaturesOfSocialAppExport, ReqBodyWithAccessToken, ReqBodyWithExportProps } from "../../controllers/types.js";
 
 export interface ReqBodyWithLastEditedSpreadsheetID extends ReqBodyWithExportProps {
   accessTokenSocial: string,
@@ -13,4 +13,9 @@ export type ImportDataIntoSheetResponse = {
   numOfImportedItems: number,
   totalNumOfItems: number, // -1 represents unknown
   newExportProps: FeaturesOfSocialAppExport,
+}
+
+export interface ReqBodyOfGetPlaylistTracks extends ReqBodyWithAccessToken {
+  playlistId: string,
+  offset?: number,
 }
