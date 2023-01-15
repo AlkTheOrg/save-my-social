@@ -2,10 +2,13 @@ import { AsyncThunkAction } from "@reduxjs/toolkit";
 import { ExportFrom, ExportTo } from "../app/smsSlice";
 import { ThunkAPI } from "../app/store";
 import { importItems as importItemsToNotion } from "../features/notion/notionSlice";
-import { importItems as importItemsToSheets } from "../features/sheets/sheetsSlice";
+import {
+  importItems as importItemsToSheets,
+  importSpotifyPlaylistsToSheets,
+} from "../features/sheets/sheetsSlice";
 import { getSavedModels } from "../features/reddit/redditSlice";
 import { GetSavedModelsThunkResponse } from "../features/reddit/types";
-import { FeaturesOfSocialAppExport } from "../features/types";
+import { FeaturesOfSocialAppExport, FeaturesOfSpotifyExport } from "../features/types";
 
 export type GenuineExportFrom = Exclude<ExportFrom, "">;
 export type GenuineExportTo = Exclude<ExportTo, "">;
@@ -30,7 +33,14 @@ export const getExportThunkAction = (
   ThunkAPI
 > => {
   if (exportTo === "download") return getDownloadThunk(exportFrom)();
-  if (exportTo === "sheets") return importItemsToSheets(initialExportProps);
+  if (exportTo === "sheets") {
+    if (exportFrom === "spotify") {
+      return importSpotifyPlaylistsToSheets(
+        initialExportProps as FeaturesOfSpotifyExport,
+      );
+    }
+    return importItemsToSheets(initialExportProps);
+  }
   // TODO: Whenn all exports are supported, abstract here to a mapping obj
   return importItemsToNotion(initialExportProps);
 };

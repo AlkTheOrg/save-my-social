@@ -1,6 +1,9 @@
 import { toast } from "react-toastify";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAuthURL as getRedditAuthURL, getSavedModels } from "../features/reddit/redditSlice";
+import {
+  getAuthURL as getRedditAuthURL,
+  getSavedModels,
+} from "../features/reddit/redditSlice";
 import {
   getAuthURL as getNotionAuthURL,
   importItems as importItemsToNotion,
@@ -8,7 +11,11 @@ import {
 import {
   getAuthURL as getSheetsAuthURL,
   importItems as importItemsToSheets,
+  importSpotifyPlaylistsToSheets,
 } from "../features/sheets/sheetsSlice";
+import {
+  getAuthURL as getSpotifyAuthURL,
+} from "../features/spotify/spotifySlice";
 import { getExportableTargetsOfCurApp } from "../features/socialApp/socialAppConstants";
 import {
   Steps,
@@ -224,6 +231,35 @@ export const smsSlice = createSlice({
         state.isError = true;
         state.message = result.error.message || "Something went wrong";
         toast.error(state.message);
+      })
+      .addCase(importSpotifyPlaylistsToSheets.pending, (state) => {
+        state.isError = false;
+        state.isLoading = true;
+      })
+      .addCase(importSpotifyPlaylistsToSheets.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.curStep += 1;
+        state.finalURL = payload;
+      })
+      .addCase(importSpotifyPlaylistsToSheets.rejected, (state, result) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = result.error.message || "Something went wrong";
+        toast.error(state.message);
+      })
+      .addCase(getSpotifyAuthURL.fulfilled, (state) => {
+        state.isLoading = false;
+        smsSlice.caseReducers.resetMessage(state);
+      })
+      .addCase(getSpotifyAuthURL.pending, (state) => {
+        state.isError = false;
+        state.isLoading = true;
+        state.message = "Getting Spotify redirection URL.";
+      })
+      .addCase(getSpotifyAuthURL.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = "Error on getting the Auth URL for Spotify";
       });
   },
 });

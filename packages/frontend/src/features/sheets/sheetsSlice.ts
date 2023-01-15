@@ -1,14 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { setMessage } from "../../app/smsSlice";
 import { ThunkAPI } from "../../app/store";
-import { FeaturesOfSocialAppExport } from "../types";
+import { getPlaylists } from "../spotify/spotifyApiService";
+import { FeaturesOfSocialAppExport, FeaturesOfSpotifyExport } from "../types";
 import { fetchAuthURL, importItemsToSheets } from "./sheetApiService";
 
 const initialState: { name: string } = {
   name: "sheets",
 };
 
-export const getAuthURL = createAsyncThunk("sheets/fetchOtt", async () => {
+export const getAuthURL = createAsyncThunk("sheets/authURL", async () => {
   const response = await fetchAuthURL();
   return response.data.url;
 });
@@ -22,7 +23,7 @@ const recursivelyImportToSheets = async (
   lastSpreadsheetID = "",
   lastSheetName = "",
   totalFetchedAmount = 0,
-): Promise<string> => {
+): Promise<{ url: string, spreadsheetId: string }> => {
   beforeImport(totalFetchedAmount);
 
   const payload = {
@@ -48,7 +49,7 @@ const recursivelyImportToSheets = async (
 
   // if (lastQueriedItem)
   if (numOfImportedItems === 100) {
-    const url = await recursivelyImportToSheets(
+    const res = await recursivelyImportToSheets(
       accessTokenToExport,
       accessTokenToImport,
       newExportProps,
@@ -58,9 +59,13 @@ const recursivelyImportToSheets = async (
       newLastSheetName,
       totalFetchedAmount + numOfImportedItems,
     );
-    return url;
+    return res;
   }
-  return `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
+
+  return {
+    url: `https://docs.google.com/spreadsheets/d/${spreadsheetId}`,
+    spreadsheetId,
+  };
 };
 
 export const importItems = createAsyncThunk<
@@ -86,7 +91,7 @@ export const importItems = createAsyncThunk<
         }`,
       ));
 
-    const spreadsheetURL = await recursivelyImportToSheets(
+    const res = await recursivelyImportToSheets(
       toExport,
       toImport,
       initialExportProps,
@@ -96,6 +101,62 @@ export const importItems = createAsyncThunk<
       "",
     );
 
+    return res.url;
+  },
+);
+
+export const importSpotifyPlaylistsToSheets = createAsyncThunk<
+  string,
+  FeaturesOfSpotifyExport,
+  ThunkAPI
+>(
+  "sheets/importSpotifyPlaylistsToSheets",
+  async (initialExportProps, { getState, dispatch }) => {
+    const {
+      sms: {
+        tokens: [toExport, toImport],
+      },
+    } = getState();
+
+    const { data: playlistIds } = await getPlaylists(toExport);
+
+    const beforeImport = (totalFetchedAmount: number) => dispatch(setMessage(
+      `Importing items from ${totalFetchedAmount} to ${totalFetchedAmount + 100}`,
+    ));
+    const afterImport = (totalFetchedAmount: number, numOfImportedItems: number) =>
+      dispatch(setMessage(
+        `Successfully imported items from ${totalFetchedAmount} to ${
+          totalFetchedAmount + numOfImportedItems
+        }`,
+      ));
+
+    let spreadsheetURL = "";
+    let lastSpreadsheetID = "";
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < playlistIds.length; i++) {
+      const id = playlistIds[i];
+      const exportProps: FeaturesOfSpotifyExport = {
+        spotify: {
+          playlist: {
+            ...initialExportProps.spotify.playlist,
+            id,
+          },
+        },
+      };
+
+      // eslint-disable-next-line no-await-in-loop
+      const res = await recursivelyImportToSheets(
+        toExport,
+        toImport,
+        exportProps,
+        beforeImport,
+        afterImport,
+        lastSpreadsheetID,
+        "",
+      );
+      spreadsheetURL = res.url;
+      lastSpreadsheetID = res.spreadsheetId;
+    }
     return spreadsheetURL;
   },
 );
