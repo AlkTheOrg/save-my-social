@@ -20,17 +20,17 @@ const TabTrap: FC<Props> = ({ children }) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Tab") {
-        e.preventDefault();
-
         //* content may be dynamic, so we get all focusable elements every time
         const focusableElements = getFocusableElements();
         const firstElement = focusableElements[0];
         const lastElement = focusableElements[focusableElements.length - 1];
         if (e.shiftKey) {
           if (document.activeElement === firstElement) {
+            e.preventDefault();
             lastElement?.focus();
           }
         } else if (document.activeElement === lastElement) {
+          e.preventDefault();
           firstElement?.focus();
         }
       }
