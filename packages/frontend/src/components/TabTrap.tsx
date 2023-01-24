@@ -11,10 +11,10 @@ type Props = {
 
 const TabTrap: FC<Props> = ({ children }) => {
   const [prevFocusedElem, setPrevFocusedElem] = useState<HTMLElement | null>(null);
-  const trapWrapper = useRef<HTMLDivElement>(null);
+  const trapWrapperRef = useRef<HTMLDivElement>(null);
 
   const getFocusableElements = () => Array.from(
-    trapWrapper.current?.querySelectorAll(focusableElementsString) || [],
+    trapWrapperRef.current?.querySelectorAll(focusableElementsString) || [],
   ) as HTMLElement[];
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const TabTrap: FC<Props> = ({ children }) => {
     };
 
     setPrevFocusedElem(document.activeElement as HTMLElement);
-    const wrapperDiv = trapWrapper.current;
+    const wrapperDiv = trapWrapperRef.current;
     wrapperDiv?.addEventListener("keydown", handleKeyDown);
 
     return () => {
@@ -54,7 +54,7 @@ const TabTrap: FC<Props> = ({ children }) => {
     }
   }, []);
 
-  return <div ref={trapWrapper} tabIndex={-1}>{children}</div>;
+  return <div ref={trapWrapperRef} tabIndex={-1}>{children}</div>;
 };
 
 export default TabTrap;
