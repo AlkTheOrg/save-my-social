@@ -1,4 +1,6 @@
-import React, { useRef, useEffect, useCallback } from "react";
+import React, {
+  useRef, useEffect, useCallback,
+} from "react";
 import "../styles/Modal.scss";
 
 interface Props {
@@ -29,7 +31,6 @@ const Modal: React.FC<Props> = ({
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
       document.addEventListener("keydown", handleEscapeKey);
-      // setIsAnimating(true);
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEscapeKey);
@@ -41,7 +42,7 @@ const Modal: React.FC<Props> = ({
     };
   }, [isOpen, onClose, handleClickOutside, handleEscapeKey]);
   return (
-    <div className="modal-overlay">
+    <div className={`modal-overlay ${isOpen ? "in" : "out"}`}>
       <div ref={modalRef} className="modal">
         <h2 role="alert">{heading}</h2>
         {children}

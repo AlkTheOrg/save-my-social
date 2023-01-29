@@ -24,6 +24,17 @@
     align-items: center;
     justify-content: center;
     z-index: 10;
+    transition: opacity .2s;
+
+      &.in {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      &.out {
+        opacity: 0;
+        pointer-events: none;
+  }
   }
   
   &-close-button {
@@ -42,5 +53,9 @@
     margin-block-end: 20px;
     font-weight: bold;
     font-size: 20px;
+  }
+
+  @media screen and (max-width: 830px) {
+    inline-size: 80%;
   }
 }
