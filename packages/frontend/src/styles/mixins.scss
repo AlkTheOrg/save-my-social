@@ -15,14 +15,19 @@
   transition: $transition;
   position: $position;
   cursor: $cursor;
-
-  &:hover {
+  opacity: 1;
+  
+  &:not(:disabled):hover {
     @if $bgHoverColor {
       background-color: $bgHoverColor;
     }
     @if $hoverColor {
       color: $hoverColor;
     }
+  }
+  
+  &:disabled {
+    opacity: .7;
   }
 }
 
@@ -32,19 +37,6 @@
     $inlineSize, $blockSize,
     $border, 5px, #fbfbfb, #333, 28px,
     $bgHoverColor, false,
-    background-color .5 ease
+    background-color .5s ease
   );
-
-  img, h3 {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  img {
-    top: 46px;
-  }
-  h3 {
-    top: 169px;
-    text-transform: capitalize;
-  }
 }

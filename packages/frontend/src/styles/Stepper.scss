@@ -3,7 +3,8 @@
   $incompletedStepColor: #738DED;
   $completedStepColor: #D4D4D4;
   $regularStepSize: 44px;
-  $stepMarginInlineStart: 150px;
+  $stepMarginInlineStart: 250px;
+  $stepAmount: 3;
 
   margin-block-end: 50px;
   margin-inline: auto;
@@ -15,7 +16,11 @@
     justify-content: center;
     position: relative;
     // .stepWidth * stepAmount + (stepAmount - 1) * margin-inline-size
-    width: calc(($stepMarginInlineStart * 3) + (4 * $regularStepSize));
+    width: calc(
+      ($regularStepSize * $stepAmount )
+      +
+      ($stepMarginInlineStart * ($stepAmount - 1))
+    );
     margin: 0 auto;
     transition: width .5s;
   }
@@ -74,9 +79,9 @@
       &:not(.first) { margin-inline-start: $stepMarginInlineStart; }
     }
     &__container {
-      width: calc(($stepMarginInlineStart * 3) + (4 * $regularStepSize)); 
+      width: calc(($stepMarginInlineStart * ($stepAmount - 1)) + ($stepAmount * $regularStepSize)); 
     }
-}
+  }
 
   @media screen and (max-width: 520px) {
     margin-block-end: 60px;

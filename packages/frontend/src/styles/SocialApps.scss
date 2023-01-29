@@ -1,29 +1,15 @@
 @import "./mixins.scss";
 
 .social-app {
-  &-container {
-    max-inline-size: 810px;
-    margin-block: 0;
-    margin-inline: auto;
-
-    display: grid;
-    grid-template-columns: repeat(3, 250px);
-    gap: 30px;
-    justify-content: center;
+  @include socialApp(100%, 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // padding-inline: 90px;
+  margin-block-end: 5px;
+  img {
+    width: 60px;
+    margin-inline-end: 20px;
   }
-
-  @include socialApp(100%, 250px);
-
-  @media screen and (max-width: 830px) {
-    &-container {
-      grid-template-columns: repeat(2, minmax(200px, 300px));
-      gap: 20px;
-    }
-  }
-
-  @media screen and (max-width: 520px) {
-    &-container {
-      grid-template-columns: minmax(200px, .9fr);
-    }
-  }
+  h3 { text-transform: capitalize; }
 }

@@ -1,12 +1,11 @@
-export type Step = "selectExportFrom" | "selectExportTo" | "final" | "finished";
+export type Step = "Select Apps" | "Export" | "Finished";
 export type Steps = Record<string, Step>;
 export type StepOrderMapping = Record<Step, string>;
 
 export const stepsByOrder: Steps = {
-  0: "selectExportFrom",
-  1: "selectExportTo",
-  2: "final",
-  3: "finished",
+  0: "Select Apps",
+  1: "Export",
+  2: "Finished",
 };
 export const numOfSteps = Object.keys(stepsByOrder).length;
 

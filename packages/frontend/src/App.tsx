@@ -2,10 +2,9 @@ import { ToastContainer } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { setToken } from "./app/smsSlice";
 import { stepsByOrder } from "./app/steps";
-import FinalStep from "./components/FinalStep";
+import MainStep from "./components/MainStep";
 import Finished from "./components/Finished";
 import Header from "./components/Header";
-import SocialApps from "./components/SocialApps";
 import Stepper from "./components/Stepper";
 import WindowOpener from "./components/WindowOpener";
 import { closed, opened } from "./features/windowOpener";
@@ -45,12 +44,10 @@ function App(): JSX.Element {
 
   const renderSwitch = () => {
     switch (curStepName) {
-      case "final":
-        return <FinalStep />;
-      case "finished":
+      case "Finished":
         return <Finished />;
       default:
-        return <SocialApps />;
+        return <MainStep />;
     }
   };
 

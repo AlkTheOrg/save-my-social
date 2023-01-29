@@ -27,11 +27,21 @@
           margin-block-end: 18px;
           font-weight: bold;
         }
-        div {
-          @include socialApp(250px, 250px, false);
-          cursor: auto;
-          pointer-events: none;
-          h3 { text-transform: capitalize; }
+        button {
+          @include socialApp(250px, 250px);
+          position: relative;
+
+          img, h3 {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+          }
+          img { top: 46px; }
+          h3 {
+            text-transform: capitalize;
+            bottom: 46px;
+          }
+          &:disabled { cursor: default; }
         }
       }
     }
@@ -75,20 +85,20 @@
         #f4f4f4, false,
         all .4s ease-in-out
       );
-      &:hover { background-position: 100% 0; }
+      &:not(:disabled):hover { background-position: 100% 0; }
 
       &:disabled {
+        cursor: default;
         background-image: none;
         background-color: #3332;
       }
     }
   }
 
-  &__process__info {
-    h2 {
-      margin-block-start: 24px;
-      font-size: 24px;
-    }
+  .final__process__info {
+    margin-block-start: 24px;
+    margin-block-end: 28px;
+    font-size: 24px;
   }
 
   @media screen and (max-width: 1250px) {

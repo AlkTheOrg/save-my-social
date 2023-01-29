@@ -17,7 +17,6 @@ import {
   getAuthURL as getSpotifyAuthURL,
   getPlaylists,
 } from "../features/spotify/spotifySlice";
-import { getExportableTargetsOfCurApp } from "../features/socialApp/socialAppConstants";
 import {
   Steps,
   stepsByOrder,
@@ -102,14 +101,8 @@ export const smsSlice = createSlice({
       state.exportTo = action.payload;
     },
     setToken: (state, action: PayloadAction<string>) => {
-      const index = state.curStep >= 1 ? 1 : 0;
+      const index = state.tokens[0] ? 1 : 0;
       state.tokens[index] = action.payload;
-      // TODO: May get rid of below logic and use a new component for the next step
-      if (index < 1) { // if token belongs to the first app
-        const exportableTargetsOfCurApp = getExportableTargetsOfCurApp(state.exportFrom);
-        state.activeApps = exportableTargetsOfCurApp;
-      }
-      smsSlice.caseReducers.incrementCurStep(state);
     },
     setActiveApps: (state, action: PayloadAction<SmsApp[]>) => {
       state.activeApps = action.payload;
@@ -122,6 +115,9 @@ export const smsSlice = createSlice({
     },
     incrementCurStep: (state) => {
       state.curStep = getNextStep(state.curStep);
+    },
+    setStep: (state, action: PayloadAction<number>) => {
+      state.curStep = action.payload;
     },
     clickOnFinishedStepLink: (
       { exportTo, finalURL, finalFileName },
@@ -290,6 +286,7 @@ export const {
   setMessage,
   resetMessage,
   incrementCurStep,
+  setStep,
   clickOnFinishedStepLink,
   reset,
 } = smsSlice.actions;
