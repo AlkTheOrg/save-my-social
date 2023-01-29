@@ -5,6 +5,7 @@ export type Props = {
   name: string,
   logoPath: string,
   buttonClass?: string,
+  isDisabled?: boolean,
 }
 
 const SocialAppBtn: (props: Props) => JSX.Element = ({
@@ -12,6 +13,7 @@ const SocialAppBtn: (props: Props) => JSX.Element = ({
   name,
   logoPath,
   buttonClass = "",
+  isDisabled = false,
 }) => {
   const handleKeyUp = (e: KeyboardEvent<HTMLButtonElement>): void => {
     if (e.key === "Enter") onClick();
@@ -23,6 +25,7 @@ const SocialAppBtn: (props: Props) => JSX.Element = ({
       className={buttonClass}
       onClick={onClick}
       onKeyUp={handleKeyUp}
+      disabled={isDisabled}
       aria-label={`${name} button`}
     >
       <img src={logoPath} aria-hidden alt={`${name} logo`} />

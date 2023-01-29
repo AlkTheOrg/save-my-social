@@ -6,7 +6,6 @@ import {
   appsToExportFrom,
   ExportFrom,
   setExportTo,
-  incrementCurStep,
 } from "../../app/smsSlice";
 import SocialAppBtn from "../../components/SocialAppBtn";
 import { getAuthURL as getRedditAuthURL } from "../reddit/redditSlice";
@@ -16,6 +15,8 @@ import { getAuthURL as getSpotifyAuthURL } from "../spotify/spotifySlice";
 
 type Props = {
   appName: SmsApp;
+  onClick?: (...args: unknown[]) => void;
+  isDisabled?: boolean;
 };
 
 type AppToAuthURLGetterMapping = Record<
@@ -23,7 +24,7 @@ type AppToAuthURLGetterMapping = Record<
   AsyncThunk<string, void, Record<string, unknown>>
 >;
 
-const SocialApp: (props: Props) => JSX.Element = ({ appName }) => {
+const SocialApp: (props: Props) => JSX.Element = ({ appName, onClick, isDisabled }) => {
   const dispatch = useAppDispatch();
 
   const appToAuthURLGetterMapping: AppToAuthURLGetterMapping = {
@@ -36,6 +37,7 @@ const SocialApp: (props: Props) => JSX.Element = ({ appName }) => {
   };
 
   const handleClick = (): void => {
+    if (onClick) onClick();
     if (appToAuthURLGetterMapping[appName as keyof AppToAuthURLGetterMapping]) {
       dispatch(appToAuthURLGetterMapping[appName as keyof AppToAuthURLGetterMapping]());
     }
@@ -45,8 +47,6 @@ const SocialApp: (props: Props) => JSX.Element = ({ appName }) => {
     } else {
       dispatch(setExportTo(appName));
     }
-
-    if (appName === "download") dispatch(incrementCurStep());
   };
 
   return (
@@ -55,6 +55,7 @@ const SocialApp: (props: Props) => JSX.Element = ({ appName }) => {
       onClick={handleClick}
       name={appName}
       logoPath={`logos/${appName}.svg`}
+      isDisabled={isDisabled}
     />
   );
 };
