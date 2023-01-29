@@ -80,7 +80,11 @@ const logged = async (req: Request, res: Response) => {
 
     Axios.post(authOptions.url, authOptions.form, authOptions.axiosConfig)
     .then((response: AxiosResponse<AccessTokenResponse>) => {
-      res.send(getWindowAccessTokenPosterHTML(response.data.access_token));
+      if (response.status >= 300) {
+        res.send(getWindowErrorPosterHTML('Error while getting access token. Status: ' + response.status));
+      } else {
+        res.send(getWindowAccessTokenPosterHTML(response.data.access_token));
+      }
     })
       .catch((error: AxiosError) => {
         console.log(error);
