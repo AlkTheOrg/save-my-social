@@ -2,6 +2,7 @@ import React, {
   useRef, useEffect, useCallback,
 } from "react";
 import "../styles/Modal.scss";
+import TabTrap from "./TabTrap";
 
 interface Props {
   children: React.ReactNode;
@@ -42,13 +43,20 @@ const Modal: React.FC<Props> = ({
     };
   }, [isOpen, onClose, handleClickOutside, handleEscapeKey]);
   return (
-    <div className={`modal-overlay ${isOpen ? "in" : "out"}`}>
+    <div aria-hidden={!isOpen} className={`modal-overlay ${isOpen ? "in" : "out"}`}>
       <div ref={modalRef} className="modal">
-        <h2 role="alert">{heading}</h2>
-        {children}
-        <button type="button" className="modal-close-button" onClick={onClose}>
-          ×
-        </button>
+        <TabTrap isActive={isOpen}>
+          <h2 role="alert">{heading}</h2>
+          {children}
+          <button
+            type="button"
+            className="modal-close-button"
+            onClick={onClose}
+            tabIndex={isOpen ? 0 : -1}
+          >
+            ×
+          </button>
+        </TabTrap>
       </div>
     </div>
   );
