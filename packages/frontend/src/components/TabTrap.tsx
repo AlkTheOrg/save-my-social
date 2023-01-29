@@ -13,9 +13,10 @@ const getFirstFocusableElement = (target: HTMLElement | null) =>
 
 type Props = {
   children: ReactNode;
+  isActive?: boolean;
 };
 
-const TabTrap: FC<Props> = ({ children }) => {
+const TabTrap: FC<Props> = ({ children, isActive }) => {
   const trapWrapperRef = useRef<HTMLDivElement>(null);
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "Tab") {
@@ -36,20 +37,27 @@ const TabTrap: FC<Props> = ({ children }) => {
   };
 
   useEffect(() => {
-    const prevFocusedElem = document.activeElement as HTMLElement;
-    const wrapperDiv = trapWrapperRef.current;
-    wrapperDiv?.addEventListener("keydown", handleKeyDown);
+    if (isActive) {
+      const prevFocusedElem = document.activeElement as HTMLElement;
+      const wrapperDiv = trapWrapperRef.current;
+      wrapperDiv?.addEventListener("keydown", handleKeyDown);
 
-    const firstFocusableElement = getFirstFocusableElement(trapWrapperRef.current);
-    (firstFocusableElement as HTMLElement)?.focus();
+      const firstFocusableElement = getFirstFocusableElement(trapWrapperRef.current);
+      (firstFocusableElement as HTMLElement)?.focus();
 
-    return () => {
-      wrapperDiv?.removeEventListener("keydown", handleKeyDown);
-      prevFocusedElem?.focus();
-    };
-  }, []);
+      return () => {
+        wrapperDiv?.removeEventListener("keydown", handleKeyDown);
+        prevFocusedElem?.focus();
+      };
+    }
+    return undefined;
+  }, [isActive]);
 
   return <div ref={trapWrapperRef}>{children}</div>;
+};
+
+TabTrap.defaultProps = {
+  isActive: true,
 };
 
 export default TabTrap;
