@@ -1,0 +1,112 @@
+.stepper {
+  $activeStepColor: #ed73e3;
+  $incompletedStepColor: #738DED;
+  $completedStepColor: #D4D4D4;
+  $regularStepSize: 44px;
+  $stepMarginInlineStart: 250px;
+  $stepAmount: 3;
+
+  margin-block-end: 50px;
+  margin-inline: auto;
+  height: 90px;
+  
+  &__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    // .stepWidth * stepAmount + (stepAmount - 1) * margin-inline-size
+    width: calc(
+      ($regularStepSize * $stepAmount )
+      +
+      ($stepMarginInlineStart * ($stepAmount - 1))
+    );
+    margin: 0 auto;
+    transition: width .5s;
+  }
+
+  .step {
+    border-radius: 50%;
+    inline-size: $regularStepSize;
+    min-inline-size: $regularStepSize;
+    block-size: $regularStepSize;
+    position: relative;
+    font-size: 16px;
+    z-index: 1;
+    text-align: center;
+    transition: all .5s;
+    user-select: none;
+
+    &.solo { display: none; } // responsive step view
+    &:not(.first) { margin-inline-start: $stepMarginInlineStart; }
+    &.active {
+      background-color: $activeStepColor;
+      font-weight: bold;
+    }
+    &.incompleted { background-color: $incompletedStepColor; }
+    &.completed {
+      background-color: $completedStepColor;
+      color: $completedStepColor;
+    }
+
+    &__name {
+      position: absolute;
+      bottom: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300%;
+      text-transform: capitalize;
+    }
+  }
+  
+  &__line {
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: $incompletedStepColor;
+    position: absolute;
+    transition: all .5s;
+
+    &--proggress {
+      background-color: $completedStepColor;
+      height: 2px;
+    }
+  }
+
+  @media screen and (max-width: 830px) {
+    $stepMarginInlineStart: 100px;
+    .step {
+      &:not(.first) { margin-inline-start: $stepMarginInlineStart; }
+    }
+    &__container {
+      width: calc(($stepMarginInlineStart * ($stepAmount - 1)) + ($stepAmount * $regularStepSize)); 
+    }
+  }
+
+  @media screen and (max-width: 520px) {
+    margin-block-end: 60px;
+    &__container { width: 100%; }
+    .step {
+      $stepSize: 80px;
+      inline-size: $stepSize;
+      min-inline-size: $stepSize;
+      block-size: $stepSize;
+      font-size: 16px;
+      background-color: $activeStepColor;
+      &.solo {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        font-weight: 600;
+        color: white;
+        span { padding: 3px; }
+        .step__name { color: black; }
+      }
+      &:not(.solo) { display: none; }
+    }
+    &__line { display: none; }
+  }
+}

@@ -1,0 +1,42 @@
+@mixin button(
+  $inlineSize, $blockSize,
+  $border, $borderRadius, $bgColor, $color, $fontSize,
+  $bgHoverColor, $hoverColor,
+  $transition: none,
+  $position: relative, $cursor: pointer,
+) {
+  inline-size: $inlineSize;
+  block-size: $blockSize;
+  border: $border;
+  border-radius: $borderRadius;
+  background-color: $bgColor;
+  color: $color;
+  font-size: $fontSize;
+  transition: $transition;
+  position: $position;
+  cursor: $cursor;
+  opacity: 1;
+  
+  &:not(:disabled):hover {
+    @if $bgHoverColor {
+      background-color: $bgHoverColor;
+    }
+    @if $hoverColor {
+      color: $hoverColor;
+    }
+  }
+  
+  &:disabled {
+    opacity: .7;
+  }
+}
+
+@mixin socialApp($inlineSize, $blockSize, $bgHoverColor: #f4f4f4) {
+  $border: 1px solid rgba(51, 51, 51, 0.048);
+  @include button(
+    $inlineSize, $blockSize,
+    $border, 5px, #fbfbfb, #333, 28px,
+    $bgHoverColor, false,
+    background-color .5s ease
+  );
+}

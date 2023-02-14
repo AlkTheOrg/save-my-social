@@ -1,0 +1,15 @@
+@import "./mixins.scss";
+
+.social-app {
+  @include socialApp(100%, 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // padding-inline: 90px;
+  margin-block-end: 5px;
+  img {
+    width: 60px;
+    margin-inline-end: 20px;
+  }
+  h3 { text-transform: capitalize; }
+}
