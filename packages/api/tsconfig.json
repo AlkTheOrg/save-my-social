@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "alwaysStrict": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true, // tslib will be used
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": false,
+    "noImplicitReturns": true,
+    "noImplicitThis": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "build",
+    "rootDir": ".",
+    "sourceMap": true,
+    "strictNullChecks": false,
+    "target": "es6"
+  },
+  "include": ["src/**/*", "__tests__/**/*"],
+  "exclude": ["node_modules"]
+}
