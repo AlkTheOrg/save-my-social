@@ -1,12 +1,17 @@
 {
-  "name": "monorepo",
+  "name": "save-my-social",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
+  "license": "MIT",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "concurrently \"wsrun --parallel dev\""
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "concurrently": "^5.2.0",
+    "wsrun": "^5.2.0"
+  }
 }
