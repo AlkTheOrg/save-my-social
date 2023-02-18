@@ -1,20 +1,18 @@
-import { ReqBodyWithAccessToken } from "../../controllers/types.js";
+import { ReqWithCredentials } from "../../controllers/types";
 
-export type SavedChildren = {
-  data: {
-    id: string;
-    title?: string;
-    link_title?: string;
-    over_18: boolean;
-    permalink: string;
-    urL: string;
-    category: string;
-    subreddit: string;
+export type SavedModel = {
+  name: string;
+  id: string;
+  title?: string;
+  link_title?: string;
+  over_18: boolean;
+  permalink: string;
+  subreddit: {
+    display_name: string
   };
-  kind: string;
 };
 
-export type ProcessedSavedChildren = {
+export type ProcessedSavedModel = {
   id: string,
   kind: 'Comment' | 'Post',
   kindID: string,
@@ -26,7 +24,7 @@ export type ProcessedSavedChildren = {
 };
 
 export type FetchSavedModelsResponse = {
-  models: ProcessedSavedChildren[],
+  models: ProcessedSavedModel[],
   lastQueried: string,
 }
 
@@ -37,6 +35,8 @@ export type AuthHeaders = {
   'User-Agent'?: string,
 }
 
-export interface ReqBodyWithItemAfter extends ReqBodyWithAccessToken {
-  after: string,
+export interface ReqWithItemAfter extends ReqWithCredentials {
+  body: {
+    after: string,
+  }
 }

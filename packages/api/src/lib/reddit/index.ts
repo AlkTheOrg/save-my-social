@@ -1,24 +1,22 @@
-import axios from 'axios';
-import { AccessTokenReqConfig } from '../../controllers/types.js';
-import { AuthHeaders, FetchSavedModelsResponse, ProcessedSavedChildren, SavedChildren } from './types.js';
-const Axios = axios.default;
+import { FetchSavedModelsResponse, ProcessedSavedModel, SavedModel } from './types.js';
+import snoowrap from 'snoowrap';
+import { ClientCredentials } from '../../controllers/types.js';
+import Snoowrap from 'snoowrap';
 
-export const processSavedChildren = (children: SavedChildren[]): ProcessedSavedChildren[] =>
-  children.map((child) => ({
-    id: child.data.id,
-    kind: child.kind === 't1' ? 'Comment' : 'Post',
-    kindID: `${child.kind}_${child.data.id}`,
-    subreddit: child.data.subreddit,
-    title: child.data.title || child.data.link_title || '',
-    over_18: child.data.over_18,
-    permalink: child.data.permalink,
-    // url: child.data.url,
-    link: 'https://reddit.com' + child.data.permalink,
-    // category: child.data.category
+export const processSavedChildren = (models: SavedModel[]): ProcessedSavedModel[] =>
+  models.map((child) => ({
+    id: child.id,
+    kind: child.name.split('_')[0] === 't1' ? 'Comment' : 'Post',
+    kindID: child.name,
+    subreddit: child.subreddit.display_name,
+    title: child.title || child.link_title || 'Title not found',
+    over_18: child.over_18,
+    permalink: child.permalink,
+    link: 'https://reddit.com' + child.permalink,
   }));
 
 export const redditSavedModelColumnNames: {
-  [P in keyof ProcessedSavedChildren]: any;
+  [P in keyof ProcessedSavedModel]: any;
 } = {
   id: 1,
   kind: 1,
@@ -30,79 +28,44 @@ export const redditSavedModelColumnNames: {
   link: 1,
 };
 
-export const getAuthHeaders = (accessToken: string): AuthHeaders => ({
-  Authorization: `Bearer ${accessToken}`,
-  Accept: "*/*",
-  // "User-Agent": "axios/0.21.1",
-  "Content-Type": "application/x-www-form-urlencoded",
-});
+const getSnoowrapClient = (credentials: ClientCredentials) => new snoowrap({
+    userAgent: 'nodejs',
+    clientId: credentials.CLIENT_ID,
+    clientSecret: credentials.SECRET,
+    username: credentials.USERNAME,
+    password: credentials.PASSWORD
+  });
 
-export const getAuthOptions = (
-  code: string,
-  redirect_uri: string,
-  clientID: string,
-  secret: string
-): AccessTokenReqConfig => ({
-  url: 'https://www.reddit.com/api/v1/access_token',
-  form: {
-    code,
-    redirect_uri,
-    grant_type: 'authorization_code',
-  },
-  axiosConfig: {
-    headers: {
-      Accept: 'application/json',
-      Authorization: 'Basic ' + Buffer.from(clientID + ':' + secret).toString('base64'),
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-  }
-});
-
-export async function getSavedModelsRecursive(
-  userURL: string,
-  headers: AuthHeaders,
+const snoowrap_getSavedModels = async (
+  client: Snoowrap,
   lastQueried: string | undefined | null = undefined,
-  resultArr: ProcessedSavedChildren[] = [],
-  // maxNumOfRecursions = 2
-) {
-  // if (!maxNumOfRecursions) return resultArr;
-  const params = {
+) => {
+  const options = {
     limit: 100,
     after: lastQueried,
   };
-  const { data } = await Axios.get(userURL, { headers, params });
-  const { children, after } = data.data;
-  resultArr.push(...processSavedChildren(children));
-  if (after) {
-    await getSavedModelsRecursive(userURL, headers, after, resultArr);
-  }
-}
-
-export const getMe = async (headers) => {
-  const {
-    data: {
-      subreddit: { url }, // can also return display_name, display_name_prefixed, name
-    },
-  } = await Axios.get('https://oauth.reddit.com/api/v1/me', { headers });
-  return url;
+  const res = client.getMe().getSavedContent(options)
+    .then(x => x)
+    .catch(e => {
+      console.log(e);
+      throw new Error('An error occured while fetching saved models. Please check the log from your terminal.')
+    })
+  return res;
 }
 
 export const fetchSavedModels = async (
-  accessToken: string,
+  credentials: ClientCredentials,
   after?: string,
 ): Promise<FetchSavedModelsResponse> => {
-  const headers = getAuthHeaders(accessToken);
   const result = {
     models: [],
     lastQueried: '',
   } as FetchSavedModelsResponse;
-  const userURL = await getMe(headers); // /user/<username>/
-  const savedEndpoint = `https://oauth.reddit.com${userURL}saved`;
-  const params = { limit: 100, after }; // can also be added to the endpoint url as a query string
 
-  const savedResponse = await Axios.get(savedEndpoint, { headers, params });
-  const { children } = savedResponse.data.data;
-  result.models.push(...processSavedChildren(children));
+  const r = getSnoowrapClient(credentials);
+  const models = await snoowrap_getSavedModels(r, after);
+
+  result.models.push(...processSavedChildren(models as unknown as SavedModel[]));
 
   const lastModel = result.models[result.models.length - 1] || null;
   if (lastModel && lastModel.id) {

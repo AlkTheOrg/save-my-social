@@ -1,3 +1,4 @@
+import { getAppCredentials } from './../index.js';
 import SpotifyWebApi from 'spotify-web-api-node';
 import { sheets_v4 } from 'googleapis';
 import { FeaturesOfRedditExport, FeaturesOfSpotifyExport } from '../../controllers/types.js';
@@ -210,7 +211,7 @@ export const importRedditDataIntoSheet = async (
 ): Promise<ImportDataIntoSheetResponse> => {
   const { reddit: { saved: { lastItemID } }} = exportProps;
   
-  const { models, lastQueried } = await fetchSavedRedditModels(redditAccessToken, lastItemID);
+  const { models, lastQueried } = await fetchSavedRedditModels(getAppCredentials('reddit'), lastItemID);
   const sheetName = 'Saved Models';
   await renameSheet(sheetsApi, 'Saved Models', spreadsheetId, firstSheetId);
 
