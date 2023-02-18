@@ -1,7 +1,15 @@
 import { Request } from 'express';
 
+export interface RequestWithAT extends Request {
+  accessToken: string
+}
+
 export interface CustomRequest<T> extends Request {
   body: T
+}
+
+export interface CustomRequestWithAT<T> extends CustomRequest<T> {
+  accessToken: string
 }
 
 export type ScopeVariables = string[];
@@ -62,6 +70,8 @@ export type SmsApp =
   | "notion"
   | "sheets"
   | "download";
+
+export type ActiveApp = Exclude<SmsApp, "download" | "twitter" | "youtube">;
 
 export type ExportFrom = Exclude<
   SmsApp,
