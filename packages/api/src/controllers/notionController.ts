@@ -1,4 +1,5 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { getAccessToken, setAccessToken } from './../lib/accessTokenManager.js';
+import { default as axios, AxiosError, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
 import { Client } from '@notionhq/client';
@@ -11,7 +12,7 @@ import {
 } from '../lib/index.js';
 import {
   AccessTokenResponse,
-  CustomRequest,
+  CustomRequestWithAT,
   FeaturesOfRedditExport,
   OTTReqNotionOptions,
 } from './types.js';
@@ -30,7 +31,6 @@ import {
 import { appsToExportFrom } from '../lib/constants.js';
 import { socialAppToDBPropsMapping } from '../lib/notion/dbCreator.js';
 dotenv.config();
-const Axios = axios.default;
 
 const { NOTION_CLIENT_ID, NOTION_REDIRECT_URI, NOTION_SECRET, NOTION_STATE } =
   process.env;
@@ -78,11 +78,13 @@ const logged = async (req: Request, res: Response) => {
       NOTION_SECRET,
     );
 
-    Axios.post(authOptions.url, authOptions.form, authOptions.axiosConfig)
+    axios.post(authOptions.url, authOptions.form, authOptions.axiosConfig)
     .then((response: AxiosResponse<AccessTokenResponse>) => {
       if (response.status >= 300) {
         res.send(getWindowErrorPosterHTML('Error while getting access token. Status: ' + response.status));
       } else {
+        // TODO
+        setAccessToken('notion', response.data.access_token);
         res.send(getWindowAccessTokenPosterHTML(response.data.access_token));
       }
     })
@@ -94,21 +96,27 @@ const logged = async (req: Request, res: Response) => {
 };
 
 const importItems = async (
-  req: CustomRequest<ImportItemsToNotionReqBody>,
+  req: CustomRequestWithAT<ImportItemsToNotionReqBody>,
   res: Response,
 ) => {
   try {
-    const { lastEditedDBID, accessToken, accessTokenSocial, exportProps } = req.body;
-    if (!accessTokenSocial || !exportProps || Object.keys(exportProps).length < 1) {
+    const { lastEditedDBID,  exportProps } = req.body;
+    const accessToken = req.accessToken;
+    if (!exportProps || Object.keys(exportProps).length < 1) {
       sendMsgResponse(res, 400, 'One of the required parameters is missing.');
       return;
     }
     const notion = new Client({ auth: accessToken });
 
-    // get the type of the exported app (reddit, twitter etc.)
+    // get the type of the exported app (reddit, spotify etc.)
     const appName = appsToExportFrom.find((app) => app === Object.keys(exportProps)[0]);
     if (!appName) {
       sendMsgResponse(res, 400, 'Invalid app name... bruh...');
+      return;
+    }
+    const accessTokenSocial = getAccessToken(appName);
+    if (!accessTokenSocial) {
+      sendMsgResponse(res, 400, `Access token for ${appName} is not found.`);
       return;
     }
 

@@ -125,13 +125,17 @@ export type FeaturesOfTwitterExport = {
 export type FeaturesOfSocialAppExport =
   | FeaturesOfRedditExport
   | FeaturesOfSpotifyExport
-  | FeaturesOfYoutubeExport
-  | FeaturesOfTwitterExport;
+  // | FeaturesOfYoutubeExport
+  // | FeaturesOfTwitterExport; // Inactive apps
 
 export interface ReqBodyWithAccessToken {
   accessToken: string,
 };
 
-export interface ReqBodyWithExportProps extends ReqBodyWithAccessToken {
+export interface ReqBodyWithExportProps_Deprecated extends ReqBodyWithAccessToken {
   exportProps: FeaturesOfSocialAppExport,
+};
+
+export interface ReqBodyWithExportProps {
+  exportProps: FeaturesOfSocialAppExport
 };

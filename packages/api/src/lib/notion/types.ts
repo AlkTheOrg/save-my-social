@@ -108,7 +108,6 @@ export type CreateDBPropArguments =
 // body of /importItems endpoint
 export interface ReqBodyWithLastEditedPageID extends ReqBodyWithExportProps {
   lastEditedDBID: string,
-  accessTokenSocial: string,
 };
 
 export type SocialAppToDBPropsMapping = {

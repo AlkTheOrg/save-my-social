@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { ExportFrom, FeaturesOfSocialAppExport } from "../controllers/types.js";
+import { ActiveApp,  FeaturesOfSocialAppExport } from "../controllers/types.js";
 
 export const encodeURIOptions = (options: Record<string, string>): string => {
   return Object.keys(options)
@@ -65,7 +65,7 @@ export const sendMsgResponse = (
 // get the export feature (saved, playlist etc.) that is made from the app
 export const getAppExportFeatureKey = (
   exportProps: FeaturesOfSocialAppExport,
-  appName: ExportFrom
+  appName: ActiveApp
 ): string => {
   const propertiesOfAppExport = exportProps[appName];
   const featureKey = 

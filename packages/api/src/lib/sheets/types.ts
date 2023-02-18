@@ -1,6 +1,6 @@
-import { FeaturesOfSocialAppExport, ReqBodyWithAccessToken, ReqBodyWithExportProps } from "../../controllers/types.js";
+import { FeaturesOfSocialAppExport, ReqBodyWithAccessToken, ReqBodyWithExportProps_Deprecated } from "../../controllers/types.js";
 
-export interface ReqBodyWithLastEditedSpreadsheetID extends ReqBodyWithExportProps {
+export interface ReqBodyWithLastEditedSpreadsheetID extends ReqBodyWithExportProps_Deprecated {
   accessTokenSocial: string,
   lastSpreadsheetID?: string,
   lastSheetName?: string,
