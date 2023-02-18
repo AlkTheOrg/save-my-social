@@ -122,17 +122,6 @@ export interface ReqBodyWithAccessToken {
   accessToken: string,
 };
 
-export interface ReqWithCredentials extends Request {
-  credentials: ClientCredentials
-}
-
 export interface ReqBodyWithExportProps extends ReqBodyWithAccessToken {
   exportProps: FeaturesOfSocialAppExport,
 };
-
-export type ClientCredentials = {
-  CLIENT_ID: string,
-  SECRET: string,
-  USERNAME: string,
-  PASSWORD: string
-}

@@ -1,7 +1,5 @@
-import dotenv from 'dotenv';
 import { Response } from "express";
-import { ClientCredentials, ExportFrom, FeaturesOfSocialAppExport, SmsApp } from "../controllers/types.js";
-dotenv.config();
+import { ExportFrom, FeaturesOfSocialAppExport } from "../controllers/types.js";
 
 export const encodeURIOptions = (options: Record<string, string>): string => {
   return Object.keys(options)
@@ -77,13 +75,3 @@ export const getAppExportFeatureKey = (
   // if featureKey is null or an unsupported feature, it will considered invalid
   return featureKey;
 };
-
-export const getAppCredentials = (app: Exclude<SmsApp, 'download'>): ClientCredentials => {
-  const APP_NAME = app.toUpperCase();
-  return {
-    CLIENT_ID: process.env[`${APP_NAME}_CLIENT_ID`],
-    SECRET: process.env[`${APP_NAME}_SECRET`],
-    USERNAME: process.env[`${APP_NAME}_USERNAME`],
-    PASSWORD: process.env[`${APP_NAME}_PASSWORD`],
-  }
-}

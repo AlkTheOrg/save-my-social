@@ -50,7 +50,6 @@
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "googleapis": "^109.0.1",
-    "snoowrap": "^1.23.0",
     "spotify-web-api-node": "^5.0.2",
     "ts-node": "^10.9.1",
     "tslib": "~2.4",

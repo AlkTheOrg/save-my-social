@@ -4,7 +4,7 @@ import {
   FeaturesOfRedditExport,
 } from "../../controllers/types.js";
 import { fetchSavedModels } from "../reddit/index.js";
-import { ProcessedSavedModel } from "../reddit/types.js";
+import { ProcessedSavedChildren } from "../reddit/types.js";
 import DBCreator from "./dbCreator.js";
 import PageCreator,
 { createRedditPropsForDBPage } from "./pageCreator.js";
@@ -78,7 +78,7 @@ export const createDB = async (
 const createPagesFromRedditModels = async (
   notion: Client,
   dbID: string,
-  models: ProcessedSavedModel[],
+  models: ProcessedSavedChildren[],
 ) => {
   const pageCreator = PageCreator();
   return Promise.all(

@@ -1,5 +1,5 @@
 import { Client } from '@notionhq/client';
-import { ProcessedSavedModel } from '../reddit/types.js';
+import { ProcessedSavedChildren } from '../reddit/types.js';
 import {
   DBPropTypeName,
   DBPageCheckboxProp,
@@ -88,7 +88,7 @@ const PageCreator = () => {
 };
 
 export const createRedditPropsForDBPage = (
-  item: ProcessedSavedModel,
+  item: ProcessedSavedChildren,
 ): Array<CreateDBPagePropArguments> => [
   // { key: 'Count', type: 'number', value: count },
   { key: 'Title', type: 'title', value: item.title },
