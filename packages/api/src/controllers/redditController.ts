@@ -1,6 +1,7 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { default as axios, AxiosError, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
+import { setAccessToken } from '../lib/accessTokenManager.js';
 import {
   concatWithEmptySpace,
   encodeURIOptions,
@@ -11,12 +12,11 @@ import { fetchSavedModels, getAuthOptions } from '../lib/reddit/index.js';
 import { ReqBodyWithItemAfter } from '../lib/reddit/types.js';
 import {
   AccessTokenResponse,
-  CustomRequest,
+  CustomRequestWithAT,
   OTTReqOptions,
   ScopeVariables,
 } from './types.js';
 dotenv.config();
-const Axios = axios.default;
 
 const scopeVariables: ScopeVariables = ['save', 'history', 'identity']; // https://www.reddit.com/dev/api/oauth
 
@@ -66,8 +66,10 @@ const logged = async (req: Request, res: Response) => {
       REDDIT_SECRET,
     );
 
-    Axios.post(authOptions.url, encodeURIOptions(authOptions.form), authOptions.axiosConfig)
+    axios.post(authOptions.url, encodeURIOptions(authOptions.form), authOptions.axiosConfig)
       .then((response: AxiosResponse<AccessTokenResponse> )=> {
+        setAccessToken('reddit', response.data.access_token);
+        // TODO: Only send a boolean that states the access token is set
         res.send(getWindowAccessTokenPosterHTML(response.data.access_token));
       })
       .catch((err: AxiosError) => {
@@ -77,8 +79,9 @@ const logged = async (req: Request, res: Response) => {
   }
 };
 
-const getSavedModels = async (req: CustomRequest<ReqBodyWithItemAfter>, res: Response) => {
-  const { accessToken, after } = req.body;
+const getSavedModels = async (req: CustomRequestWithAT<ReqBodyWithItemAfter>, res: Response) => {
+  const { after } = req.body;
+  const accessToken = req.accessToken;
   try {
     const result = await fetchSavedModels(accessToken, after);
     res.send(result);
