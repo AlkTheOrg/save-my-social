@@ -133,7 +133,7 @@ export const importSpotifyDataIntoSheet = async (
 ): Promise<ImportDataIntoSheetResponse> => {
   const {
     spotify: {
-      playlist: { id: playlistId, lastTrackID },
+      playlist: { id: playlistId, offset },
     },
   } = exportProps;
 
@@ -151,7 +151,7 @@ export const importSpotifyDataIntoSheet = async (
   let sheetName = lastSheetName;
   
   // first time importing this playlist
-  if (!lastTrackID) {
+  if (!offset) {
     if (isImportingForTheFirstTime) {
       // as we create spreadsheet in GoogleController, we rename the default sheet and use it
       await renameSheet(sheetsApi, playlistName, spreadsheetId, firstSheetId);
@@ -161,7 +161,7 @@ export const importSpotifyDataIntoSheet = async (
     sheetName = playlistName;
   }
   
-  const { lastQueried, tracks, next } = await fetchPlaylistTracks(
+  const { offset: newOffset, tracks, next } = await fetchPlaylistTracks(
     spotifyApi,
     playlistId,
     totalNumOfImportedItems,
@@ -185,7 +185,7 @@ export const importSpotifyDataIntoSheet = async (
     spotify: {
       playlist: {
         id: playlistId,
-        lastTrackID: lastQueried,
+        offset: newOffset,
       }
     }
   }

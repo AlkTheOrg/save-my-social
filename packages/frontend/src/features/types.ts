@@ -12,7 +12,7 @@ export type FeaturesOfRedditExport = {
 type SpotifyPlaylistExport = {
   playlist: {
     id: string,
-    lastTrackID: string,
+    offset: number,
   }
 };
 

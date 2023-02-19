@@ -14,7 +14,7 @@ const initialMapping: Record<ActiveExportApps, FeaturesOfSocialAppExport> = {
     spotify: {
       playlist: {
         id: "",
-        lastTrackID: "",
+        offset: 0,
       },
     },
   },

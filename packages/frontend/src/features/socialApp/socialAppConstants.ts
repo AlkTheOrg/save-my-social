@@ -2,8 +2,8 @@ import { ExportFrom, ExportTo } from "../../app/smsSlice";
 
 const appsExportableToMapping: Record<ExportFrom, Partial<ExportTo>[]> = {
   "": [],
-  reddit: ["download", "reddit", "notion", "sheets"],
-  spotify: ["download", "spotify", "notion", "sheets"],
+  reddit: ["download", "notion", "sheets"],
+  spotify: ["download", "notion", "sheets"],
   twitter: [],
   youtube: [],
 };
