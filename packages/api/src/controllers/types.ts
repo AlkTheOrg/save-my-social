@@ -128,14 +128,11 @@ export type FeaturesOfSocialAppExport =
   // | FeaturesOfYoutubeExport
   // | FeaturesOfTwitterExport; // Inactive apps
 
-export interface ReqBodyWithAccessToken {
-  accessToken: string,
-};
-
-export interface ReqBodyWithExportProps_Deprecated extends ReqBodyWithAccessToken {
-  exportProps: FeaturesOfSocialAppExport,
-};
-
 export interface ReqBodyWithExportProps {
   exportProps: FeaturesOfSocialAppExport
 };
+
+export interface ReqBodyOfGetPlaylistTracks {
+  playlistId: string,
+  offset?: number,
+}

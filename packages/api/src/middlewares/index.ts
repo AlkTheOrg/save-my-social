@@ -18,10 +18,10 @@ export const passAppAccessToken = (
   res: Response,
   next: NextFunction
 ): void => {
-  const appType = req.originalUrl.split('/')[1] as ActiveApp;
-  const accessToken = getAccessToken(appType);
+  const appType = req.originalUrl.split('/')[1] as ActiveApp | 'google';
+  const accessToken = getAccessToken(appType === 'google' ? 'sheets' : appType);
   if (!accessToken) {
-    res.status(400).send({ msg: `Access token for ${appType} should be provided.`})
+    res.status(400).send({ msg: `Access token for ${appType} is not set.`})
   } else {
     req.accessToken = accessToken;
     next();

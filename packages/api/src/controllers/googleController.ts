@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
-import { CustomRequest, FeaturesOfRedditExport, FeaturesOfSpotifyExport, ScopeVariables } from '../controllers/types.js';
+import { CustomRequestWithAT, FeaturesOfRedditExport, FeaturesOfSpotifyExport, ScopeVariables } from '../controllers/types.js';
 // import drive from '@googleapis/drive'; //TODO uninstall these packages if there is no way to setCredentials with them
 // import sheets from '@googleapis/sheets';
 // import youtube from '@googleapis/youtube';
@@ -15,6 +15,7 @@ import {
   importRedditDataIntoSheet
 } from '../lib/sheets/index.js';
 import { appsToExportFrom } from '../lib/constants.js';
+import { getAccessToken, setAccessToken } from '../lib/accessTokenManager.js';
 dotenv.config();
 
 const { GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI, GOOGLE_SECRET, GOOGLE_STATE } =
@@ -72,6 +73,8 @@ const logged = async (req: Request, res: Response) => {
       .getToken(code)
       .then((response) => {
         console.log(response.tokens.access_token);
+        setAccessToken('sheets', response.tokens.access_token);
+        // TODO
         res.send(getWindowAccessTokenPosterHTML(response.tokens.access_token));
       })
       .catch((err) => {
@@ -84,19 +87,13 @@ const logged = async (req: Request, res: Response) => {
 };
 
 const importItemsToSheets = async (
-  req: CustomRequest<ReqBodyWithLastEditedSpreadsheetID>,
+  req: CustomRequestWithAT<ReqBodyWithLastEditedSpreadsheetID>,
   res: Response,
 ) => {
   try {
-    const {
-      accessToken,
-      accessTokenSocial,
-      exportProps,
-      lastSpreadsheetID,
-      lastSheetName,
-      totalNumOfImportedItems = 0
-    } = req.body;
-    if (!accessTokenSocial || !exportProps || Object.keys(exportProps).length < 1) {
+    const { exportProps, lastSpreadsheetID, lastSheetName, totalNumOfImportedItems = 0 } = req.body;
+    const accessToken = req.accessToken;
+    if (!exportProps || Object.keys(exportProps).length < 1) {
       sendMsgResponse(res, 400, 'One of the required parameters is missing.');
       return;
     }
@@ -105,6 +102,11 @@ const importItemsToSheets = async (
     const appName = appsToExportFrom.find(app => app === Object.keys(exportProps)[0]);
     if (!appName) {
       sendMsgResponse(res, 400, 'Invalid app name... bruh...');
+      return;
+    }
+    const accessTokenSocial = getAccessToken(appName);
+    if (!accessTokenSocial) {
+      sendMsgResponse(res, 400, `Access token for ${appName} is not found.`);
       return;
     }
     const featureKey = getAppExportFeatureKey(exportProps, appName);
