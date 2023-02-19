@@ -14,11 +14,13 @@ import {
   AccessTokenResponse,
   CustomRequestWithAT,
   FeaturesOfRedditExport,
+  FeaturesOfSpotifyExport,
   OTTReqNotionOptions,
 } from './types.js';
 import {
   createDB,
   createPagesFromRedditExportProps,
+  createPagesFromSpotifyExportProps,
   getAuthOptions,
   getLastEditedPage,
   retrieveDB,
@@ -149,10 +151,14 @@ const importItems = async (
     }
 
     const response = {
+      dbID: db.id,
+      dbURL: db.url,
       numOfImportedItems: 0,
       newExportProps: {},
+      totalNumOfItems: -1, // -1 means unknown
     };
 
+    // each row in a Notion db is a Page in Notion. Hence the function names are plural
     switch (appName) {
       case 'reddit': {
         const { newExportProps, numOfImportedItems } =
@@ -164,6 +170,27 @@ const importItems = async (
           );
         response.newExportProps = newExportProps;
         response.numOfImportedItems = numOfImportedItems;
+        if (numOfImportedItems < 100)
+          updateDBTitle(notion, `${appName} ${featureKey} - Completed`, db.id);
+        break;
+      }
+
+      case 'spotify': {
+        const { newExportProps, numOfImportedItems, dbID, playlistName, totalNumOfTracks } =
+          await createPagesFromSpotifyExportProps(
+            notion,
+            accessTokenSocial,
+            db.id,
+            exportProps as FeaturesOfSpotifyExport,
+          );
+        response.newExportProps = newExportProps;
+        response.numOfImportedItems = numOfImportedItems;
+        response.dbID = dbID;
+        response.dbURL = dbID ? response.dbURL : '';
+        response.totalNumOfItems = totalNumOfTracks;
+        if (numOfImportedItems < 100) {
+          updateDBTitle(notion, playlistName, db.id);
+        }
         break;
       }
 
@@ -172,14 +199,12 @@ const importItems = async (
         return;
     }
 
-    if (response.numOfImportedItems < 100)
-      updateDBTitle(notion, `${appName} ${featureKey} - Completed`, db.id);
-
     res.send({
-      dbURL: db.url,
-      dbID: db.id,
+      dbURL: response.dbURL,
+      dbID: response.dbID,
       numOfImportedItems: response.numOfImportedItems,
       newExportProps: response.newExportProps,
+      totalNumOfItems: response.totalNumOfItems
     });
   } catch (err) {
     console.log(err);

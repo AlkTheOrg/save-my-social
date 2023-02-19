@@ -1,14 +1,18 @@
+import SpotifyWebApi from 'spotify-web-api-node';
 import { Client } from "@notionhq/client";
 import {
   AccessTokenReqConfig,
   FeaturesOfRedditExport,
+  FeaturesOfSpotifyExport,
 } from "../../controllers/types.js";
 import { fetchSavedModels } from "../reddit/index.js";
 import { ProcessedSavedChildren } from "../reddit/types.js";
+import { fetchPlaylistTracks, getPlaylist } from "../spotify/index.js";
 import DBCreator from "./dbCreator.js";
 import PageCreator,
-{ createRedditPropsForDBPage } from "./pageCreator.js";
-import { CreateDBPropArguments, CreatePagesFromRedditExportPropsResponse } from "./types.js";
+{ createRedditPropsForDBPage, createSpotifyTrackPropsForDBPage } from "./pageCreator.js";
+import { CreateDBPropArguments, CreatePagesFromRedditExportPropsResponse, CreatePagesFromSpotifyExportPropsResponse } from "./types.js";
+import { MappedTrackItem } from '../spotify/types.js';
 
 export const getAuthOptions = (
   code: string,
@@ -103,6 +107,59 @@ export const createPagesFromRedditExportProps = async (
       reddit: {
         saved: {
           lastItemID: lastQueried
+        }
+      }
+    }
+  };
+};
+
+const createPagesFromSpotifyTracks = async (
+  notion: Client,
+  dbID: string,
+  tracks: MappedTrackItem[]
+) => {
+  const pageCreator = PageCreator();
+  return Promise.all(
+    tracks.map(async (track) =>
+      pageCreator.createDBPage(
+        notion,
+        dbID,
+        createSpotifyTrackPropsForDBPage(track)
+      )
+    )
+  );
+};
+
+export const createPagesFromSpotifyExportProps = async (
+  notion: Client,
+  spotifyAccessToken: string,
+  dbID: string,
+  exportProps: FeaturesOfSpotifyExport,
+): CreatePagesFromSpotifyExportPropsResponse => {
+  const { spotify: { playlist: { id, offset }}} = exportProps as FeaturesOfSpotifyExport;
+  const spotifyApi = new SpotifyWebApi();
+  spotifyApi.setAccessToken(spotifyAccessToken);
+
+  const {
+    body: {
+      name: playlistName,
+      tracks: { total: totalNumOfTracks },
+    },
+  } = await getPlaylist(spotifyApi, (exportProps as FeaturesOfSpotifyExport).spotify.playlist.id);
+  const { tracks, newOffset } = await fetchPlaylistTracks(spotifyApi, id, offset);
+
+  await createPagesFromSpotifyTracks(notion, dbID, tracks);
+
+  return {
+    numOfImportedItems: tracks.length,
+    dbID: tracks.length < 100 ? '' : dbID, // resetting db id => switch to next playlist and create a new db for it
+    playlistName,
+    totalNumOfTracks,
+    newExportProps: {
+      spotify: {
+        playlist: {
+          id,
+          offset: newOffset
         }
       }
     }

@@ -1,4 +1,4 @@
-import { ExportFrom, FeaturesOfRedditExport, ReqBodyWithExportProps } from "../../controllers/types.js";
+import { ExportFrom, FeaturesOfRedditExport, FeaturesOfSpotifyExport, ReqBodyWithExportProps } from "../../controllers/types.js";
 
 export type EmptyObject = Record<string, never>;
 
@@ -173,4 +173,12 @@ export type CreateDBPagePropArguments =
 export type CreatePagesFromRedditExportPropsResponse = Promise<{
   numOfImportedItems: number,
   newExportProps: FeaturesOfRedditExport,
+}>
+
+export type CreatePagesFromSpotifyExportPropsResponse = Promise<{
+  numOfImportedItems: number,
+  newExportProps: FeaturesOfSpotifyExport,
+  dbID: string,
+  playlistName: string,
+  totalNumOfTracks: number,
 }>

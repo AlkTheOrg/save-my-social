@@ -140,7 +140,63 @@ export const socialAppToDBPropsMapping: SocialAppToDBPropsMapping = {
   },
   spotify: {
     spotify_playlist: {
-      properties: []
+      properties: [
+        {
+          type: 'rich_text',
+          key: 'ID',
+          args: undefined,
+        },
+        {
+          type: 'title',
+          key: 'Name',
+          args: undefined,
+        },
+        {
+          type: 'rich_text',
+          key: 'Artists',
+          args: undefined,
+        },
+        {
+          type: 'rich_text',
+          key: 'Album',
+          args: undefined,
+        },
+        {
+          type: 'url',
+          key: 'Link',
+          args: undefined,
+        },
+        {
+          type: 'rich_text',
+          key: 'Duration',
+          args: undefined,
+        },
+        {
+          type: 'number',
+          key: 'Popularity',
+          args: undefined,
+        },
+        {
+          type: 'checkbox',
+          key: 'Explicit',
+          args: undefined,
+        },
+        {
+          type: 'rich_text',
+          key: 'Preview URL',
+          args: undefined,
+        },
+        {
+          type: 'rich_text',
+          key: 'Album Cover',
+          args: undefined,
+        },
+        {
+          type: 'rich_text',
+          key: 'Added At',
+          args: undefined,
+        }
+      ]
     }
   },
   twitter: {

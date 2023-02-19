@@ -21,6 +21,6 @@ export type MappedTrackItem = {
 
 export type FetchPlaylistTracksReponse = {
   tracks: Array<MappedTrackItem>,
-  offset: number,
+  newOffset: number,
   next: string | null,
 }

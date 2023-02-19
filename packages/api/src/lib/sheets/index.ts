@@ -161,7 +161,7 @@ export const importSpotifyDataIntoSheet = async (
     sheetName = playlistName;
   }
   
-  const { offset: newOffset, tracks, next } = await fetchPlaylistTracks(
+  const { newOffset, tracks, next } = await fetchPlaylistTracks(
     spotifyApi,
     playlistId,
     totalNumOfImportedItems,

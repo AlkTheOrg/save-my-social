@@ -59,7 +59,7 @@ export type GetPlaylistTracksResponse = {
 
 export type FetchPlaylistTracksReponse = {
   tracks: Array<MappedTrackItem>,
-  offset: number,
+  newOffset: number,
   next: string | null,
 }
 
