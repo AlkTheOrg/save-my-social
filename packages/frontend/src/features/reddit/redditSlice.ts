@@ -13,7 +13,6 @@ const initialState: RedditState = {
 
 export const getAuthURL = createAsyncThunk("reddit/authURL", async () => {
   const response = await fetchAuthURL();
-  console.log("fetchAuthUrl:", response.data);
   return response.data.url;
 });
 
@@ -23,9 +22,7 @@ export const getSavedModels = createAsyncThunk<
   ThunkAPI
 >(
   "reddit/getSavedModels",
-  async (_, { getState, dispatch }) => {
-    const { sms: { tokens: [toExport] } } = getState();
-
+  async (_, { dispatch }) => {
     const recursivelyCollectItems = async (
       items: SavedModel[],
       lastItemID = "",
@@ -37,7 +34,7 @@ export const getSavedModels = createAsyncThunk<
         data: {
           models, lastQueried,
         },
-      } = await fetchSavedModels(toExport, lastItemID);
+      } = await fetchSavedModels(lastItemID);
 
       items.push(...models);
 

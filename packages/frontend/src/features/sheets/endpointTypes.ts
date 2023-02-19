@@ -6,8 +6,6 @@ export type FetchAuthURLResponse = {
 
 export type ImportItemsIntoSheetsPayload = {
   exportProps: FeaturesOfSocialAppExport,
-  accessToken: string,
-  accessTokenSocial: string,
   lastSpreadsheetID?: string,
   lastSheetName?: string,
   totalNumOfImportedItems?: number

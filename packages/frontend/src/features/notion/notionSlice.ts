@@ -24,13 +24,7 @@ export const importItems = createAsyncThunk<
   ThunkAPI
 >(
   "notion/importItems",
-  async (initialExportProps, { getState, dispatch }) => {
-    const {
-      sms: {
-        tokens: [toExport, toImport],
-      },
-    } = getState();
-
+  async (initialExportProps, { dispatch }) => {
     let importedDBURL = "";
 
     const recursivelyImportToNotion = async (
@@ -43,8 +37,6 @@ export const importItems = createAsyncThunk<
       ));
 
       const payload: ImportItemsToNotionPayload = {
-        accessToken: toImport,
-        accessTokenSocial: toExport,
         lastEditedDBID,
         exportProps,
       };

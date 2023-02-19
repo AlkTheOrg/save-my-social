@@ -15,8 +15,6 @@ export const getAuthURL = createAsyncThunk("sheets/authURL", async () => {
 });
 
 const recursivelyImportToSheets = async (
-  accessTokenToExport: string,
-  accessTokenToImport: string,
   exportProps: FeaturesOfSocialAppExport,
   beforeImport: (totalFetchedAmount: number) => void,
   afterImport: (totalFetchedAmount: number, numOfImportedItems: number) => void,
@@ -27,8 +25,6 @@ const recursivelyImportToSheets = async (
   beforeImport(totalFetchedAmount);
 
   const payload = {
-    accessToken: accessTokenToImport,
-    accessTokenSocial: accessTokenToExport,
     exportProps,
     lastSpreadsheetID,
     lastSheetName,
@@ -50,8 +46,6 @@ const recursivelyImportToSheets = async (
   // if (lastQueriedItem)
   if (numOfImportedItems === 100) {
     const res = await recursivelyImportToSheets(
-      accessTokenToExport,
-      accessTokenToImport,
       newExportProps,
       beforeImport,
       afterImport,
@@ -74,13 +68,7 @@ export const importItems = createAsyncThunk<
   ThunkAPI
 >(
   "sheets/importItems",
-  async (initialExportProps, { getState, dispatch }) => {
-    const {
-      sms: {
-        tokens: [toExport, toImport],
-      },
-    } = getState();
-
+  async (initialExportProps, { dispatch }) => {
     const beforeImport = (totalFetchedAmount: number) => dispatch(setMessage(
       `Importing items from ${totalFetchedAmount} to ${totalFetchedAmount + 100}`,
     ));
@@ -92,8 +80,6 @@ export const importItems = createAsyncThunk<
       ));
 
     const res = await recursivelyImportToSheets(
-      toExport,
-      toImport,
       initialExportProps,
       beforeImport,
       afterImport,
@@ -111,14 +97,8 @@ export const importSpotifyPlaylistsToSheets = createAsyncThunk<
   ThunkAPI
 >(
   "sheets/importSpotifyPlaylistsToSheets",
-  async (initialExportProps, { getState, dispatch }) => {
-    const {
-      sms: {
-        tokens: [toExport, toImport],
-      },
-    } = getState();
-
-    const { data: playlistIds } = await fetchPlaylists(toExport);
+  async (initialExportProps, { dispatch }) => {
+    const { data: playlistIds } = await fetchPlaylists();
 
     const beforeImport = (totalFetchedAmount: number) => dispatch(setMessage(
       `Importing items from ${totalFetchedAmount} to ${totalFetchedAmount + 100}`,
@@ -146,8 +126,6 @@ export const importSpotifyPlaylistsToSheets = createAsyncThunk<
 
       // eslint-disable-next-line no-await-in-loop
       const res = await recursivelyImportToSheets(
-        toExport,
-        toImport,
         exportProps,
         beforeImport,
         afterImport,

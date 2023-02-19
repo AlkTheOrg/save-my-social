@@ -20,7 +20,6 @@ export const getAuthURL = createAsyncThunk("spotify/authURL", async () => {
 });
 
 const recursivelyCollectTracks = async (
-  accessToken: string,
   tracks: MappedTrackItem[],
   playlistId: string,
   beforeFetch: (tracksLen: number) => void,
@@ -31,14 +30,13 @@ const recursivelyCollectTracks = async (
 
   const {
     data: { tracks: fetchedTracks },
-  } = await fetchPlaylistTracks(accessToken, playlistId, offset);
+  } = await fetchPlaylistTracks(playlistId, offset);
 
   tracks.push(...fetchedTracks);
 
   // if there may be more to fetch
   if (fetchedTracks.length === 100) {
     await recursivelyCollectTracks(
-      accessToken,
       tracks,
       playlistId,
       beforeFetch,
@@ -52,13 +50,8 @@ export const getPlaylists = createAsyncThunk<
   { url: string; fileName: string },
   void,
   ThunkAPI
->("spotify/getPlaylists", async (_, { getState, dispatch }) => {
-  const {
-    sms: {
-      tokens: [exportFrom],
-    },
-  } = getState();
-  const { data: playlistIds } = await fetchPlaylists(exportFrom);
+>("spotify/getPlaylists", async (_, { dispatch }) => {
+  const { data: playlistIds } = await fetchPlaylists();
 
   const beforeFetch = (tracksLen: number) =>
     dispatch(
@@ -81,7 +74,7 @@ export const getPlaylists = createAsyncThunk<
     const id = playlistIds[i];
     const tracks = [] as MappedTrackItem[];
     // eslint-disable-next-line no-await-in-loop
-    await recursivelyCollectTracks(exportFrom, tracks, id, beforeFetch, afterFetch);
+    await recursivelyCollectTracks(tracks, id, beforeFetch, afterFetch);
     playlists.push({ [id]: tracks });
   }
 

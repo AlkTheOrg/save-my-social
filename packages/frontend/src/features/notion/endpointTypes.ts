@@ -9,7 +9,5 @@ export type ImportItemsToNotionResponse = {
 
 export type ImportItemsToNotionPayload = {
   exportProps: FeaturesOfSocialAppExport,
-  accessToken: string,
-  accessTokenSocial: string,
   lastEditedDBID: string,
 };
