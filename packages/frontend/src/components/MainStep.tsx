@@ -15,7 +15,7 @@ const MainStep = (): JSX.Element => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useAppDispatch();
   const {
-    exportFrom, exportTo, isLoading, isError, message, tokens,
+    exportFrom, exportTo, isLoading, isError, message, areTokensSet,
   } = useAppSelector(
     (state) => state.sms,
   );
@@ -61,7 +61,7 @@ const MainStep = (): JSX.Element => {
                 logoPath={getAppLogoPath(exportTo)}
                 name={exportTo || "Unselected"}
                 onClick={handleSocialAppBtnClick}
-                isDisabled={!tokens[0]}
+                isDisabled={!areTokensSet[0]}
               />
             </div>
           </div>

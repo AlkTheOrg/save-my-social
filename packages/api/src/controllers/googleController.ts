@@ -6,7 +6,7 @@ import { CustomRequestWithAT, FeaturesOfRedditExport, FeaturesOfSpotifyExport, S
 // import youtube from '@googleapis/youtube';
 import { google } from "googleapis";
 import { getAppExportFeatureKey, getWindowErrorPosterHTML, sendMsgResponse } from './../lib/index.js';
-import { getWindowAccessTokenPosterHTML } from '../lib/index.js';
+import { getWindowAccessTokenInfoPosterHTML } from '../lib/index.js';
 import { ImportDataIntoSheetResponse, ReqBodyWithLastEditedSpreadsheetID } from '../lib/sheets/types.js';
 import {
   createSpreadSheet,
@@ -72,10 +72,8 @@ const logged = async (req: Request, res: Response) => {
     oauth2Client
       .getToken(code)
       .then((response) => {
-        console.log(response.tokens.access_token);
         setAccessToken('sheets', response.tokens.access_token);
-        // TODO
-        res.send(getWindowAccessTokenPosterHTML(response.tokens.access_token));
+        res.send(getWindowAccessTokenInfoPosterHTML(!!response.tokens.access_token));
       })
       .catch((err) => {
         console.log(err);

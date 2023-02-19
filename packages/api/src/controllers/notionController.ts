@@ -6,7 +6,7 @@ import { Client } from '@notionhq/client';
 import {
   encodeURIOptions,
   getAppExportFeatureKey,
-  getWindowAccessTokenPosterHTML,
+  getWindowAccessTokenInfoPosterHTML,
   getWindowErrorPosterHTML,
   sendMsgResponse,
 } from '../lib/index.js';
@@ -83,9 +83,8 @@ const logged = async (req: Request, res: Response) => {
       if (response.status >= 300) {
         res.send(getWindowErrorPosterHTML('Error while getting access token. Status: ' + response.status));
       } else {
-        // TODO
         setAccessToken('notion', response.data.access_token);
-        res.send(getWindowAccessTokenPosterHTML(response.data.access_token));
+        res.send(getWindowAccessTokenInfoPosterHTML(!!response.data.access_token));
       }
     })
       .catch((error: AxiosError) => {

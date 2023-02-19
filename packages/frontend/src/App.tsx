@@ -33,7 +33,7 @@ function App(): JSX.Element {
 
     if (message.type === "accessToken") {
       console.log("RETURNED MESSAGE:", message);
-      dispatch(setToken(message.accessToken));
+      dispatch(setToken(message.accessTokenIsSet));
     } else if (message.type === "closeOrder") {
       console.log("close order");
       onWindowClose();

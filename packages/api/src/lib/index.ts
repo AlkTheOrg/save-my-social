@@ -33,13 +33,13 @@ export const getWindowMessagePosterHTML = (
 </html>
 `;
 
-export const getWindowAccessTokenPosterHTML = (
-  accessToken: string,
+export const getWindowAccessTokenInfoPosterHTML = (
+  accessTokenIsSet: boolean,
   targetOrigin = '*',
 ) =>
   getWindowMessagePosterHTML(
     {
-      accessToken,
+      accessTokenIsSet: String(accessTokenIsSet),
       source: 'save-my-social',
       type: 'accessToken',
     },

@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import { default as axios, AxiosResponse, AxiosError } from 'axios';
 import { Request, Response } from 'express';
-import { concatWithEmptySpace, encodeURIOptions, getWindowAccessTokenPosterHTML, getWindowErrorPosterHTML } from '../lib/index.js';
+import { concatWithEmptySpace, encodeURIOptions, getWindowAccessTokenInfoPosterHTML, getWindowErrorPosterHTML } from '../lib/index.js';
 import { fetchPlaylistTracks, getPlaylistIDs } from '../lib/spotify/index.js';
 import { 
   AccessTokenReqConfig,
@@ -90,9 +90,8 @@ const logged = async (req: Request, res: Response) => {
       authOptions.axiosConfig,
     )
       .then((response: AxiosResponse<AccessTokenResponse>) => {
-        // TODO
         setAccessToken('spotify', response.data.access_token);
-        res.send(getWindowAccessTokenPosterHTML(response.data.access_token));
+        res.send(getWindowAccessTokenInfoPosterHTML(!!response.data.access_token));
       })
       .catch((error: AxiosError) => {
         console.log(error);

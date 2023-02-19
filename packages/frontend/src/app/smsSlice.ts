@@ -45,7 +45,7 @@ export interface SmsState {
   exportTo: ExportTo;
   apps: SmsApp[];
   activeApps: SmsApp[];
-  tokens: [toExport: string, toImport: string];
+  areTokensSet: [toExport: boolean, toImport: boolean];
   isLoading: boolean;
   isError: boolean;
   message: string;
@@ -79,7 +79,7 @@ const initialState: SmsState = {
   exportTo: "",
   apps: allApps,
   activeApps: appsToExportFrom,
-  tokens: ["", ""],
+  areTokensSet: [false, false],
   isLoading: false,
   isError: false,
   message: "",
@@ -101,8 +101,8 @@ export const smsSlice = createSlice({
       state.exportTo = action.payload;
     },
     setToken: (state, action: PayloadAction<string>) => {
-      const index = state.tokens[0] ? 1 : 0;
-      state.tokens[index] = action.payload;
+      const index = state.areTokensSet[0] ? 1 : 0;
+      state.areTokensSet[index] = action.payload === "true";
     },
     setActiveApps: (state, action: PayloadAction<SmsApp[]>) => {
       state.activeApps = action.payload;

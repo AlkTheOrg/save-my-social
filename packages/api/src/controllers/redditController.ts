@@ -5,7 +5,7 @@ import { setAccessToken } from '../lib/accessTokenManager.js';
 import {
   concatWithEmptySpace,
   encodeURIOptions,
-  getWindowAccessTokenPosterHTML,
+  getWindowAccessTokenInfoPosterHTML,
   getWindowErrorPosterHTML,
 } from '../lib/index.js';
 import { fetchSavedModels, getAuthOptions } from '../lib/reddit/index.js';
@@ -69,8 +69,7 @@ const logged = async (req: Request, res: Response) => {
     axios.post(authOptions.url, encodeURIOptions(authOptions.form), authOptions.axiosConfig)
       .then((response: AxiosResponse<AccessTokenResponse> )=> {
         setAccessToken('reddit', response.data.access_token);
-        // TODO: Only send a boolean that states the access token is set
-        res.send(getWindowAccessTokenPosterHTML(response.data.access_token));
+        res.send(getWindowAccessTokenInfoPosterHTML(!!response.data.access_token));
       })
       .catch((err: AxiosError) => {
         console.log(err);

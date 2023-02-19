@@ -9,13 +9,13 @@ type Props = {
   isDisabled?: boolean;
 };
 const SocialApps: FC<Props> = ({ onAppClick, isDisabled }) => {
-  const { activeApps, tokens, exportFrom } = useAppSelector(
+  const { activeApps, areTokensSet, exportFrom } = useAppSelector(
     (state) => state.sms,
   );
 
   return (
     <div className="social-app-container">
-      {(!tokens[0]
+      {(!areTokensSet[0]
         ? activeApps
         : getExportableTargetsOfCurApp(exportFrom)
       ).map((appName) => (
