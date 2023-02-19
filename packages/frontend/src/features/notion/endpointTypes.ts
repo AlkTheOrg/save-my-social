@@ -5,10 +5,12 @@ export type ImportItemsToNotionResponse = {
   dbID: string,
   numOfImportedItems: number,
   newExportProps: FeaturesOfSocialAppExport,
-  totalNumOfImportedItems: number,
+  totalNumOfItems: number,
+  lastEditedPageId?: string,
 };
 
 export type ImportItemsToNotionPayload = {
   exportProps: FeaturesOfSocialAppExport,
   lastEditedDBID: string,
+  lastEditedPageId?: string,
 };

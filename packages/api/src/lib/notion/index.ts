@@ -35,11 +35,11 @@ export const getAuthOptions = (
   },
 });
 
-export const getLastEditedPage = async (notion: Client) => {
+export const getLastEditedPage = async (notion: Client, query = '') => {
   const {
     results: [page],
   } = await notion.search({
-    query: '',
+    query,
     sort: {
       direction: 'descending',
       timestamp: 'last_edited_time',
@@ -67,6 +67,9 @@ export const updateDBTitle = (notion: Client, title: string, dbID: string) => {
 
 export const retrieveDB = (notion: Client, dbID: string) =>
   notion.databases.retrieve({ database_id: dbID });
+
+export const retrievePage = (notion: Client, pageId: string) =>
+  notion.pages.retrieve({ page_id: pageId });
 
 export const createDB = async (
   notion: Client,
@@ -152,7 +155,6 @@ export const createPagesFromSpotifyExportProps = async (
 
   return {
     numOfImportedItems: tracks.length,
-    dbID: tracks.length < 100 ? '' : dbID, // resetting db id => switch to next playlist and create a new db for it
     playlistName,
     totalNumOfTracks,
     newExportProps: {

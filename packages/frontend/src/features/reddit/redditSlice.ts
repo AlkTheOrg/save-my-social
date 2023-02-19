@@ -1,15 +1,10 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setMessage } from "../../app/smsSlice";
 import { ThunkAPI } from "../../app/store";
 import { prepareBlobURL } from "../../util";
 import { SavedModel } from "./endpointTypes";
 import { fetchAuthURL, fetchSavedModels } from "./redditApiService";
-import { GetSavedModelsThunkResponse, RedditState } from "./types";
-
-const initialState: RedditState = {
-  name: "reddit",
-  selections: ["saved"],
-};
+import { GetSavedModelsThunkResponse } from "./types";
 
 export const getAuthURL = createAsyncThunk("reddit/authURL", async () => {
   const response = await fetchAuthURL();
@@ -58,11 +53,3 @@ export const getSavedModels = createAsyncThunk<
     return { url, fileName };
   },
 );
-
-export const redditSlice = createSlice({
-  name: "reddit",
-  initialState,
-  reducers: {},
-});
-
-export default redditSlice.reducer;

@@ -108,6 +108,7 @@ export type CreateDBPropArguments =
 // body of /importItems endpoint
 export interface ReqBodyWithLastEditedPageID extends ReqBodyWithExportProps {
   lastEditedDBID: string,
+  lastEditedPageId?: string,
 };
 
 export type SocialAppToDBPropsMapping = {
@@ -178,7 +179,6 @@ export type CreatePagesFromRedditExportPropsResponse = Promise<{
 export type CreatePagesFromSpotifyExportPropsResponse = Promise<{
   numOfImportedItems: number,
   newExportProps: FeaturesOfSpotifyExport,
-  dbID: string,
   playlistName: string,
   totalNumOfTracks: number,
 }>

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setMessage } from "../../app/smsSlice";
 import { ThunkAPI } from "../../app/store";
 import { prepareBlobURL } from "../../util";
@@ -8,11 +8,6 @@ import {
   fetchPlaylists,
   fetchPlaylistTracks,
 } from "./spotifyApiService";
-
-const initialState = {
-  name: "spotify",
-  selections: ["playlist"],
-};
 
 export const getAuthURL = createAsyncThunk("spotify/authURL", async () => {
   const response = await fetchAuthURL();
@@ -83,11 +78,3 @@ export const getPlaylists = createAsyncThunk<
 
   return { url, fileName };
 });
-
-export const redditSlice = createSlice({
-  name: "spotify",
-  initialState,
-  reducers: {},
-});
-
-export default redditSlice.reducer;

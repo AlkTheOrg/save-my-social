@@ -7,6 +7,7 @@ import {
 import {
   getAuthURL as getNotionAuthURL,
   importItems as importItemsToNotion,
+  importSpotifyPlaylistsToNotion,
 } from "../features/notion/notionSlice";
 import {
   getAuthURL as getSheetsAuthURL,
@@ -256,6 +257,21 @@ export const smsSlice = createSlice({
         state.finalURL = payload;
       })
       .addCase(importSpotifyPlaylistsToSheets.rejected, (state, result) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = result.error.message || "Something went wrong";
+        toast.error(state.message);
+      })
+      .addCase(importSpotifyPlaylistsToNotion.pending, (state) => {
+        state.isError = false;
+        state.isLoading = true;
+      })
+      .addCase(importSpotifyPlaylistsToNotion.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.curStep += 1;
+        state.finalURL = payload;
+      })
+      .addCase(importSpotifyPlaylistsToNotion.rejected, (state, result) => {
         state.isLoading = false;
         state.isError = true;
         state.message = result.error.message || "Something went wrong";

@@ -1,7 +1,10 @@
 import { AsyncThunkAction } from "@reduxjs/toolkit";
 import { ExportFrom, ExportTo } from "../app/smsSlice";
 import { ThunkAPI } from "../app/store";
-import { importItems as importItemsToNotion } from "../features/notion/notionSlice";
+import {
+  importItems as importItemsToNotion,
+  importSpotifyPlaylistsToNotion,
+} from "../features/notion/notionSlice";
 import {
   importItems as importItemsToSheets,
   importSpotifyPlaylistsToSheets,
@@ -43,5 +46,11 @@ export const getExportThunkAction = (
     return importItemsToSheets(initialExportProps);
   }
   // TODO: Whenn all exports are supported, abstract here to a mapping obj
+  if (exportTo === "notion" && exportFrom === "spotify") {
+    return importSpotifyPlaylistsToNotion(
+      initialExportProps as FeaturesOfSpotifyExport,
+    );
+  }
+  // exportTo === "notion"
   return importItemsToNotion(initialExportProps);
 };

@@ -1,13 +1,9 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setMessage } from "../../app/smsSlice";
 import { ThunkAPI } from "../../app/store";
 import { fetchPlaylists } from "../spotify/spotifyApiService";
 import { FeaturesOfSocialAppExport, FeaturesOfSpotifyExport } from "../types";
 import { fetchAuthURL, importItemsToSheets } from "./sheetApiService";
-
-const initialState: { name: string } = {
-  name: "sheets",
-};
 
 export const getAuthURL = createAsyncThunk("sheets/authURL", async () => {
   const response = await fetchAuthURL();
@@ -138,11 +134,3 @@ export const importSpotifyPlaylistsToSheets = createAsyncThunk<
     return spreadsheetURL;
   },
 );
-
-export const sheetsSlice = createSlice({
-  name: "sheets",
-  initialState,
-  reducers: {},
-});
-
-export default sheetsSlice.reducer;

@@ -1,3 +1,4 @@
+import { retrievePage } from './../lib/notion/index.js';
 import { getAccessToken, setAccessToken } from './../lib/accessTokenManager.js';
 import { default as axios, AxiosError, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
@@ -101,7 +102,8 @@ const importItems = async (
   res: Response,
 ) => {
   try {
-    const { lastEditedDBID,  exportProps } = req.body;
+    const { lastEditedDBID, exportProps } = req.body;
+    let lastEditedPageId = req.body.lastEditedPageId;
     const accessToken = req.accessToken;
     if (!exportProps || Object.keys(exportProps).length < 1) {
       sendMsgResponse(res, 400, 'One of the required parameters is missing.');
@@ -137,7 +139,10 @@ const importItems = async (
       db = await retrieveDB(notion, lastEditedDBID);
     } else {
       // get the last edited page and create a new db
-      const lastEditedPage = await getLastEditedPage(notion);
+      const lastEditedPage = lastEditedPageId
+        ? await retrievePage(notion, lastEditedPageId)
+        : await getLastEditedPage(notion);
+      lastEditedPageId = lastEditedPage.id;
       if (!lastEditedPage) {
         sendMsgResponse(res, 404, 'You need to give access to at least one notion page.');
         return;
@@ -176,7 +181,7 @@ const importItems = async (
       }
 
       case 'spotify': {
-        const { newExportProps, numOfImportedItems, dbID, playlistName, totalNumOfTracks } =
+        const { newExportProps, numOfImportedItems, playlistName, totalNumOfTracks } =
           await createPagesFromSpotifyExportProps(
             notion,
             accessTokenSocial,
@@ -185,8 +190,6 @@ const importItems = async (
           );
         response.newExportProps = newExportProps;
         response.numOfImportedItems = numOfImportedItems;
-        response.dbID = dbID;
-        response.dbURL = dbID ? response.dbURL : '';
         response.totalNumOfItems = totalNumOfTracks;
         if (numOfImportedItems < 100) {
           updateDBTitle(notion, playlistName, db.id);
@@ -204,7 +207,8 @@ const importItems = async (
       dbID: response.dbID,
       numOfImportedItems: response.numOfImportedItems,
       newExportProps: response.newExportProps,
-      totalNumOfItems: response.totalNumOfItems
+      totalNumOfItems: response.totalNumOfItems,
+      lastEditedPageId,
     });
   } catch (err) {
     console.log(err);
