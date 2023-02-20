@@ -8,10 +8,10 @@ import {
   setExportTo,
 } from "../../app/smsSlice";
 import SocialAppBtn from "../../components/SocialAppBtn";
-import { getAuthURL as getRedditAuthURL } from "../reddit/redditSlice";
-import { getAuthURL as getNotionAuthURL } from "../notion/notionSlice";
-import { getAuthURL as getSheetsAuthURL } from "../sheets/sheetsSlice";
-import { getAuthURL as getSpotifyAuthURL } from "../spotify/spotifySlice";
+import { getAuthURL as getRedditAuthURL } from "../reddit";
+import { getAuthURL as getNotionAuthURL } from "../notion";
+import { getAuthURL as getSheetsAuthURL } from "../sheets";
+import { getAuthURL as getSpotifyAuthURL } from "../spotify";
 
 type Props = {
   appName: SmsApp;

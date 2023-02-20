@@ -3,21 +3,21 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   getAuthURL as getRedditAuthURL,
   getSavedModels,
-} from "../features/reddit/redditSlice";
+} from "../features/reddit";
 import {
   getAuthURL as getNotionAuthURL,
   importItems as importItemsToNotion,
   importSpotifyPlaylistsToNotion,
-} from "../features/notion/notionSlice";
+} from "../features/notion";
 import {
   getAuthURL as getSheetsAuthURL,
   importItems as importItemsToSheets,
   importSpotifyPlaylistsToSheets,
-} from "../features/sheets/sheetsSlice";
+} from "../features/sheets";
 import {
   getAuthURL as getSpotifyAuthURL,
   getPlaylists,
-} from "../features/spotify/spotifySlice";
+} from "../features/spotify";
 import {
   Steps,
   stepsByOrder,

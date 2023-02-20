@@ -4,13 +4,13 @@ import { ThunkAPI } from "../app/store";
 import {
   importItems as importItemsToNotion,
   importSpotifyPlaylistsToNotion,
-} from "../features/notion/notionSlice";
+} from "../features/notion";
 import {
   importItems as importItemsToSheets,
   importSpotifyPlaylistsToSheets,
-} from "../features/sheets/sheetsSlice";
-import { getSavedModels } from "../features/reddit/redditSlice";
-import { getPlaylists } from "../features/spotify/spotifySlice";
+} from "../features/sheets";
+import { getSavedModels } from "../features/reddit";
+import { getPlaylists } from "../features/spotify";
 import { GetSavedModelsThunkResponse } from "../features/reddit/types";
 import { FeaturesOfSocialAppExport, FeaturesOfSpotifyExport } from "../features/types";
 
