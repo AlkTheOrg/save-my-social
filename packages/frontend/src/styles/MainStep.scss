@@ -29,6 +29,7 @@
         }
         button {
           @include socialApp(250px, 250px);
+          transition: all .5s;
           position: relative;
 
           img, h3 {
@@ -42,6 +43,9 @@
             bottom: 46px;
           }
           &:disabled { cursor: default; }
+          &.unselected {
+            border-radius: 50%;
+          }
         }
       }
     }

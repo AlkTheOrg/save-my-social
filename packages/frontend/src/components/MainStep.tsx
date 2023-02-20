@@ -9,7 +9,7 @@ import Modal from "./Modal";
 import SocialApps from "./SocialApps";
 import SocialAppBtn from "./SocialAppBtn";
 
-const getAppLogoPath = (type?: string) => `logos/${type || "qmark"}.svg`;
+const getAppLogoPath = (type?: string) => `logos/${type || "plus"}.svg`;
 
 const MainStep = (): JSX.Element => {
   const [isModalOpen, setIsModalOpen] = useState(false);

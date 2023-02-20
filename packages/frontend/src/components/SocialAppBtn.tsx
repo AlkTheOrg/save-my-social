@@ -12,7 +12,7 @@ const SocialAppBtn: (props: Props) => JSX.Element = ({
   onClick,
   name,
   logoPath,
-  buttonClass = "",
+  buttonClass = name === "Unselected" ? "unselected" : "",
   isDisabled = false,
 }) => {
   const handleKeyUp = (e: KeyboardEvent<HTMLButtonElement>): void => {
@@ -29,7 +29,7 @@ const SocialAppBtn: (props: Props) => JSX.Element = ({
       aria-label={`${name} button`}
     >
       <img src={logoPath} aria-hidden alt={`${name} logo`} />
-      <h3>{name}</h3>
+      <h3>{name === "Unselected" ? "Select" : name}</h3>
     </button>
   );
 };
