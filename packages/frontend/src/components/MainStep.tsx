@@ -51,17 +51,19 @@ const MainStep = (): JSX.Element => {
               <h4>From</h4>
               <SocialAppBtn
                 logoPath={getAppLogoPath(exportFrom)}
-                name={exportFrom || "Unselected"}
+                text={exportFrom || "Unselected"}
                 onClick={handleSocialAppBtnClick}
+                buttonClass={exportFrom ? "" : "unselected"}
               />
             </div>
             <div className="final__summary__apps__app">
               <h4>To</h4>
               <SocialAppBtn
                 logoPath={getAppLogoPath(exportTo)}
-                name={exportTo || "Unselected"}
+                text={exportTo || "Unselected"}
                 onClick={handleSocialAppBtnClick}
                 isDisabled={!areTokensSet[0]}
+                buttonClass={exportFrom ? "" : "unselected"}
               />
             </div>
           </div>

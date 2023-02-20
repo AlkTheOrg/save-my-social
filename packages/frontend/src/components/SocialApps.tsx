@@ -1,7 +1,10 @@
 import { FC } from "react";
 import { useAppSelector } from "../app/hooks";
 import SocialApp from "../features/socialApp/SocialApp";
-import { getExportableTargetsOfCurApp } from "../features/socialApp/socialAppConstants";
+import {
+  getAppInfo,
+  getExportableTargetsOfCurApp,
+} from "../features/socialApp/socialAppConstants";
 import "../styles/SocialApps.scss";
 
 type Props = {
@@ -18,12 +21,16 @@ const SocialApps: FC<Props> = ({ onAppClick, isDisabled }) => {
       {(!areTokensSet[0]
         ? activeApps
         : getExportableTargetsOfCurApp(exportFrom)
-      ).map((appName) => (
+      ).map(getAppInfo).map(({
+        title, appName, disabledText, isAppDisabled,
+      }) => (
         <SocialApp
           key={appName}
           appName={appName}
+          btnText={title}
           onClick={onAppClick}
-          isDisabled={isDisabled}
+          isDisabled={isDisabled || isAppDisabled}
+          disabledText={disabledText}
         />
       ))}
     </div>

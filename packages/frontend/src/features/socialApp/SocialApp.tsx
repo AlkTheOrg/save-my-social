@@ -15,8 +15,10 @@ import { getAuthURL as getSpotifyAuthURL } from "../spotify";
 
 type Props = {
   appName: SmsApp;
+  btnText: string;
   onClick?: (...args: unknown[]) => void;
   isDisabled?: boolean;
+  disabledText?: string
 };
 
 type AppToAuthURLGetterMapping = Record<
@@ -24,7 +26,13 @@ type AppToAuthURLGetterMapping = Record<
   AsyncThunk<string, void, Record<string, unknown>>
 >;
 
-const SocialApp: (props: Props) => JSX.Element = ({ appName, onClick, isDisabled }) => {
+const SocialApp: (props: Props) => JSX.Element = ({
+  appName,
+  btnText,
+  onClick,
+  isDisabled,
+  disabledText,
+}) => {
   const dispatch = useAppDispatch();
 
   const appToAuthURLGetterMapping: AppToAuthURLGetterMapping = {
@@ -53,9 +61,10 @@ const SocialApp: (props: Props) => JSX.Element = ({ appName, onClick, isDisabled
     <SocialAppBtn
       buttonClass="social-app"
       onClick={handleClick}
-      name={appName}
+      text={btnText}
       logoPath={`logos/${appName}.svg`}
       isDisabled={isDisabled}
+      disabledText={disabledText}
     />
   );
 };

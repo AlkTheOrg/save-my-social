@@ -2,6 +2,7 @@
 
 .social-app {
   @include socialApp(100%, 120px);
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,4 +13,20 @@
     margin-inline-end: 20px;
   }
   h3 { text-transform: capitalize; }
+  &:disabled { cursor: default; }
+  .disabled-info {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    border-top-right-radius: 0;
+    width: 40px;
+    height: 25px;
+    font-size: 14px;
+    right: 0;
+    top: 0;
+    color: white;
+    background-color: rgba(255, 83, 83, 0.877);
+  }
 }
