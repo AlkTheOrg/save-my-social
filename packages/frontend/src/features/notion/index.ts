@@ -8,6 +8,7 @@ import {
   importItemsToNotion,
 } from "./notionApiService";
 import { fetchPlaylists } from "../spotify/spotifyApiService";
+import { getImportStartedText } from "../spotify";
 
 export const getAuthURL = createAsyncThunk("notion/authURL", async () => {
   const response = await fetchAuthURL();
@@ -105,9 +106,6 @@ export const importSpotifyPlaylistsToNotion = createAsyncThunk<
     const { data: playlistIds } = await fetchPlaylists();
     const numOfPlaylists = playlistIds.length;
 
-    const getImportStartedText = (loopIndex = -1) => (loopIndex >= 0
-      ? `Importing playlist ${loopIndex + 1}/${numOfPlaylists}`
-      : "Started importing tracks");
     const beforeImport = (
       totalFetchedAmount: number,
       totalItemAmount = 0,
@@ -117,7 +115,7 @@ export const importSpotifyPlaylistsToNotion = createAsyncThunk<
         ? `Importing tracks ${totalFetchedAmount}/${totalItemAmount} (
             Playlist ${loopIndex + 1}/${numOfPlaylists}
           )`
-        : getImportStartedText(loopIndex);
+        : getImportStartedText(numOfPlaylists, loopIndex);
       dispatch(setMessage(message));
     };
 

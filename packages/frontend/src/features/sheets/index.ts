@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setMessage } from "../../app/smsSlice";
 import { ThunkAPI } from "../../app/store";
+import { getImportStartedText } from "../spotify";
 import { fetchPlaylists } from "../spotify/spotifyApiService";
 import { FeaturesOfSocialAppExport, FeaturesOfSpotifyExport } from "../types";
 import { fetchAuthURL, importItemsToSheets } from "./sheetApiService";
@@ -12,13 +13,19 @@ export const getAuthURL = createAsyncThunk("sheets/authURL", async () => {
 
 const recursivelyImportToSheets = async (
   exportProps: FeaturesOfSocialAppExport,
-  beforeImport: (totalFetchedAmount: number) => void,
-  afterImport: (totalFetchedAmount: number, numOfImportedItems: number) => void,
+  beforeImport: (
+    totalFetchedAmount: number,
+    totalItemAmount?: number,
+    loopIndex?: number,
+  ) => void,
+  afterImport: () => void,
+  totalItemAmount?: number,
   lastSpreadsheetID = "",
   lastSheetName = "",
   totalFetchedAmount = 0,
+  loopIndex = 1,
 ): Promise<{ url: string, spreadsheetId: string }> => {
-  beforeImport(totalFetchedAmount);
+  beforeImport(totalFetchedAmount, totalItemAmount, loopIndex);
 
   const payload = {
     exportProps,
@@ -33,11 +40,11 @@ const recursivelyImportToSheets = async (
       newExportProps,
       numOfImportedItems,
       spreadsheetId,
-      // totalNumOfItems, // TODO: If not -1, use while setting the redux msg
+      totalNumOfItems,
     },
   } = await importItemsToSheets(payload);
 
-  afterImport(totalFetchedAmount, numOfImportedItems);
+  afterImport();
 
   // if (lastQueriedItem)
   if (numOfImportedItems === 100) {
@@ -45,9 +52,11 @@ const recursivelyImportToSheets = async (
       newExportProps,
       beforeImport,
       afterImport,
+      totalNumOfItems > 0 ? totalNumOfItems : undefined,
       spreadsheetId,
       newLastSheetName,
       totalFetchedAmount + numOfImportedItems,
+      loopIndex,
     );
     return res;
   }
@@ -68,19 +77,16 @@ export const importItems = createAsyncThunk<
     const beforeImport = (totalFetchedAmount: number) => dispatch(setMessage(
       `Importing items from ${totalFetchedAmount} to ${totalFetchedAmount + 100}`,
     ));
-    const afterImport = (totalFetchedAmount: number, numOfImportedItems: number) =>
-      dispatch(setMessage(
-        `Successfully imported items from ${totalFetchedAmount} to ${
-          totalFetchedAmount + numOfImportedItems
-        }`,
-      ));
 
     const res = await recursivelyImportToSheets(
       initialExportProps,
       beforeImport,
-      afterImport,
+      () => {},
+      undefined,
       "",
       "",
+      0,
+      -1, // no multiple recursive calls here
     );
 
     return res.url;
@@ -95,16 +101,20 @@ export const importSpotifyPlaylistsToSheets = createAsyncThunk<
   "sheets/importSpotifyPlaylistsToSheets",
   async (initialExportProps, { dispatch }) => {
     const { data: playlistIds } = await fetchPlaylists();
+    const numOfPlaylists = playlistIds.length;
 
-    const beforeImport = (totalFetchedAmount: number) => dispatch(setMessage(
-      `Importing items from ${totalFetchedAmount} to ${totalFetchedAmount + 100}`,
-    ));
-    const afterImport = (totalFetchedAmount: number, numOfImportedItems: number) =>
-      dispatch(setMessage(
-        `Successfully imported items from ${totalFetchedAmount} to ${
-          totalFetchedAmount + numOfImportedItems
-        }`,
-      ));
+    const beforeImport = (
+      totalFetchedAmount: number,
+      totalItemAmount = 0,
+      loopIndex = 0,
+    ) => {
+      const message = totalItemAmount
+        ? `Importing tracks ${totalFetchedAmount}/${totalItemAmount} (
+            Playlist ${loopIndex + 1}/${numOfPlaylists}
+          )`
+        : getImportStartedText(numOfPlaylists, loopIndex);
+      dispatch(setMessage(message));
+    };
 
     let spreadsheetURL = "";
     let lastSpreadsheetID = "";
@@ -124,9 +134,12 @@ export const importSpotifyPlaylistsToSheets = createAsyncThunk<
       const res = await recursivelyImportToSheets(
         exportProps,
         beforeImport,
-        afterImport,
+        () => {},
+        undefined,
         lastSpreadsheetID,
         "",
+        0,
+        i,
       );
       spreadsheetURL = res.url;
       lastSpreadsheetID = res.spreadsheetId;

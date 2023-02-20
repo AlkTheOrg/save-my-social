@@ -78,3 +78,10 @@ export const getPlaylists = createAsyncThunk<
 
   return { url, fileName };
 });
+
+export const getImportStartedText = (
+  numOfPlaylists: number,
+  loopIndex = -1,
+) => (loopIndex >= 0
+  ? `Importing playlist ${loopIndex + 1}/${numOfPlaylists}`
+  : "Started importing tracks");
