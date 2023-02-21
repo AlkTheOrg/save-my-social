@@ -138,6 +138,13 @@ export const smsSlice = createSlice({
       }
       return initialState;
     },
+    setError: (state, action: PayloadAction<string>) => {
+      state.isError = true;
+      state.message = action.payload;
+      toast.error(action.payload);
+      // eslint-disable-next-line no-console
+      console.log(action.payload);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -305,6 +312,7 @@ export const {
   setStep,
   clickOnFinishedStepLink,
   reset,
+  setError,
 } = smsSlice.actions;
 
 export default smsSlice.reducer;

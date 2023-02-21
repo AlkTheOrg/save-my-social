@@ -62,12 +62,10 @@ const logged = async (req: Request, res: Response) => {
   const error = (req.query.error as string) || null;
 
   if (error) {
-    res.status(404).send({ error });
-  } else if (state === null) {
-    // res.redirect('/#' + new URLSearchParams({ error: 'state_missing' }));
-    res.status(404).send({ error: 'State missing' });
-  } else if (state !== SPOTIFY_STATE) {
-    res.status(404).send({ error: 'Invalid state' });
+    console.log(error);
+    res.send(getWindowErrorPosterHTML(error));
+  } else if (state === null || state !== SPOTIFY_STATE) {
+    res.send(getWindowErrorPosterHTML(`Your SPOTIFY_STATE token is not same with '${state}'`));
   } else {
     const authOptions: AccessTokenReqConfig = {
       url: 'https://accounts.spotify.com/api/token',

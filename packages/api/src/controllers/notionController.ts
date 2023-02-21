@@ -67,12 +67,10 @@ const logged = async (req: Request, res: Response) => {
   const error = (req.query.error as string) || null;
 
   if (error) {
-    res.status(404).send({ error });
-  } else if (state === null) {
-    // res.redirect('/#' + new URLSearchParams({ error: 'state_missing' }));
-    res.status(404).send({ msg: 'State missing' });
-  } else if (state !== NOTION_STATE) {
-    res.status(404).send({ msg: 'Invalid state' });
+    console.log(error);
+    res.send(getWindowErrorPosterHTML(error));
+  } else if (state === null || state !== NOTION_STATE) {
+    res.send(getWindowErrorPosterHTML(`Your NOTION_STATE token is not same with '${state}'`));
   } else {
     const authOptions = getAuthOptions(
       code,

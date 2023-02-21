@@ -28,8 +28,7 @@ const oauth2Client = new google.auth.OAuth2(
 
 const redirectUrl = (_: Request, res: Response) => {
   const scopes: ScopeVariables = [
-    'https://www.googleapis.com/auth/drive',
-    'https://www.googleapis.com/auth/youtube',
+    // 'https://www.googleapis.com/auth/youtube',
     'https://www.googleapis.com/auth/spreadsheets',
   ];
   const url = oauth2Client.generateAuthUrl({
@@ -40,8 +39,7 @@ const redirectUrl = (_: Request, res: Response) => {
 
 const login = (_: Request, res: Response) => {
   const scopes: ScopeVariables = [
-    'https://www.googleapis.com/auth/drive',
-    'https://www.googleapis.com/auth/youtube',
+    // 'https://www.googleapis.com/auth/youtube',
     'https://www.googleapis.com/auth/spreadsheets',
   ];
   const url = oauth2Client.generateAuthUrl({
@@ -59,16 +57,9 @@ const logged = async (req: Request, res: Response) => {
   if (error) {
     console.log(error);
     res.send(getWindowErrorPosterHTML(error));
-    // } else if (state === null) {
-    //   console.log('state is missing');
-    //   res.send(getWindowErrorPosterHTML('State missing'))
+  } else if (state === null || state !== GOOGLE_STATE) {
+    res.send(getWindowErrorPosterHTML(`Your GOOGLE_STATE token is not same with '${state}'`));
   } else {
-    // const oauth2Client = new google.auth.OAuth2(
-    //   GOOGLE_CLIENT_ID,
-    //   GOOGLE_SECRET,
-    //   GOOGLE_REDIRECT_URI,
-    // );
-
     oauth2Client
       .getToken(code)
       .then((response) => {
@@ -154,8 +145,7 @@ const importItemsToSheets = async (
         sendMsgResponse(res, 401, 'Invalid social app.');
         return;
     }
-    // if (numOfImportedItems < 100)
-    //   updateDBTitle(notion, `${appName} ${featureKey} - Completed`, db.id);
+
     res.send(importToSheetsRes);
   } catch (err) {
     console.log(err);

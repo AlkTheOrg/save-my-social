@@ -3,6 +3,7 @@ dotenv.config();
 import { Request, Response } from 'express';
 import { ScopeVariables } from './types.js';
 import { TwitterApi } from 'twitter-api-v2';
+import { getWindowErrorPosterHTML } from '../lib/index.js';
 
 const codeVerifiers = [];
 
@@ -49,11 +50,10 @@ const logged = async (req: Request, res: Response) => {
   const error = (req.query.error as string) || null;
 
   if (error) {
-    throw new Error(error);
-  } else if (state === null) {
-    throw new Error('State missing');
-  } else if (state !== TWITTER_STATE) {
-    throw new Error('Invalid state');
+    console.log(error);
+    res.send(getWindowErrorPosterHTML(error));
+  } else if (state === null || state !== TWITTER_STATE) {
+    res.send(getWindowErrorPosterHTML(`Your TWITTER_STATE token is not same with '${state}'`));
   } else {
     const { client: _client, accessToken } = await twitterClient.loginWithOAuth2({
       code,

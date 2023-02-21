@@ -52,12 +52,8 @@ const logged = async (req: Request, res: Response) => {
   if (error) {
     console.log(error);
     res.send(getWindowErrorPosterHTML(error));
-  } else if (state === null) {
-    console.log('State missing');
-    res.send(getWindowErrorPosterHTML('State missing'));
-  } else if (state !== REDDIT_STATE) {
-    console.log('Invalid state');
-    res.send(getWindowErrorPosterHTML('Invalid state'));
+  } else if (state === null || state !== REDDIT_STATE) {
+    res.send(getWindowErrorPosterHTML(`Your REDDIT_STATE token is not same with '${state}'`));
   } else {
     const authOptions = getAuthOptions(
       code,

@@ -1,6 +1,6 @@
 import { ToastContainer } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
-import { setToken } from "./app/smsSlice";
+import { setError, setToken } from "./app/smsSlice";
 import { stepsByOrder } from "./app/steps";
 import MainStep from "./components/MainStep";
 import Finished from "./components/Finished";
@@ -32,13 +32,11 @@ function App(): JSX.Element {
     if (message.source !== "save-my-social") return;
 
     if (message.type === "accessToken") {
-      console.log("RETURNED MESSAGE:", message);
       dispatch(setToken(message.accessTokenIsSet));
     } else if (message.type === "closeOrder") {
-      console.log("close order");
       onWindowClose();
     } else if (message.type === "error") {
-      // TODO handle error
+      dispatch(setError(message.error));
     }
   };
 
