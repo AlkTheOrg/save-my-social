@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, AsyncThunk } from "@reduxjs/toolkit";
 import {
   getAuthURL as getRedditAuthURL,
   getSavedModels,
