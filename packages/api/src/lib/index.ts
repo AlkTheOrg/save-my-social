@@ -1,6 +1,14 @@
 import { Response } from "express";
 import { ActiveApp,  FeaturesOfSocialAppExport } from "../controllers/types.js";
 
+const htmlHead = (title = 'Authorization') => `<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+</head>
+`;
+
 export const encodeURIOptions = (options: Record<string, string>): string => {
   return Object.keys(options)
     .map(
@@ -18,12 +26,7 @@ export const getWindowMessagePosterHTML = (
 ) => `
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Authorization</title>
-</head>
+${htmlHead()}
 <body>
   <script>
     window.opener.postMessage(${JSON.stringify(message)}, '${targetOrigin}');
