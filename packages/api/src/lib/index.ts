@@ -9,6 +9,16 @@ const htmlHead = (title = 'Authorization') => `<head>
 </head>
 `;
 
+export const htmlPage = (body: string) => `
+<!DOCTYPE html>
+<html lang="en">
+${htmlHead()}
+<body>
+${body}
+</body>
+</html>
+`
+
 export const encodeURIOptions = (options: Record<string, string>): string => {
   return Object.keys(options)
     .map(
@@ -23,18 +33,12 @@ export const concatWithEmptySpace = (prev: string, cur: string) =>
 export const getWindowMessagePosterHTML = (
   message: Record<string, string>,
   targetOrigin = '*',
-) => `
-<!DOCTYPE html>
-<html lang="en">
-${htmlHead()}
-<body>
+) => htmlPage(`
   <script>
     window.opener.postMessage(${JSON.stringify(message)}, '${targetOrigin}');
     window.opener.postMessage({ source: 'save-my-social', type: 'closeOrder' }, '${targetOrigin}');
   </script>
-</body>
-</html>
-`;
+`)
 
 export const getWindowAccessTokenInfoPosterHTML = (
   accessTokenIsSet: boolean,
