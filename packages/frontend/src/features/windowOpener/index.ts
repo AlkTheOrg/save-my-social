@@ -3,6 +3,7 @@ import { getAuthURL as getRedditAuthURL } from "../reddit";
 import { getAuthURL as getNotionAuthURL } from "../notion";
 import { getAuthURL as getSheetsAuthURL } from "../sheets";
 import { getAuthURL as getSpotifyAuthURL } from "../spotify";
+import { getAuthURL as getTwitterAuthURL } from "../twitter";
 
 export const windowSlice = createSlice({
   name: "windowOpener",
@@ -38,6 +39,10 @@ export const windowSlice = createSlice({
         state.target = action.payload;
       })
       .addCase(getSpotifyAuthURL.fulfilled, (state, action) => {
+        state.isOpened = true;
+        state.target = action.payload;
+      })
+      .addCase(getTwitterAuthURL.fulfilled, (state, action) => {
         state.isOpened = true;
         state.target = action.payload;
       });

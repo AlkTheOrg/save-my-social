@@ -4,7 +4,7 @@ const appsExportableToMapping: Record<ExportFrom, Partial<ExportTo>[]> = {
   "": [],
   reddit: ["download", "notion", "sheets"],
   spotify: ["download", "notion", "sheets"],
-  twitter: [],
+  twitter: ["download", "notion", "sheets"],
   youtube: [],
 };
 
@@ -23,7 +23,7 @@ const appInfoMapping: Record<SmsApp, AppInfo> = {
     title: "Youtube Playlists",
     appName: "youtube",
     isAppDisabled: true,
-    disabledText: "WIP",
+    disabledText: "Soon",
   },
   download: { title: "Download", appName: "download" },
   notion: { title: "Notion", appName: "notion" },

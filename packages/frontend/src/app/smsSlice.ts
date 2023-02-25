@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { createSlice, PayloadAction, AsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   getAuthURL as getRedditAuthURL,
   getSavedModels,
@@ -18,6 +18,9 @@ import {
   getAuthURL as getSpotifyAuthURL,
   getPlaylists,
 } from "../features/spotify";
+import {
+  getAuthURL as getTwitterAuthURL,
+} from "../features/twitter";
 import {
   Steps,
   stepsByOrder,
@@ -101,7 +104,7 @@ export const smsSlice = createSlice({
     setExportTo: (state, action: PayloadAction<ExportTo>) => {
       state.exportTo = action.payload;
     },
-    setToken: (state, action: PayloadAction<string>) => {
+    setToken: (state, action: PayloadAction<"true" | "false">) => {
       const index = state.areTokensSet[0] ? 1 : 0;
       state.areTokensSet[index] = action.payload === "true";
     },
@@ -161,6 +164,20 @@ export const smsSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = "Error on getting the Auth URL for Reddit";
+      })
+      .addCase(getTwitterAuthURL.fulfilled, (state) => {
+        state.isLoading = false;
+        smsSlice.caseReducers.resetMessage(state);
+      })
+      .addCase(getTwitterAuthURL.pending, (state) => {
+        state.isError = false;
+        state.isLoading = true;
+        state.message = "Getting Twitter redirection URL.";
+      })
+      .addCase(getTwitterAuthURL.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = "Error on getting the Auth URL for Twitter";
       })
       .addCase(getNotionAuthURL.fulfilled, (state) => {
         state.isLoading = false;

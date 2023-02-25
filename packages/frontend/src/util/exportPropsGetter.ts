@@ -1,10 +1,7 @@
 import { FeaturesOfSocialAppExport } from "../features/types";
 import { GenuineExportFrom } from "./thunkMappings";
 
-type ActiveExportApps = Exclude<
-  GenuineExportFrom,
-  "youtube" | "twitter"
->;
+type ActiveExportApps = Exclude< GenuineExportFrom, "youtube">;
 
 const initialMapping: Record<ActiveExportApps, FeaturesOfSocialAppExport> = {
   reddit: {
@@ -16,6 +13,11 @@ const initialMapping: Record<ActiveExportApps, FeaturesOfSocialAppExport> = {
         id: "",
         offset: 0,
       },
+    },
+  },
+  twitter: {
+    twitter: {
+      bookmarks: { lastTweetID: "" },
     },
   },
 };

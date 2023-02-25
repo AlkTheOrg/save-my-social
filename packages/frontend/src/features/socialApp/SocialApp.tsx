@@ -12,6 +12,7 @@ import { getAuthURL as getRedditAuthURL } from "../reddit";
 import { getAuthURL as getNotionAuthURL } from "../notion";
 import { getAuthURL as getSheetsAuthURL } from "../sheets";
 import { getAuthURL as getSpotifyAuthURL } from "../spotify";
+import { getAuthURL as getTwitterAuthURL } from "../twitter";
 
 type Props = {
   appName: SmsApp;
@@ -38,8 +39,8 @@ const SocialApp: (props: Props) => JSX.Element = ({
   const appToAuthURLGetterMapping: AppToAuthURLGetterMapping = {
     reddit: getRedditAuthURL,
     spotify: getSpotifyAuthURL,
-    twitter: getRedditAuthURL, // TODO: Update these when implemented
-    youtube: getRedditAuthURL,
+    twitter: getTwitterAuthURL,
+    youtube: getRedditAuthURL, // TODO: Update when implemented
     notion: getNotionAuthURL,
     sheets: getSheetsAuthURL,
   };
