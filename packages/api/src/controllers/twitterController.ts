@@ -3,7 +3,8 @@ dotenv.config();
 import { Request, Response } from 'express';
 import { ScopeVariables } from './types.js';
 import { TwitterApi } from 'twitter-api-v2';
-import { getWindowErrorPosterHTML } from '../lib/index.js';
+import { htmlPage } from '../lib/index.js';
+import { getAccessToken, setAccessToken } from '../lib/accessTokenManager.js';
 
 const codeVerifiers = [];
 
@@ -51,21 +52,44 @@ const logged = async (req: Request, res: Response) => {
 
   if (error) {
     console.log(error);
-    res.send(getWindowErrorPosterHTML(error));
+    res.send(htmlPage(`
+      <h4>An error occured: "${error}"</h4>
+      <h4>You can close this window and try again.</h4>
+    `));
   } else if (state === null || state !== TWITTER_STATE) {
-    res.send(getWindowErrorPosterHTML(`Your TWITTER_STATE token is not same with '${state}'`));
+    res.send(htmlPage(`
+      <h3>Your TWITTER_STATE token is not same with "${state}"</h3>
+      <h4>You can close this window and try again.</h4>
+    `));
   } else {
-    const { client: _client, accessToken } = await twitterClient.loginWithOAuth2({
-      code,
-      codeVerifier: codeVerifiers.pop(),
-      redirectUri: TWITTER_REDIRECT_URI,
-    });
-    res.send({ access_token: accessToken });
+    try {
+      const { client: _client, accessToken } = await twitterClient.loginWithOAuth2({
+        code,
+        codeVerifier: codeVerifiers.pop(),
+        redirectUri: TWITTER_REDIRECT_URI,
+      });
+      setAccessToken('twitter', accessToken);
+      res.send(htmlPage(`
+        <h3>Success! Please close this window.</h3>
+        <h4>You can close this window.</h3>
+      `))
+    } catch (err) {
+      console.log(err);
+      res.send(htmlPage(`
+        <h3>Eror while getting the access token: "${JSON.stringify(err)}"</h3>
+        <h4>You can close this window and try again.</h4>
+      `));
+    }
   }
+}
+
+const accessTokenIsSet = (_req: Request, res: Response) => {
+  res.send(Boolean(getAccessToken('twitter')));
 }
 
 export default {
   redirectUrl,
   login,
-  logged
+  logged,
+  accessTokenIsSet,
 }
