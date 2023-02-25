@@ -5,6 +5,7 @@ const accessTokens: Record<ActiveApp, string> = {
   spotify: '',
   notion: '',
   sheets: '',
+  twitter: '',
 };
 
 export const setAccessToken = (app: ActiveApp, token: string) => accessTokens[app] = token;

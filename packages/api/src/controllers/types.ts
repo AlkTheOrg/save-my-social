@@ -71,7 +71,7 @@ export type SmsApp =
   | "sheets"
   | "download";
 
-export type ActiveApp = Exclude<SmsApp, "download" | "twitter" | "youtube">;
+export type ActiveApp = Exclude<SmsApp, "download" | "youtube">;
 
 export type ExportFrom = Exclude<
   SmsApp,
