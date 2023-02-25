@@ -55,6 +55,7 @@ export interface SmsState {
   message: string;
   finalURL: string;
   finalFileName: string;
+  isConfirmModalOpen: boolean;
   // -- steps --
   steps: Steps,
   curStep: number,
@@ -90,6 +91,7 @@ const initialState: SmsState = {
   steps: stepsByOrder,
   finalURL: "",
   finalFileName: "",
+  isConfirmModalOpen: false,
   curStep: 0,
   numOfSteps,
 };
@@ -147,6 +149,9 @@ export const smsSlice = createSlice({
       toast.error(action.payload);
       // eslint-disable-next-line no-console
       console.log(action.payload);
+    },
+    toggleConfirmModal: (state) => {
+      state.isConfirmModalOpen = !state.isConfirmModalOpen;
     },
   },
   extraReducers: (builder) => {
@@ -330,6 +335,7 @@ export const {
   clickOnFinishedStepLink,
   reset,
   setError,
+  toggleConfirmModal,
 } = smsSlice.actions;
 
 export default smsSlice.reducer;

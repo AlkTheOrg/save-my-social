@@ -1,5 +1,6 @@
 import { FC } from "react";
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { SmsApp, toggleConfirmModal } from "../app/smsSlice";
 import SocialApp from "../features/socialApp/SocialApp";
 import {
   getAppInfo,
@@ -11,10 +12,19 @@ type Props = {
   onAppClick: (...args: unknown[]) => void;
   isDisabled?: boolean;
 };
+
 const SocialApps: FC<Props> = ({ onAppClick, isDisabled }) => {
+  const dispatch = useAppDispatch();
   const { activeApps, areTokensSet, exportFrom } = useAppSelector(
     (state) => state.sms,
   );
+
+  const handleClick = (appName: SmsApp) => {
+    onAppClick();
+    if (appName === "twitter") {
+      dispatch(toggleConfirmModal());
+    }
+  };
 
   return (
     <div className="social-app-container">
@@ -28,7 +38,7 @@ const SocialApps: FC<Props> = ({ onAppClick, isDisabled }) => {
           key={appName}
           appName={appName}
           btnText={title}
-          onClick={onAppClick}
+          onClick={() => handleClick(appName)}
           isDisabled={isDisabled || isAppDisabled}
           disabledText={disabledText}
         />

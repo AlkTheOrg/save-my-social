@@ -6,13 +6,13 @@ import TabTrap from "./TabTrap";
 
 interface Props {
   children: React.ReactNode;
-  heading: string;
   isOpen: boolean;
   onClose: () => void;
+  heading?: string;
 }
 
 const Modal: React.FC<Props> = ({
-  children, heading, isOpen, onClose,
+  children, isOpen, onClose, heading,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -46,7 +46,7 @@ const Modal: React.FC<Props> = ({
     <div aria-hidden={!isOpen} className={`modal-overlay ${isOpen ? "in" : "out"}`}>
       <div ref={modalRef} className="modal">
         <TabTrap isActive={isOpen}>
-          <h2 role="alert">{heading}</h2>
+          <h2>{heading || ""}</h2>
           {children}
           <button
             type="button"
@@ -60,6 +60,10 @@ const Modal: React.FC<Props> = ({
       </div>
     </div>
   );
+};
+
+Modal.defaultProps = {
+  heading: "",
 };
 
 export default Modal;

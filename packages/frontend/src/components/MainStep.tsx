@@ -8,11 +8,12 @@ import Loader from "./Loader";
 import Modal from "./Modal";
 import SocialApps from "./SocialApps";
 import SocialAppBtn from "./SocialAppBtn";
+import TwitterConfirmModal from "./TwitterConfirmModal";
 
 const getAppLogoPath = (type?: string) => `logos/${type || "plus"}.svg`;
 
 const MainStep = (): JSX.Element => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSocialAppsModalOpen, setIsSocialAppsModalOpen] = useState(false);
   const dispatch = useAppDispatch();
   const {
     exportFrom, exportTo, isLoading, isError, message, areTokensSet,
@@ -21,7 +22,7 @@ const MainStep = (): JSX.Element => {
   );
 
   const handleSocialAppBtnClick = () => {
-    setIsModalOpen(true);
+    setIsSocialAppsModalOpen(true);
   };
 
   const handleFinish = () => {
@@ -37,12 +38,16 @@ const MainStep = (): JSX.Element => {
   return (
     <>
       <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isSocialAppsModalOpen}
+        onClose={() => setIsSocialAppsModalOpen(false)}
         heading={exportFrom ? "Select Export To" : "Select Export From"}
       >
-        <SocialApps onAppClick={() => setIsModalOpen(false)} isDisabled={!isModalOpen} />
+        <SocialApps
+          onAppClick={() => setIsSocialAppsModalOpen(false)}
+          isDisabled={!isSocialAppsModalOpen}
+        />
       </Modal>
+      <TwitterConfirmModal />
       <div className="final">
         <div className="final__summary">
           <h2 className="final__summary__title">Export</h2>

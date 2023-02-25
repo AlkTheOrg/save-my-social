@@ -1,0 +1,39 @@
+.confirm-modal {
+  p { margin-block-end: 1.5em ; }
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .reject, .confirm {
+      //TODO refactor button mixin so that it will use padding/margin instead of size
+      align-items: center;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      padding: 8px 16px;
+      transition: all .3s;
+    }
+
+    .reject {
+      color: #a0a6c3;
+      background-color: #fafafc;
+      border: 1px solid #a0a6c3;
+
+      &:hover {
+        background-color: #eaeaf2;
+      }
+    }
+
+    .confirm {
+      color: white;
+      background-color: #1bb649;
+      border: 1px solid transparent;
+      
+      &:hover {
+        background-color: #18aa44;
+      }
+    }
+    }
+}
