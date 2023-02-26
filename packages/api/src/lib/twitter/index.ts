@@ -27,7 +27,7 @@ export const fetchBookmarks = async (accessToken: string, pagination_token?: str
   }));
   return ({
     tweets: result,
-    next_token,
-    result_count,
+    nextToken: next_token,
+    resultCount: result_count,
   });
 }

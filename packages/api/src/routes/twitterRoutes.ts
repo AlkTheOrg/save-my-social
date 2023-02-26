@@ -7,7 +7,7 @@ router.get('/auth-url', twitterController.redirectUrl);
 router.get('/login', twitterController.login);
 router.get('/logged', twitterController.logged);
 router.get( '/accessTokenIsSet', twitterController.accessTokenIsSet);
-router.get(
+router.post(
   '/bookmarks',
   passAppAccessToken,
   twitterController.getBookmarks

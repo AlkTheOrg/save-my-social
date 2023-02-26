@@ -27,7 +27,8 @@ const MainStep = (): JSX.Element => {
 
   const handleFinish = () => {
     if (exportFrom && exportTo) {
-      if (exportFrom === "reddit" || exportFrom === "spotify") {
+      // TODO: This is to disable ts lint errors. After imp of YT, this won't be necessary
+      if (exportFrom !== "youtube") {
         const exportProps = exportPropsGetter(exportFrom);
         dispatch(setStep(1));
         dispatch(getExportThunkAction(exportFrom, exportTo, exportProps));

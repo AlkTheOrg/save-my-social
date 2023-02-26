@@ -19,7 +19,7 @@ import {
   getPlaylists,
 } from "../features/spotify";
 import {
-  getAuthURL as getTwitterAuthURL,
+  getAuthURL as getTwitterAuthURL, getTwitterBookmarks,
 } from "../features/twitter";
 import {
   Steps,
@@ -225,6 +225,23 @@ export const smsSlice = createSlice({
         state.finalFileName = result.payload.fileName;
       })
       .addCase(getSavedModels.rejected, (state, result) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = result.error.message || "Something went wrong";
+        toast.error(state.message);
+      })
+      .addCase(getTwitterBookmarks.pending, (state) => {
+        state.isError = false;
+        state.isLoading = true;
+      })
+      .addCase(getTwitterBookmarks.fulfilled, (state, result) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.curStep += 1;
+        state.finalURL = result.payload.url;
+        state.finalFileName = result.payload.fileName;
+      })
+      .addCase(getTwitterBookmarks.rejected, (state, result) => {
         state.isLoading = false;
         state.isError = true;
         state.message = result.error.message || "Something went wrong";

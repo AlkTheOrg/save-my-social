@@ -6,10 +6,10 @@ export interface TweetV2 {
     author_id?: string;
 }
 
-export interface TweetResponse extends Exclude<TweetV2, "author_id">{
-  url: string;
-  author: string
-}
+export type TweetResponse = {
+  url: string,
+  author: string,
+} & Omit<TweetV2, "author_id">;
 
 export type GetBookmarksResponse = {
   tweets: TweetResponse[],

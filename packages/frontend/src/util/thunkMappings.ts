@@ -11,8 +11,12 @@ import {
 } from "../features/sheets";
 import { getSavedModels } from "../features/reddit";
 import { getPlaylists } from "../features/spotify";
-import { GetSavedModelsThunkResponse } from "../features/reddit/types";
-import { FeaturesOfSocialAppExport, FeaturesOfSpotifyExport } from "../features/types";
+import {
+  FeaturesOfSocialAppExport,
+  FeaturesOfSpotifyExport,
+  UrlAndFileNameThunkResponse,
+} from "../features/types";
+import { getTwitterBookmarks } from "../features/twitter";
 
 export type GenuineExportFrom = Exclude<ExportFrom, "">;
 export type GenuineExportTo = Exclude<ExportTo, "">;
@@ -20,8 +24,8 @@ export type GenuineExportTo = Exclude<ExportTo, "">;
 const appToDownloadToLocal = {
   reddit: getSavedModels,
   spotify: getPlaylists,
-  twitter: getSavedModels, // TODO only for linters until the implementation is done
-  youtube: getSavedModels,
+  twitter: getTwitterBookmarks,
+  youtube: getSavedModels, // TODO only for linters until the implementation is done
 };
 
 const getDownloadThunk = (appType: GenuineExportFrom) =>
@@ -32,7 +36,7 @@ export const getExportThunkAction = (
   exportTo: GenuineExportTo,
   initialExportProps: FeaturesOfSocialAppExport,
 ): AsyncThunkAction<
-  GetSavedModelsThunkResponse | string,
+  UrlAndFileNameThunkResponse | string,
   FeaturesOfSocialAppExport | void,
   ThunkAPI
 > => {

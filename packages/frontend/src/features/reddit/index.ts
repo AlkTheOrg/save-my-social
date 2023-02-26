@@ -2,9 +2,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setMessage } from "../../app/smsSlice";
 import { ThunkAPI } from "../../app/store";
 import { prepareBlobURL } from "../../util";
+import { UrlAndFileNameThunkResponse } from "../types";
 import { SavedModel } from "./endpointTypes";
 import { fetchAuthURL, fetchSavedModels } from "./redditApiService";
-import { GetSavedModelsThunkResponse } from "./types";
 
 export const getAuthURL = createAsyncThunk("reddit/authURL", async () => {
   const response = await fetchAuthURL();
@@ -12,7 +12,7 @@ export const getAuthURL = createAsyncThunk("reddit/authURL", async () => {
 });
 
 export const getSavedModels = createAsyncThunk<
-  GetSavedModelsThunkResponse,
+  UrlAndFileNameThunkResponse,
   void,
   ThunkAPI
 >(
@@ -47,8 +47,8 @@ export const getSavedModels = createAsyncThunk<
 
     const items = [] as SavedModel[];
     await recursivelyCollectItems(items);
-    const fileName = "reddit_items.csv";
-    const url = prepareBlobURL(items, "text/csv");
+    const fileName = "reddit_items.json";
+    const url = prepareBlobURL(items, "application/json");
 
     return { url, fileName };
   },

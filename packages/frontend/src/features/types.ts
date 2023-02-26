@@ -46,3 +46,8 @@ export type FeaturesOfSocialAppExport =
   | FeaturesOfSpotifyExport
   | FeaturesOfYoutubeExport
   | FeaturesOfTwitterExport;
+
+export type UrlAndFileNameThunkResponse = {
+  url: string,
+  fileName: string
+}

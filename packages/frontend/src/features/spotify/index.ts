@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setMessage } from "../../app/smsSlice";
 import { ThunkAPI } from "../../app/store";
 import { prepareBlobURL } from "../../util";
+import { UrlAndFileNameThunkResponse } from "../types";
 import { MappedTrackItem } from "./endpointTypes";
 import {
   fetchAuthURL,
@@ -42,7 +43,7 @@ const recursivelyCollectTracks = async (
 };
 
 export const getPlaylists = createAsyncThunk<
-  { url: string; fileName: string },
+  UrlAndFileNameThunkResponse,
   void,
   ThunkAPI
 >("spotify/getPlaylists", async (_, { dispatch }) => {
