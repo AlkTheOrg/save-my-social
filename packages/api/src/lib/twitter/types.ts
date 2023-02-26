@@ -6,7 +6,7 @@ export interface TweetV2 {
     author_id?: string;
 }
 
-export interface TweetResponse extends Exclude<TweetV2, "author_id">{
+export interface TweetResponse extends Omit<TweetV2, "author_id">{
   url: string;
   author: string
 }

@@ -4,15 +4,18 @@ import {
   AccessTokenReqConfig,
   FeaturesOfRedditExport,
   FeaturesOfSpotifyExport,
+  FeaturesOfTwitterExport,
 } from "../../controllers/types.js";
 import { fetchSavedModels } from "../reddit/index.js";
 import { ProcessedSavedChildren } from "../reddit/types.js";
 import { fetchPlaylistTracks, getPlaylist } from "../spotify/index.js";
 import DBCreator from "./dbCreator.js";
 import PageCreator,
-{ createRedditPropsForDBPage, createSpotifyTrackPropsForDBPage } from "./pageCreator.js";
-import { CreateDBPropArguments, CreatePagesFromRedditExportPropsResponse, CreatePagesFromSpotifyExportPropsResponse } from "./types.js";
+{ createRedditPropsForDBPage, createSpotifyTrackPropsForDBPage, createTweetPropsForDBPage } from "./pageCreator.js";
+import { CreateDBPropArguments, CreatePagesFromRedditExportPropsResponse, CreatePagesFromSpotifyExportPropsResponse, CreatePagesFromTwitterExportPropsResponse } from "./types.js";
 import { MappedTrackItem } from '../spotify/types.js';
+import { fetchBookmarks as fetchTwitterBookmarks } from '../twitter/index.js';
+import { TweetResponse } from '../twitter/types.js';
 
 export const getAuthOptions = (
   code: string,
@@ -110,6 +113,40 @@ export const createPagesFromRedditExportProps = async (
       reddit: {
         saved: {
           lastItemID: lastQueried
+        }
+      }
+    }
+  };
+};
+
+const createPagesFromTweets = async (
+  notion: Client,
+  dbID: string,
+  tweets: TweetResponse[],
+) => {
+  const pageCreator = PageCreator();
+  return Promise.all(
+    tweets.map(async (tweet) =>
+      pageCreator.createDBPage(notion, dbID, createTweetPropsForDBPage(tweet)),
+    ),
+  );
+}; 
+
+export const createPagesFromTwitterExportProps = async (
+  notion: Client,
+  twitterAccessToken,
+  dbID: string,
+  exportProps: FeaturesOfTwitterExport,
+): CreatePagesFromTwitterExportPropsResponse => {
+  const { twitter: { bookmarks: { paginationToken }}} = exportProps as FeaturesOfTwitterExport;
+  const { nextToken, resultCount, tweets } = await fetchTwitterBookmarks(twitterAccessToken, paginationToken);
+  await createPagesFromTweets(notion, dbID, tweets);
+  return {
+    numOfImportedItems: resultCount,
+    newExportProps: {
+      twitter: {
+        bookmarks: {
+          paginationToken: nextToken
         }
       }
     }

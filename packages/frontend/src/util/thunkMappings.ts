@@ -55,6 +55,6 @@ export const getExportThunkAction = (
       initialExportProps as FeaturesOfSpotifyExport,
     );
   }
-  // exportTo === "notion"
+  // exportTo === "notion" && (exportFrom is either "reddit" or "twitter")
   return importItemsToNotion(initialExportProps);
 };

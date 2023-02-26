@@ -91,11 +91,6 @@ export const socialAppToDBPropsMapping: SocialAppToDBPropsMapping = {
   reddit: {
     reddit_saved: {
       properties: [
-        // {
-        //   type: 'number',
-        //   key: 'Count',
-        //   args: 'number',
-        // },
         {
           type: 'title',
           key: 'Title',
@@ -200,8 +195,34 @@ export const socialAppToDBPropsMapping: SocialAppToDBPropsMapping = {
     }
   },
   twitter: {
-    twitter_playlist: {
-      properties: []
+    twitter_bookmarks: {
+      properties: [
+        {
+          type: 'title',
+          key: 'ID',
+          args: undefined,
+        },
+        {
+          type: 'rich_text',
+          key: 'Text',
+          args: undefined,
+        },
+        {
+          type: 'rich_text',
+          key: 'Created At',
+          args: undefined,
+        },
+        {
+          type: 'url',
+          key: 'Link',
+          args: undefined,
+        },
+        {
+          type: 'rich_text',
+          key: 'Author',
+          args: undefined,
+        },
+      ]
     }
   },
   youtube: {

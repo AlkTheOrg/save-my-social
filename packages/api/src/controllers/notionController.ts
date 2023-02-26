@@ -1,4 +1,4 @@
-import { retrievePage } from './../lib/notion/index.js';
+import { createPagesFromTwitterExportProps, retrievePage } from './../lib/notion/index.js';
 import { getAccessToken, setAccessToken } from './../lib/accessTokenManager.js';
 import { default as axios, AxiosError, AxiosResponse } from 'axios';
 import dotenv from 'dotenv';
@@ -16,6 +16,7 @@ import {
   CustomRequestWithAT,
   FeaturesOfRedditExport,
   FeaturesOfSpotifyExport,
+  FeaturesOfTwitterExport,
   OTTReqNotionOptions,
 } from './types.js';
 import {
@@ -192,6 +193,21 @@ const importItems = async (
         if (numOfImportedItems < 100) {
           updateDBTitle(notion, playlistName, db.id);
         }
+        break;
+      }
+
+      case 'twitter': {
+        const { newExportProps, numOfImportedItems } =
+          await createPagesFromTwitterExportProps(
+            notion,
+            accessTokenSocial,
+            db.id,
+            exportProps as FeaturesOfTwitterExport,
+          );
+        response.newExportProps = newExportProps;
+        response.numOfImportedItems = numOfImportedItems;
+        if (numOfImportedItems < 100)
+          updateDBTitle(notion, `${appName} ${featureKey} - Completed`, db.id);
         break;
       }
 

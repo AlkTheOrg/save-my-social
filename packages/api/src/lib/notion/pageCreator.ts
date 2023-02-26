@@ -1,6 +1,7 @@
 import { Client } from '@notionhq/client';
 import { ProcessedSavedChildren } from '../reddit/types.js';
 import { MappedTrackItem } from '../spotify/types.js';
+import { TweetResponse } from '../twitter/types.js';
 import {
   DBPropTypeName,
   DBPageCheckboxProp,
@@ -91,13 +92,22 @@ const PageCreator = () => {
 export const createRedditPropsForDBPage = (
   item: ProcessedSavedChildren,
 ): Array<CreateDBPagePropArguments> => [
-  // { key: 'Count', type: 'number', value: count },
   { key: 'Title', type: 'title', value: item.title },
   { key: 'ID', type: 'rich_text', value: item.kindID },
   { key: 'Subreddit', type: 'rich_text', value: item.subreddit },
   { key: 'Over 18', type: 'checkbox', value: item.over_18 },
   { key: 'Type', type: 'select', value: item.kind },
   { key: 'Link', type: 'url', value: item.link },
+];
+
+export const createTweetPropsForDBPage = (
+  tweet: TweetResponse,
+): Array<CreateDBPagePropArguments> => [
+  { key: 'ID', type: 'title', value: tweet.id },
+  { key: 'Text', type: 'rich_text', value: tweet.text },
+  { key: 'Created At', type: 'rich_text', value: tweet.created_at },
+  { key: 'Link', type: 'url', value: tweet.url },
+  { key: 'Author', type: 'rich_text', value: tweet.author },
 ];
 
 export const createSpotifyTrackPropsForDBPage = (
