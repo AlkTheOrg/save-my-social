@@ -1,10 +1,11 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import { Request, Response } from 'express';
-import { ScopeVariables } from './types.js';
+import { CustomRequestWithAT, ScopeVariables } from './types.js';
 import { TwitterApi } from 'twitter-api-v2';
 import { htmlPage } from '../lib/index.js';
 import { getAccessToken, setAccessToken } from '../lib/accessTokenManager.js';
+import { fetchBookmarks } from '../lib/twitter/index.js';
 
 const codeVerifiers = [];
 
@@ -70,7 +71,7 @@ const logged = async (req: Request, res: Response) => {
       });
       setAccessToken('twitter', accessToken);
       res.send(htmlPage(`
-        <h3>Success! Please close this window.</h3>
+        <h3>Success!</h3>
         <h4>You can close this window.</h3>
       `))
     } catch (err) {
@@ -87,9 +88,20 @@ const accessTokenIsSet = (_req: Request, res: Response) => {
   res.send(Boolean(getAccessToken('twitter')));
 }
 
+const getBookmarks = async (req: CustomRequestWithAT<{ pagination_token?: string }>, res: Response) => {
+  try {
+    const result = await fetchBookmarks(req.accessToken, req.body.pagination_token);
+    res.send(result);
+  } catch (err) {
+    console.log(err);
+    res.status(err.status || 500).send(err);
+  }
+}
+
 export default {
   redirectUrl,
   login,
   logged,
   accessTokenIsSet,
+  getBookmarks
 }

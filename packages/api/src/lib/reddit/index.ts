@@ -1,7 +1,6 @@
-import axios from 'axios';
+import { default as axios } from 'axios';
 import { AccessTokenReqConfig } from '../../controllers/types.js';
 import { AuthHeaders, FetchSavedModelsResponse, ProcessedSavedChildren, SavedChildren } from './types.js';
-const Axios = axios.default;
 
 export const processSavedChildren = (children: SavedChildren[]): ProcessedSavedChildren[] =>
   children.map((child) => ({
@@ -70,7 +69,7 @@ export async function getSavedModelsRecursive(
     limit: 100,
     after: lastQueried,
   };
-  const { data } = await Axios.get(userURL, { headers, params });
+  const { data } = await axios.get(userURL, { headers, params });
   const { children, after } = data.data;
   resultArr.push(...processSavedChildren(children));
   if (after) {
@@ -83,7 +82,7 @@ export const getMe = async (headers) => {
     data: {
       subreddit: { url }, // can also return display_name, display_name_prefixed, name
     },
-  } = await Axios.get('https://oauth.reddit.com/api/v1/me', { headers });
+  } = await axios.get('https://oauth.reddit.com/api/v1/me', { headers });
   return url;
 }
 
@@ -100,7 +99,7 @@ export const fetchSavedModels = async (
   const savedEndpoint = `https://oauth.reddit.com${userURL}saved`;
   const params = { limit: 100, after }; // can also be added to the endpoint url as a query string
 
-  const savedResponse = await Axios.get(savedEndpoint, { headers, params });
+  const savedResponse = await axios.get(savedEndpoint, { headers, params });
   const { children } = savedResponse.data.data;
   result.models.push(...processSavedChildren(children));
 
