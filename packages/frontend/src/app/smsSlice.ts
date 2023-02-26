@@ -44,9 +44,12 @@ export type ExportFrom = Exclude<
 >;
 export type ExportTo = SmsApp;
 
+export type SelectionContext = "exportFrom" | "exportTo";
+
 export interface SmsState {
   exportFrom: ExportFrom;
   exportTo: ExportTo;
+  curSelectionContext: SelectionContext;
   apps: SmsApp[];
   activeApps: SmsApp[];
   areTokensSet: [toExport: boolean, toImport: boolean];
@@ -82,6 +85,7 @@ export const allApps = [...appsToExportFrom, ...appsToImportTo] as SmsApp[];
 const initialState: SmsState = {
   exportFrom: "",
   exportTo: "",
+  curSelectionContext: "exportFrom",
   apps: allApps,
   activeApps: appsToExportFrom,
   areTokensSet: [false, false],
@@ -106,8 +110,11 @@ export const smsSlice = createSlice({
     setExportTo: (state, action: PayloadAction<ExportTo>) => {
       state.exportTo = action.payload;
     },
+    setCurSelectionContext: (state, action: PayloadAction<SelectionContext>) => {
+      state.curSelectionContext = action.payload;
+    },
     setToken: (state, action: PayloadAction<"true" | "false">) => {
-      const index = state.areTokensSet[0] ? 1 : 0;
+      const index = state.curSelectionContext === "exportFrom" ? 0 : 1;
       state.areTokensSet[index] = action.payload === "true";
     },
     setActiveApps: (state, action: PayloadAction<SmsApp[]>) => {
@@ -343,6 +350,7 @@ export const smsSlice = createSlice({
 export const {
   setExportFrom,
   setExportTo,
+  setCurSelectionContext,
   setToken,
   setActiveApps,
   setMessage,

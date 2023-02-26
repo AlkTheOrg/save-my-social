@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { reset, setStep } from "../app/smsSlice";
+import {
+  reset,
+  SelectionContext,
+  setCurSelectionContext,
+  setStep,
+} from "../app/smsSlice";
 import "../styles/MainStep.scss";
 import exportPropsGetter from "../util/exportPropsGetter";
 import { getExportThunkAction } from "../util/thunkMappings";
@@ -21,7 +26,8 @@ const MainStep = (): JSX.Element => {
     (state) => state.sms,
   );
 
-  const handleSocialAppBtnClick = () => {
+  const handleSocialAppBtnClick = (newContext: SelectionContext) => {
+    dispatch(setCurSelectionContext(newContext));
     setIsSocialAppsModalOpen(true);
   };
 
@@ -58,7 +64,7 @@ const MainStep = (): JSX.Element => {
               <SocialAppBtn
                 logoPath={getAppLogoPath(exportFrom)}
                 text={exportFrom || "Unselected"}
-                onClick={handleSocialAppBtnClick}
+                onClick={() => handleSocialAppBtnClick("exportFrom")}
                 buttonClass={exportFrom ? "" : "unselected"}
               />
             </div>
@@ -67,7 +73,7 @@ const MainStep = (): JSX.Element => {
               <SocialAppBtn
                 logoPath={getAppLogoPath(exportTo)}
                 text={exportTo || "Unselected"}
-                onClick={handleSocialAppBtnClick}
+                onClick={() => handleSocialAppBtnClick("exportTo")}
                 isDisabled={!areTokensSet[0]}
                 buttonClass={exportTo ? "" : "unselected"}
               />

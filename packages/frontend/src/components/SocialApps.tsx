@@ -1,12 +1,22 @@
 import { FC } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { SmsApp, toggleConfirmModal } from "../app/smsSlice";
+import {
+  ExportFrom,
+  setExportFrom,
+  setExportTo,
+  SmsApp,
+  toggleConfirmModal,
+} from "../app/smsSlice";
 import SocialApp from "../features/socialApp/SocialApp";
 import {
   getAppInfo,
   getExportableTargetsOfCurApp,
 } from "../features/socialApp/socialAppConstants";
 import "../styles/SocialApps.scss";
+import {
+  AppToAuthURLGetterMapping,
+  appToAuthURLGetterMapping,
+} from "../util/thunkMappings";
 
 type Props = {
   onAppClick: (...args: unknown[]) => void;
@@ -15,7 +25,9 @@ type Props = {
 
 const SocialApps: FC<Props> = ({ onAppClick, isDisabled }) => {
   const dispatch = useAppDispatch();
-  const { activeApps, areTokensSet, exportFrom } = useAppSelector(
+  const {
+    activeApps, areTokensSet, exportFrom, curSelectionContext,
+  } = useAppSelector(
     (state) => state.sms,
   );
 
@@ -24,13 +36,23 @@ const SocialApps: FC<Props> = ({ onAppClick, isDisabled }) => {
     if (appName === "twitter") {
       dispatch(toggleConfirmModal());
     }
+
+    if (appToAuthURLGetterMapping[appName as keyof AppToAuthURLGetterMapping]) {
+      dispatch(appToAuthURLGetterMapping[appName as keyof AppToAuthURLGetterMapping]());
+    }
+
+    if (curSelectionContext === "exportFrom") {
+      dispatch(setExportFrom(appName as ExportFrom));
+    } else {
+      dispatch(setExportTo(appName));
+    }
   };
 
   return (
     <div className="social-app-container">
-      {(!areTokensSet[0]
-        ? activeApps
-        : getExportableTargetsOfCurApp(exportFrom)
+      {(curSelectionContext === "exportTo" && areTokensSet[0]
+        ? getExportableTargetsOfCurApp(exportFrom)
+        : activeApps
       ).map(getAppInfo).map(({
         title, appName, disabledText, isAppDisabled,
       }) => (

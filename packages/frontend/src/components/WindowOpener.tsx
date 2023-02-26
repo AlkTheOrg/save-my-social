@@ -35,7 +35,6 @@ const WindowOpener: FunctionComponent<WindowOpenerProps> = ({
         "_blank",
         `width=${width},height=${height},top=${marginTop},left=${marginLeft}`,
       );
-      console.log("newWindow:", newWindow);
       setOpenedWindow(newWindow);
       if (onOpen) onOpen();
     }
