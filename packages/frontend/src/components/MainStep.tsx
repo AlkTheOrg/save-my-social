@@ -69,7 +69,7 @@ const MainStep = (): JSX.Element => {
                 text={exportTo || "Unselected"}
                 onClick={handleSocialAppBtnClick}
                 isDisabled={!areTokensSet[0]}
-                buttonClass={exportFrom ? "" : "unselected"}
+                buttonClass={exportTo ? "" : "unselected"}
               />
             </div>
           </div>
