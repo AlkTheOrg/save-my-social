@@ -46,7 +46,7 @@ export const getExportThunkAction = (
       return importSpotifyPlaylistsToSheets(
         initialExportProps as FeaturesOfSpotifyExport,
       );
-    }
+    } // same thunk for both reddit saved models and twitter bookmarks
     return importItemsToSheets(initialExportProps);
   }
   // TODO: Whenn all exports are supported, abstract here to a mapping obj
