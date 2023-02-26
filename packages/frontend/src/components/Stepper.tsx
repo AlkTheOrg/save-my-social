@@ -10,7 +10,6 @@ type Props = {
 // a react stepper component
 const Stepper: FC<Props> = (props) => {
   const { steps, curStep } = props;
-  // const [activeStep, setActiveStep] = useState(curStep); // TODO: use this to animate the stepper
 
   return (
     <div className="stepper">

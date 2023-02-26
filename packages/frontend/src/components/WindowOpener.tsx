@@ -29,11 +29,10 @@ const WindowOpener: FunctionComponent<WindowOpenerProps> = ({
   const [openedWindow, setOpenedWindow] = useState<Window | null>(null);
 
   const handleOpen = useCallback(() => {
-    console.log("\ntarget:", target);
     if (target && !openedWindow) {
       const newWindow = window.open(
         target,
-        target,
+        "_blank",
         `width=${width},height=${height},top=${marginTop},left=${marginLeft}`,
       );
       console.log("newWindow:", newWindow);
@@ -44,7 +43,6 @@ const WindowOpener: FunctionComponent<WindowOpenerProps> = ({
 
   const handleClose = useCallback(() => {
     if (onClose) onClose();
-    console.log("handleClose :: closing window:", openedWindow);
     if (openedWindow && !openedWindow.closed) openedWindow.close();
     setOpenedWindow(null);
   }, [openedWindow, onClose]);
@@ -52,14 +50,13 @@ const WindowOpener: FunctionComponent<WindowOpenerProps> = ({
   useEffect(() => {
     if (shouldBeOpened && !openedWindow) handleOpen();
     else if (!shouldBeOpened && openedWindow && !openedWindow.closed) {
-      console.log("openedWindow:", openedWindow);
       handleClose();
     }
   }, [shouldBeOpened, openedWindow, handleOpen, handleClose]);
 
   // if the window is closed manually, we need to listen it and trigger handleClose()
   useEffect(() => {
-    console.log("rerenderrr");
+    // console.log("rerender");
     const isClosedInterval = setInterval(() => {
       // shouldBeOpened will be true when the window is closed manually by the user
       if (openedWindow && openedWindow.closed && shouldBeOpened) {
