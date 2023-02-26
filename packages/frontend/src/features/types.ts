@@ -34,7 +34,7 @@ export type FeaturesOfYoutubeExport = {
 // TWITTER
 type TwitterBookmarkExport = {
   bookmarks: {
-    lastTweetID: string,
+    paginationToken?: string,
   }
 }
 export type FeaturesOfTwitterExport = {

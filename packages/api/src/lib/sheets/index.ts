@@ -1,6 +1,6 @@
 import SpotifyWebApi from 'spotify-web-api-node';
 import { sheets_v4 } from 'googleapis';
-import { FeaturesOfRedditExport, FeaturesOfSpotifyExport } from '../../controllers/types.js';
+import { FeaturesOfRedditExport, FeaturesOfSpotifyExport, FeaturesOfTwitterExport } from '../../controllers/types.js';
 import {
   fetchPlaylistTracks,
   getPlaylist,
@@ -9,6 +9,7 @@ import {
 import { INITIAL_SHEET_NAME } from '../constants.js';
 import { fetchSavedModels as fetchSavedRedditModels, redditSavedModelColumnNames } from '../reddit/index.js';
 import { ImportDataIntoSheetResponse } from './types.js';
+import { fetchBookmarks as fetchTwitterBookmarks, twitterBookmarkColumnNames } from '../twitter/index.js';
 
 const freezeRowRequest = (frozenRowCount = 1) => ({
   gridProperties: {
@@ -212,7 +213,7 @@ export const importRedditDataIntoSheet = async (
   
   const { models, lastQueried } = await fetchSavedRedditModels(redditAccessToken, lastItemID);
   const sheetName = 'Saved Models';
-  await renameSheet(sheetsApi, 'Saved Models', spreadsheetId, firstSheetId);
+  await renameSheet(sheetsApi, sheetName, spreadsheetId, firstSheetId);
 
   const modelsData = models.map(Object.values);
   const data = isImportingForTheFirstTime
@@ -240,6 +241,53 @@ export const importRedditDataIntoSheet = async (
     spreadsheetId,
     lastSheetName: sheetName,
     numOfImportedItems: models.length,
+    newExportProps,
+    totalNumOfItems: -1,
+  })
+}
+
+
+export const importTwitterBookmarksToSheet = async (
+  sheetsApi: sheets_v4.Sheets,
+  twitterAccessToken: string,
+  exportProps: FeaturesOfTwitterExport,
+  spreadsheetId: string,
+  isImportingForTheFirstTime: boolean,
+  firstSheetId: number,
+  totalNumOfImportedItems: number,
+): Promise<ImportDataIntoSheetResponse> => {
+  const { twitter: { bookmarks: { paginationToken } }} = exportProps;
+  
+  // const { models, lastQueried } = await fetchSavedRedditModels(redditAccessToken, lastItemID);
+  const { nextToken, resultCount, tweets } = await fetchTwitterBookmarks(twitterAccessToken, paginationToken);
+  const sheetName = 'Twitter Bookmarks';
+  await renameSheet(sheetsApi, sheetName, spreadsheetId, firstSheetId);
+
+  const modelsData = tweets.map(Object.values);
+  const data = isImportingForTheFirstTime
+    ? [Object.keys(twitterBookmarkColumnNames), ...modelsData]
+    : modelsData;
+
+  const newExportProps: FeaturesOfTwitterExport = {
+    twitter: {
+      bookmarks: {
+        paginationToken: nextToken,
+      }
+    }
+  };
+
+  await importRowsIntoSheet(
+    sheetsApi,
+    data,
+    spreadsheetId,
+    // first time check is to avoid overwriting column data
+    totalNumOfImportedItems + 1 + (isImportingForTheFirstTime ? 0 : 1),
+  );
+  
+  return ({
+    spreadsheetId,
+    lastSheetName: sheetName,
+    numOfImportedItems: resultCount,
     newExportProps,
     totalNumOfItems: -1,
   })

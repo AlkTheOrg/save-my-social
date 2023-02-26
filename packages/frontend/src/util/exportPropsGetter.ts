@@ -17,7 +17,9 @@ const initialMapping: Record<ActiveExportApps, FeaturesOfSocialAppExport> = {
   },
   twitter: {
     twitter: {
-      bookmarks: { lastTweetID: "" },
+      bookmarks: {
+        paginationToken: "",
+      },
     },
   },
 };

@@ -31,3 +31,13 @@ export const fetchBookmarks = async (accessToken: string, pagination_token?: str
     resultCount: result_count,
   });
 }
+
+export const twitterBookmarkColumnNames: {
+  [P in keyof TweetResponse]: any;
+} = {
+  id:1,
+  text:1,
+  created_at: 1,
+  url: 1,
+  author: 1,
+};

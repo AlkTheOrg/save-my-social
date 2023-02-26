@@ -115,7 +115,7 @@ export type FeaturesOfYoutubeExport = {
 // TWITTER
 type TwitterBookmarkExport = {
   bookmarks: {
-    lastTweetID: string,
+    paginationToken: string,
   }
 }
 export type FeaturesOfTwitterExport = {
@@ -125,8 +125,8 @@ export type FeaturesOfTwitterExport = {
 export type FeaturesOfSocialAppExport =
   | FeaturesOfRedditExport
   | FeaturesOfSpotifyExport
+  | FeaturesOfTwitterExport;
   // | FeaturesOfYoutubeExport
-  // | FeaturesOfTwitterExport; // Inactive apps
 
 export interface ReqBodyWithExportProps {
   exportProps: FeaturesOfSocialAppExport

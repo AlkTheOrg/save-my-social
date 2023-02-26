@@ -3,7 +3,7 @@ import { ActiveApp } from "../controllers/types.js";
 export const appsToExportFrom = [
   "reddit",
   "spotify",
-  // "twitter",
+  "twitter",
   // "youtube",
 ] as ActiveApp[];
 

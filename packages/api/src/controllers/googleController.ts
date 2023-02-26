@@ -1,8 +1,13 @@
 import dotenv from 'dotenv';
 import { Request, Response } from 'express';
-import { CustomRequestWithAT, FeaturesOfRedditExport, FeaturesOfSpotifyExport, ScopeVariables } from '../controllers/types.js';
-// import drive from '@googleapis/drive'; //TODO uninstall these packages if there is no way to setCredentials with them
-// import sheets from '@googleapis/sheets';
+import {
+  CustomRequestWithAT,
+  FeaturesOfRedditExport,
+  FeaturesOfSpotifyExport,
+  FeaturesOfTwitterExport,
+  ScopeVariables
+} from './types.js';
+// import sheets from '@googleapis/sheets'; //TODO uninstall these packages if there is no way to setCredentials with them
 // import youtube from '@googleapis/youtube';
 import { google } from "googleapis";
 import { getAppExportFeatureKey, getWindowErrorPosterHTML, sendMsgResponse } from './../lib/index.js';
@@ -12,13 +17,14 @@ import {
   createSpreadSheet,
   getSpreadSheet,
   importSpotifyDataIntoSheet,
-  importRedditDataIntoSheet
+  importRedditDataIntoSheet,
+  importTwitterBookmarksToSheet
 } from '../lib/sheets/index.js';
 import { appsToExportFrom } from '../lib/constants.js';
 import { getAccessToken, setAccessToken } from '../lib/accessTokenManager.js';
 dotenv.config();
 
-const { GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI, GOOGLE_SECRET, GOOGLE_STATE } =
+const { GOOGLE_CLIENT_ID, GOOGLE_REDIRECT_URI, GOOGLE_SECRET } =
   process.env;
 const oauth2Client = new google.auth.OAuth2(
   GOOGLE_CLIENT_ID,
@@ -51,14 +57,11 @@ const login = (_: Request, res: Response) => {
 
 const logged = async (req: Request, res: Response) => {
   const code = (req.query.code as string) || null;
-  const state = (req.query.state as string) || null;
   const error = (req.query.error as string) || null;
 
   if (error) {
     console.log(error);
     res.send(getWindowErrorPosterHTML(error));
-  } else if (state === null || state !== GOOGLE_STATE) {
-    res.send(getWindowErrorPosterHTML(`Your GOOGLE_STATE token is not same with '${state}'`));
   } else {
     oauth2Client
       .getToken(code)
@@ -137,6 +140,19 @@ const importItemsToSheets = async (
           isImportingForTheFirstTime,
           firstSheetId,
           totalNumOfImportedItems
+        );
+        break;
+      }
+      
+      case 'twitter': {
+        importToSheetsRes = await importTwitterBookmarksToSheet(
+          sheetsApi,
+          accessTokenSocial,
+          exportProps as FeaturesOfTwitterExport,
+          spreadsheetId,
+          isImportingForTheFirstTime,
+          firstSheetId,
+          totalNumOfImportedItems,
         );
         break;
       }
