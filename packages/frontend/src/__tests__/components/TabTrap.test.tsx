@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import TabTrap from "../components/TabTrap";
+import TabTrap from "../../components/TabTrap";
 
 describe("TabTrap", () => {
   it("Should focus on the first element", () => {
