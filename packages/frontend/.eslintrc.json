@@ -30,12 +30,6 @@
       }
     ],
     "react/jsx-filename-extension": ["warn", { "extensions": [".tsx"] }],
-    // "@typescript-eslint/explicit-function-return-type": [
-    //   "warn",
-    //   {
-    //     "allowExpressions": true
-    //   }
-    // ],
     "@typescript-eslint/explicit-function-return-type": "off",
     "react/function-component-definition": [
       "error",
