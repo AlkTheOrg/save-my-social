@@ -42,4 +42,18 @@ describe("WindowOpener", () => {
     global.dispatchEvent(new MessageEvent("message"));
     expect(onMessage).toHaveBeenCalled();
   });
+
+  it("should add message event listener and remove it when component is unmounted", () => {
+    const addEventListenerMock = jest.spyOn(global, "addEventListener");
+    const removeEventListenerMock = jest.spyOn(global, "removeEventListener");
+    expect(global).toHaveProperty("addEventListener");
+    const onMessage = jest.fn();
+    const { unmount } = render(
+      <WindowOpener shouldBeOpened={false} onMessage={onMessage} />,
+    );
+    expect(addEventListenerMock).toHaveBeenCalledWith("message", onMessage);
+    expect(removeEventListenerMock).not.toHaveBeenCalled();
+    unmount();
+    expect(removeEventListenerMock).toHaveBeenCalledWith("message", onMessage);
+  });
 });
