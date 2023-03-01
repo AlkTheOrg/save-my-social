@@ -1,16 +1,23 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore, PreloadedState } from "@reduxjs/toolkit";
 import smsReducer from "./smsSlice";
 import windowOpenerReducer from "../features/windowOpener";
 
-export const store = configureStore({
-  reducer: {
-    sms: smsReducer,
-    windowOpener: windowOpenerReducer,
-  },
+// exported for test-utils.tsx
+export const rootReducer = combineReducers({
+  sms: smsReducer,
+  windowOpener: windowOpenerReducer,
 });
 
-export type AppDispatch = typeof store.dispatch;
-export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof rootReducer>
+
+export function setupStore(preloadedState?: PreloadedState<RootState>) {
+  return configureStore({
+    reducer: rootReducer,
+    preloadedState,
+  });
+}
+export type AppStore = ReturnType<typeof setupStore>
+export type AppDispatch = AppStore["dispatch"]
 
 export type ThunkAPI = {
   dispatch: AppDispatch,
