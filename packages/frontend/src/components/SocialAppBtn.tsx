@@ -1,4 +1,4 @@
-import { KeyboardEvent } from "react";
+import { KeyboardEvent, memo } from "react";
 
 export type Props = {
   onClick: () => void,
@@ -37,4 +37,4 @@ const SocialAppBtn: (props: Props) => JSX.Element = ({
   );
 };
 
-export default SocialAppBtn;
+export default memo(SocialAppBtn);

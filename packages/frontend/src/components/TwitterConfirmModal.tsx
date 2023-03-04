@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { reset, setToken, toggleConfirmModal } from "../app/smsSlice";
 import ConfirmModal from "./ConfirmModal";
@@ -36,4 +36,4 @@ const TwitterConfirmModal: FC<Record<string, never>> = () => {
   );
 };
 
-export default TwitterConfirmModal;
+export default memo(TwitterConfirmModal);

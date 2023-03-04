@@ -1,3 +1,4 @@
+import { memo } from "react";
 import "../styles/Header.scss";
 
 const Header = (): JSX.Element => {
@@ -21,4 +22,4 @@ const Header = (): JSX.Element => {
   );
 };
 
-export default Header;
+export default memo(Header);

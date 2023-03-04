@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import {
   reset,
@@ -26,10 +26,20 @@ const MainStep = (): JSX.Element => {
     (state) => state.sms,
   );
 
-  const handleSocialAppBtnClick = (newContext: SelectionContext) => {
+  const handleSocialAppBtnClick = useCallback((newContext: SelectionContext) => {
     dispatch(setCurSelectionContext(newContext));
     setIsSocialAppsModalOpen(true);
-  };
+  }, [dispatch]);
+
+  const handleExportFromAppBtnClick = useCallback(
+    () => handleSocialAppBtnClick("exportFrom"),
+    [handleSocialAppBtnClick],
+  );
+
+  const handleExportToAppBtnClick = useCallback(
+    () => handleSocialAppBtnClick("exportTo"),
+    [handleSocialAppBtnClick],
+  );
 
   const handleFinish = () => {
     if (exportFrom && exportTo) {
@@ -64,7 +74,7 @@ const MainStep = (): JSX.Element => {
               <SocialAppBtn
                 logoPath={getAppLogoPath(exportFrom)}
                 text={exportFrom || "Unselected"}
-                onClick={() => handleSocialAppBtnClick("exportFrom")}
+                onClick={handleExportFromAppBtnClick}
                 buttonClass={exportFrom ? "" : "unselected"}
               />
             </div>
@@ -73,7 +83,7 @@ const MainStep = (): JSX.Element => {
               <SocialAppBtn
                 logoPath={getAppLogoPath(exportTo)}
                 text={exportTo || "Unselected"}
-                onClick={() => handleSocialAppBtnClick("exportTo")}
+                onClick={handleExportToAppBtnClick}
                 isDisabled={!areTokensSet[0]}
                 buttonClass={exportTo ? "" : "unselected"}
               />
