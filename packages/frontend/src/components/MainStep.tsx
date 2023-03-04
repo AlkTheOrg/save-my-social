@@ -117,7 +117,6 @@ const MainStep = (): JSX.Element => {
         />
       </Modal>
       <TwitterConfirmModal />
-
     </>
   );
 };
