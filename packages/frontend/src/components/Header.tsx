@@ -4,7 +4,9 @@ const Header = (): JSX.Element => {
   return (
     <header className="header">
       <div className="header-container">
-        <div className="logo" />
+        <a href="/" className="logo">
+          <img src="logos/sms-logo.png" alt="App Logo" />
+        </a>
         <div className="links">
           <a href="/">About</a>
           <a href="https://twitter.com/alk_org" target="_blank" rel="noreferrer">

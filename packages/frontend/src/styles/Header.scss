@@ -10,15 +10,16 @@
     padding-inline: 100px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
 
   .logo {
-    $logoInlineSize: 36px;
+    $logoInlineSize: 52px;
     inline-size: $logoInlineSize;
     min-inline-size: $logoInlineSize;
     block-size: $logoInlineSize;
     border-radius: 50%;
-    background-color: #614CE7;
+    img { width: 100%; }
   }
 
   .links {

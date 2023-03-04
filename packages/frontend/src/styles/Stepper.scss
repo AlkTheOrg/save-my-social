@@ -1,12 +1,12 @@
 .stepper {
-  $activeStepColor: #614CE7;
-  $incompletedStepColor: #8A9FEC;
+  $activeStepColor: #15aef9;
+  $incompletedStepColor: #9ac7f9;
   $completedStepColor: #D4D4D4;
-  $regularStepSize: 44px;
+  $regularStepSize: 38px;
   $stepMarginInlineStart: 250px;
   $stepAmount: 3;
 
-  margin-block-end: 50px;
+  margin-block-end: 45px;
   margin-inline: auto;
   height: 90px;
   
