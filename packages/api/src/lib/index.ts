@@ -1,7 +1,8 @@
 import { Response } from "express";
 import { ActiveApp,  FeaturesOfSocialAppExport } from "../controllers/types.js";
 
-const htmlHead = (title = 'Authorization') => `<head>
+const htmlHead = (title = 'Authorization') => `
+<head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,9 +20,9 @@ export const htmlPage = (body: string) => `
 <!DOCTYPE html>
 <html lang="en">
 ${htmlHead()}
-<body>
-${body}
-</body>
+  <body>
+    ${body}
+  </body>
 </html>
 `
 

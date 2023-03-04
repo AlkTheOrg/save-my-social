@@ -1,4 +1,5 @@
-import { concatWithEmptySpace, encodeURIOptions } from '../../src/lib/index.js';
+import { ActiveApp, FeaturesOfSocialAppExport } from '../../src/controllers/types.js';
+import { concatWithEmptySpace, encodeURIOptions, getAppExportFeatureKey } from '../../src/lib/index.js';
 
 describe('lib', () => {
   test('encodeURIOptions', () => {
@@ -23,4 +24,16 @@ describe('lib', () => {
     const expected = 'a b c';
     expect(arr.reduce(concatWithEmptySpace)).toBe(expected);
   });
+  
+  test('getAppExportFeatureKey', () => {
+    const exportProps: FeaturesOfSocialAppExport = {
+      twitter: {
+        bookmarks: {
+          paginationToken: undefined,
+        }
+      }
+    };
+    const appName: ActiveApp = 'twitter';
+    expect(getAppExportFeatureKey(exportProps, appName)).toEqual('bookmarks');
+  })
 });

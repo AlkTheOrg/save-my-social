@@ -150,7 +150,7 @@ export const importSpotifyDataIntoSheet = async (
 
   const shouldImportColumnData = lastSheetName ? false : true;
   let sheetName = lastSheetName;
-  
+
   // first time importing this playlist
   if (!offset) {
     if (isImportingForTheFirstTime) {
@@ -161,7 +161,7 @@ export const importSpotifyDataIntoSheet = async (
     }
     sheetName = playlistName;
   }
-  
+
   const { newOffset, tracks, next } = await fetchPlaylistTracks(
     spotifyApi,
     playlistId,
@@ -220,7 +220,6 @@ export const importRedditDataIntoSheet = async (
     ? [Object.keys(redditSavedModelColumnNames), ...modelsData]
     : modelsData;
 
-
   const newExportProps: FeaturesOfRedditExport = {
     reddit: {
       saved: {
@@ -236,7 +235,7 @@ export const importRedditDataIntoSheet = async (
     // first time check is to avoid overwriting column data
     totalNumOfImportedItems + 1 + (isImportingForTheFirstTime ? 0 : 1),
   );
-  
+
   return ({
     spreadsheetId,
     lastSheetName: sheetName,
@@ -245,7 +244,6 @@ export const importRedditDataIntoSheet = async (
     totalNumOfItems: -1,
   })
 }
-
 
 export const importTwitterBookmarksToSheet = async (
   sheetsApi: sheets_v4.Sheets,
@@ -283,7 +281,7 @@ export const importTwitterBookmarksToSheet = async (
     // first time check is to avoid overwriting column data
     totalNumOfImportedItems + 1 + (isImportingForTheFirstTime ? 0 : 1),
   );
-  
+
   return ({
     spreadsheetId,
     lastSheetName: sheetName,

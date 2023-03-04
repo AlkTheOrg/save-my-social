@@ -1,5 +1,4 @@
 import { Client } from '@notionhq/client';
-import { FeaturesOfSocialAppExport } from '../../src/controllers/types.js';
 import DBCreator from '../../src/lib/notion/dbCreator.js';
 import {
   // getAppExportFeatureKey,
@@ -143,17 +142,6 @@ describe('notion', () => {
       },
     });
   });
-
-  // it('should get app export feature key', () => {
-  //   const redditExportProps: FeaturesOfSocialAppExport = {
-  //     reddit: {
-  //       saved: {
-  //         lastItemID: '',
-  //       },
-  //     },
-  //   };
-  //   expect(getAppExportFeatureKey(redditExportProps, 'reddit')).toBe('saved');
-  // });
 
   it('should get last edited page', async () => {
     const notion = {} as Client;

@@ -43,15 +43,15 @@ const spotifyTrackMapper = (item: TrackItem): MappedTrackItem => {
   };
 };
 
-const spotifyPlaylistMapper = (playlist: Playlist) => ({
-  id: playlist.id,
-  name: playlist.name,
-  owner: playlist.owner.id,
-  numOfTracks: playlist.tracks.total,
-  description: playlist.description,
-  uri: playlist.uri,
-  images: playlist.images.map((image) => image.url).join('|'),
-});
+// const spotifyPlaylistMapper = (playlist: Playlist) => ({
+//   id: playlist.id,
+//   name: playlist.name,
+//   owner: playlist.owner.id,
+//   numOfTracks: playlist.tracks.total,
+//   description: playlist.description,
+//   uri: playlist.uri,
+//   images: playlist.images.map((image) => image.url).join('|'),
+// });
 
 export const getPlaylist = (spotifyApi, id: string): Promise<GetPlaylistReponse> => spotifyApi.getPlaylist(id);
 
