@@ -54,17 +54,6 @@ const MainStep = (): JSX.Element => {
 
   return (
     <>
-      <Modal
-        isOpen={isSocialAppsModalOpen}
-        onClose={() => setIsSocialAppsModalOpen(false)}
-        heading={exportFrom ? "Select Export To" : "Select Export From"}
-      >
-        <SocialApps
-          onAppClick={() => setIsSocialAppsModalOpen(false)}
-          isDisabled={!isSocialAppsModalOpen}
-        />
-      </Modal>
-      <TwitterConfirmModal />
       <div className="final">
         <div className="final__summary">
           <h2 className="final__summary__title">Export</h2>
@@ -116,6 +105,19 @@ const MainStep = (): JSX.Element => {
         </div>
         )}
       </div>
+
+      <Modal
+        isOpen={isSocialAppsModalOpen}
+        onClose={() => setIsSocialAppsModalOpen(false)}
+        heading={exportFrom ? "Select Export To" : "Select Export From"}
+      >
+        <SocialApps
+          onAppClick={() => setIsSocialAppsModalOpen(false)}
+          isDisabled={!isSocialAppsModalOpen}
+        />
+      </Modal>
+      <TwitterConfirmModal />
+
     </>
   );
 };
