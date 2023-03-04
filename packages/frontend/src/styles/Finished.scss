@@ -11,9 +11,10 @@
     font-size: 26px;
     margin-block-end: 24px;
     line-height: 36px;
+    font-weight: 500;
     span {
       text-transform: capitalize;
-      font-weight: 600;
+      font-weight: bold;
       font-size: 30px;
     }
   }
@@ -21,6 +22,7 @@
   #final-link {
     font-size: 24px;
     margin-block-end: 38px;
+    font-weight: 500;
     a {
       font-weight: bold;
       transition: color .2s ease;

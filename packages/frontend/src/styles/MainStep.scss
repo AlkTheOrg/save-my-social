@@ -41,6 +41,7 @@
           h3 {
             text-transform: capitalize;
             bottom: 46px;
+            font-weight: 500;
           }
           &.unselected {
             border-radius: 50%;
@@ -102,6 +103,7 @@
     margin-block-start: 24px;
     margin-block-end: 28px;
     font-size: 24px;
+    font-weight: 500;
   }
 
   @media screen and (max-width: 1250px) {
