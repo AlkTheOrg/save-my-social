@@ -13,6 +13,6 @@ export interface TweetResponse extends Omit<TweetV2, "author_id">{
 
 export type GetBookmarksResponse = {
   tweets: TweetResponse[],
-  nextToken: string,
+  nextToken?: string,
   resultCount: number,
 }

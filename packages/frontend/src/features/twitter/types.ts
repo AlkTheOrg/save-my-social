@@ -13,6 +13,6 @@ export type TweetResponse = {
 
 export type GetBookmarksResponse = {
   tweets: TweetResponse[],
-  nextToken: string,
+  nextToken?: string,
   resultCount: number,
 }

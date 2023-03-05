@@ -115,8 +115,9 @@ export const sheetExists = async (
 ): Promise<boolean> => {
   const spreadsheet = await sheetsApi.spreadsheets.get({ spreadsheetId });
   const sheets = spreadsheet.data.sheets;
+  if (!sheets) return false;
   for (const sheet of sheets) {
-    if (sheet.properties.title === sheetName) return true;
+    if (sheet.properties?.title === sheetName) return true;
   }
   return false;
 };
@@ -162,7 +163,7 @@ export const importSpotifyDataIntoSheet = async (
     sheetName = playlistName;
   }
 
-  const { newOffset, tracks, next } = await fetchPlaylistTracks(
+  const { newOffset, tracks, next: _next } = await fetchPlaylistTracks(
     spotifyApi,
     playlistId,
     totalNumOfImportedItems,

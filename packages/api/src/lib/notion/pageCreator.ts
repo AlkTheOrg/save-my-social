@@ -105,7 +105,7 @@ export const createTweetPropsForDBPage = (
 ): Array<CreateDBPagePropArguments> => [
   { key: 'ID', type: 'title', value: tweet.id },
   { key: 'Text', type: 'rich_text', value: tweet.text },
-  { key: 'Created At', type: 'rich_text', value: tweet.created_at },
+  { key: 'Created At', type: 'rich_text', value: tweet.created_at || '' },
   { key: 'Link', type: 'url', value: tweet.url },
   { key: 'Author', type: 'rich_text', value: tweet.author },
 ];

@@ -24,12 +24,12 @@ const { REDDIT_CLIENT_ID, REDDIT_REDIRECT_URI, REDDIT_SECRET, REDDIT_STATE } =
   process.env;
 
 const options: OTTReqOptions = {
-  client_id: REDDIT_CLIENT_ID,
-  redirect_uri: REDDIT_REDIRECT_URI,
+  client_id: REDDIT_CLIENT_ID as string,
+  redirect_uri: REDDIT_REDIRECT_URI as string,
   scope: scopeVariables.reduce(concatWithEmptySpace),
   response_type: 'code',
   show_dialog: 'true',
-  state: REDDIT_STATE,
+  state: REDDIT_STATE as string,
 };
 
 const uriEncodedOptions = encodeURIOptions(options);
@@ -45,7 +45,7 @@ const login = (_: Request, res: Response) => {
 };
 
 const logged = async (req: Request, res: Response) => {
-  const code = (req.query.code as string) || null;
+  const code = (req.query.code as string) || '';
   const state = (req.query.state as string) || null;
   const error = (req.query.error as string) || null;
 
@@ -57,9 +57,9 @@ const logged = async (req: Request, res: Response) => {
   } else {
     const authOptions = getAuthOptions(
       code,
-      REDDIT_REDIRECT_URI,
-      REDDIT_CLIENT_ID,
-      REDDIT_SECRET,
+      REDDIT_REDIRECT_URI as string,
+      REDDIT_CLIENT_ID as string,
+      REDDIT_SECRET as string,
     );
 
     axios.post(authOptions.url, encodeURIOptions(authOptions.form), authOptions.axiosConfig)

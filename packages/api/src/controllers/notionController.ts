@@ -40,12 +40,12 @@ const { NOTION_CLIENT_ID, NOTION_REDIRECT_URI, NOTION_SECRET, NOTION_STATE } =
   process.env;
 
 const options: OTTReqNotionOptions = {
-  client_id: NOTION_CLIENT_ID,
-  redirect_uri: NOTION_REDIRECT_URI,
+  client_id: NOTION_CLIENT_ID as string,
+  redirect_uri: NOTION_REDIRECT_URI as string,
   response_type: 'code',
   owner: 'user',
   show_dialog: 'true',
-  state: NOTION_STATE,
+  state: NOTION_STATE as string,
 };
 
 const redirectUrl = (_: Request, res: Response) => {
@@ -63,7 +63,7 @@ const login = (_: Request, res: Response) => {
 };
 
 const logged = async (req: Request, res: Response) => {
-  const code = (req.query.code as string) || null;
+  const code = (req.query.code as string) || '';
   const state = (req.query.state as string) || null;
   const error = (req.query.error as string) || null;
 
@@ -75,9 +75,9 @@ const logged = async (req: Request, res: Response) => {
   } else {
     const authOptions = getAuthOptions(
       code,
-      NOTION_REDIRECT_URI,
-      NOTION_CLIENT_ID,
-      NOTION_SECRET,
+      NOTION_REDIRECT_URI as string,
+      NOTION_CLIENT_ID as string,
+      NOTION_SECRET as string,
     );
 
     axios.post(authOptions.url, authOptions.form, authOptions.axiosConfig)

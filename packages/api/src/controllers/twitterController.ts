@@ -7,7 +7,7 @@ import { htmlPage } from '../lib/index.js';
 import { getAccessToken, setAccessToken } from '../lib/accessTokenManager.js';
 import { fetchBookmarks } from '../lib/twitter/index.js';
 
-const codeVerifiers = [];
+const codeVerifiers = [] as string[];
 
 const {
   TWITTER_CLIENT_ID,
@@ -24,13 +24,13 @@ const scopeVariables: ScopeVariables = [
 ]; // https://developer.twitter.com/en/docs/authentication/oauth-2-0/authorization-code
 
 const twitterClient = new TwitterApi({
-  clientId: TWITTER_CLIENT_ID,
+  clientId: TWITTER_CLIENT_ID as string,
   clientSecret: TWITTER_SECRET,
 })
 
 const redirectUrl = (_: Request, res: Response) => {
   const { url, codeVerifier } = twitterClient.generateOAuth2AuthLink(
-    TWITTER_REDIRECT_URI,
+    TWITTER_REDIRECT_URI as string,
     { scope: scopeVariables, state: TWITTER_STATE },
   );
   codeVerifiers.push(codeVerifier);
@@ -39,7 +39,7 @@ const redirectUrl = (_: Request, res: Response) => {
 
 const login = (_: Request, res: Response) => {
   const { url, codeVerifier } = twitterClient.generateOAuth2AuthLink(
-    TWITTER_REDIRECT_URI,
+    TWITTER_REDIRECT_URI as string,
     { scope: scopeVariables, state: TWITTER_STATE },
   );
   codeVerifiers.push(codeVerifier);
@@ -47,7 +47,7 @@ const login = (_: Request, res: Response) => {
 }
 
 const logged = async (req: Request, res: Response) => {
-  const code = (req.query.code as string) || null;
+  const code = (req.query.code as string) || '';
   const state = (req.query.state as string) || null;
   const error = (req.query.error as string) || null;
 
@@ -66,8 +66,8 @@ const logged = async (req: Request, res: Response) => {
     try {
       const { client: _client, accessToken } = await twitterClient.loginWithOAuth2({
         code,
-        codeVerifier: codeVerifiers.pop(),
-        redirectUri: TWITTER_REDIRECT_URI,
+        codeVerifier: codeVerifiers.pop() || '',
+        redirectUri: TWITTER_REDIRECT_URI as string,
       });
       setAccessToken('twitter', accessToken);
       res.send(htmlPage(`

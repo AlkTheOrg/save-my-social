@@ -17,6 +17,7 @@ export const fetchBookmarks = async (accessToken: string, pagination_token?: str
     }
   ); */
   const userIds = bookmarks.data.map(b => b.author_id);
+  // @ts-ignore
   const users = await client.v2.users(userIds);
   const result: TweetResponse[] = bookmarks.data.map((b, i) => ({
     id: b.id,

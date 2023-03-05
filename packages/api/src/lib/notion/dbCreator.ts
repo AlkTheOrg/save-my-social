@@ -169,7 +169,7 @@ export const socialAppToDBPropsMapping: SocialAppToDBPropsMapping = {
         {
           type: 'number',
           key: 'Popularity',
-          args: undefined,
+          args: 'number',
         },
         {
           type: 'checkbox',

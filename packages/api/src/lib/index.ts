@@ -80,7 +80,7 @@ export const sendMsgResponse = (
 export const getAppExportFeatureKey = (
   exportProps: FeaturesOfSocialAppExport,
   appName: ActiveApp
-): string => {
+): string | null => {
   const propertiesOfAppExport = exportProps[appName];
   const featureKey = 
     Object.keys(propertiesOfAppExport).length < 1

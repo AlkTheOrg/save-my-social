@@ -56,7 +56,7 @@ const login = (_: Request, res: Response) => {
 };
 
 const logged = async (req: Request, res: Response) => {
-  const code = (req.query.code as string) || null;
+  const code = (req.query.code as string) || '';
   const error = (req.query.error as string) || null;
 
   if (error) {
@@ -66,8 +66,15 @@ const logged = async (req: Request, res: Response) => {
     oauth2Client
       .getToken(code)
       .then((response) => {
-        setAccessToken('sheets', response.tokens.access_token);
-        res.send(getWindowAccessTokenInfoPosterHTML(!!response.tokens.access_token));
+        const accessToken = response.tokens.access_token;
+        if (accessToken) {
+          setAccessToken('sheets', accessToken);
+          res.send(getWindowAccessTokenInfoPosterHTML(!!response.tokens.access_token));
+        } else {
+          res.send(
+            getWindowErrorPosterHTML('Returned access token is null.'),
+          );  
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -107,10 +114,18 @@ const importItemsToSheets = async (
     oauth2Client.setCredentials({ access_token: accessToken });
     const sheetsApi = google.sheets({ version: "v4", auth: oauth2Client });
 
-    const { data: { spreadsheetId, sheets, spreadsheetUrl }} = lastSpreadsheetID
+    const { data: { spreadsheetId, sheets }} = lastSpreadsheetID
       ? await getSpreadSheet(sheetsApi, lastSpreadsheetID)
       : await createSpreadSheet(sheetsApi, exportType.toUpperCase());
-    const firstSheetId = sheets[0].properties.sheetId;
+
+    if (!sheets || !spreadsheetId) { // never faced with this case, but added for ts compiler 
+      const errorMsg = lastSpreadsheetID
+        ? `Could not get the spreadsheet with id ${lastSpreadsheetID}.`
+        : 'Error while creating a new spreadsheet.';
+      sendMsgResponse(res, 401, errorMsg);
+      return;
+    }
+    const firstSheetId = sheets[0].properties?.sheetId as number;
     
     const isImportingForTheFirstTime = lastSpreadsheetID ? false : true;
     
@@ -123,7 +138,7 @@ const importItemsToSheets = async (
           accessTokenSocial,
           exportProps as FeaturesOfSpotifyExport,
           spreadsheetId,
-          lastSheetName,
+          lastSheetName || '',
           isImportingForTheFirstTime,
           firstSheetId,
           totalNumOfImportedItems

@@ -36,12 +36,12 @@ const {
 } = process.env;
 
 const options: OTTReqOptions = {
-  client_id: SPOTIFY_CLIENT_ID,
-  redirect_uri: SPOTIFY_REDIRECT_URI,
+  client_id: SPOTIFY_CLIENT_ID as string,
+  redirect_uri: SPOTIFY_REDIRECT_URI as string,
   scope: scopeVariables.reduce(concatWithEmptySpace),
   response_type: 'code',
   show_dialog: 'true',
-  state: SPOTIFY_STATE,
+  state: SPOTIFY_STATE as string,
 };
 
 const redirectUrl = (_: Request, res: Response) => {
@@ -57,7 +57,7 @@ const login = (_: Request, res: Response) => {
 };
 
 const logged = async (req: Request, res: Response) => {
-  const code = (req.query.code as string) || null;
+  const code = (req.query.code as string) || '';
   const state = (req.query.state as string) || null;
   const error = (req.query.error as string) || null;
 
@@ -71,7 +71,7 @@ const logged = async (req: Request, res: Response) => {
       url: 'https://accounts.spotify.com/api/token',
       form: {
         code,
-        redirect_uri: SPOTIFY_REDIRECT_URI,
+        redirect_uri: SPOTIFY_REDIRECT_URI as string,
         grant_type: 'authorization_code'
       },
       axiosConfig: {
