@@ -27,9 +27,10 @@ const MainStep = (): JSX.Element => {
   );
 
   const handleSocialAppBtnClick = useCallback((newContext: SelectionContext) => {
+    if (isLoading) return;
     dispatch(setCurSelectionContext(newContext));
     setIsSocialAppsModalOpen(true);
-  }, [dispatch]);
+  }, [dispatch, isLoading]);
 
   const handleExportFromAppBtnClick = useCallback(
     () => handleSocialAppBtnClick("exportFrom"),
