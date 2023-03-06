@@ -5,9 +5,6 @@ import {
   ImportItemsToNotionResponse,
 } from "./endpointTypes";
 
-export const fetchAuthURL = () =>
-  axios.get<{ url: string }>(`${NOTION_BACKEND}/auth-url`);
-
 export const importItemsToNotion = (payload: ImportItemsToNotionPayload) =>
   axios.post<ImportItemsToNotionResponse>(
     `${NOTION_BACKEND}/importItems`,

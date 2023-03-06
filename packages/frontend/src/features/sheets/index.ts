@@ -4,12 +4,7 @@ import { ThunkAPI } from "../../app/store";
 import { getImportStartedText } from "../spotify";
 import { fetchPlaylists } from "../spotify/spotifyApiService";
 import { FeaturesOfSocialAppExport, FeaturesOfSpotifyExport } from "../types";
-import { fetchAuthURL, importItemsToSheets } from "./sheetApiService";
-
-export const getAuthURL = createAsyncThunk("sheets/authURL", async () => {
-  const response = await fetchAuthURL();
-  return response.data.url;
-});
+import { importItemsToSheets } from "./sheetApiService";
 
 const recursivelyImportToSheets = async (
   exportProps: FeaturesOfSocialAppExport,

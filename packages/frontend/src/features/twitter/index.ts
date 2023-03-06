@@ -3,13 +3,8 @@ import { setMessage } from "../../app/smsSlice";
 import { ThunkAPI } from "../../app/store";
 import { prepareBlobURL } from "../../util";
 import { UrlAndFileNameThunkResponse } from "../types";
-import { fetchAuthURL, fetchTwitterBookmarks } from "./twitterApiService";
+import { fetchTwitterBookmarks } from "./twitterApiService";
 import { TweetResponse } from "./types";
-
-export const getAuthURL = createAsyncThunk("twitter/authURL", async () => {
-  const response = await fetchAuthURL();
-  return response.data.url;
-});
 
 export const getTwitterBookmarks = createAsyncThunk<
   UrlAndFileNameThunkResponse,

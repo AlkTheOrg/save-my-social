@@ -1,27 +1,22 @@
-import { AsyncThunk, AsyncThunkAction } from "@reduxjs/toolkit";
-import { ExportFrom, ExportTo, SmsApp } from "../app/smsSlice";
+import { AsyncThunkAction } from "@reduxjs/toolkit";
+import { ExportFrom, ExportTo } from "../app/smsSlice";
 import { ThunkAPI } from "../app/store";
 import {
   importItems as importItemsToNotion,
   importSpotifyPlaylistsToNotion,
-  getAuthURL as getNotionAuthURL,
 } from "../features/notion";
 import {
   importItems as importItemsToSheets,
   importSpotifyPlaylistsToSheets,
-  getAuthURL as getSheetsAuthURL,
 } from "../features/sheets";
-import { getSavedModels, getAuthURL as getRedditAuthURL } from "../features/reddit";
-import { getPlaylists, getAuthURL as getSpotifyAuthURL } from "../features/spotify";
+import { getSavedModels } from "../features/reddit";
+import { getPlaylists } from "../features/spotify";
 import {
   FeaturesOfSocialAppExport,
   FeaturesOfSpotifyExport,
   UrlAndFileNameThunkResponse,
 } from "../features/types";
-import {
-  getTwitterBookmarks,
-  getAuthURL as getTwitterAuthURL,
-} from "../features/twitter";
+import { getTwitterBookmarks } from "../features/twitter";
 
 export type GenuineExportFrom = Exclude<ExportFrom, "">;
 export type GenuineExportTo = Exclude<ExportTo, "">;
@@ -62,19 +57,4 @@ export const getExportThunkAction = (
   }
   // exportTo === "notion" && (exportFrom is either "reddit" or "twitter")
   return importItemsToNotion(initialExportProps);
-};
-
-// AUTH MAPPINGS
-export type AppToAuthURLGetterMapping = Record<
-  Exclude<SmsApp, "" | "download">,
-  AsyncThunk<string, void, Record<string, unknown>>
->;
-
-export const appToAuthURLGetterMapping: AppToAuthURLGetterMapping = {
-  reddit: getRedditAuthURL,
-  spotify: getSpotifyAuthURL,
-  twitter: getTwitterAuthURL,
-  youtube: getRedditAuthURL, // TODO: Update when implemented
-  notion: getNotionAuthURL,
-  sheets: getSheetsAuthURL,
 };

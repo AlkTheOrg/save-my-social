@@ -4,12 +4,7 @@ import { ThunkAPI } from "../../app/store";
 import { prepareBlobURL } from "../../util";
 import { UrlAndFileNameThunkResponse } from "../types";
 import { SavedModel } from "./endpointTypes";
-import { fetchAuthURL, fetchSavedModels } from "./redditApiService";
-
-export const getAuthURL = createAsyncThunk("reddit/authURL", async () => {
-  const response = await fetchAuthURL();
-  return response.data.url;
-});
+import { fetchSavedModels } from "./redditApiService";
 
 export const getSavedModels = createAsyncThunk<
   UrlAndFileNameThunkResponse,

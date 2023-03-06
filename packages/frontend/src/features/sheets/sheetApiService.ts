@@ -1,13 +1,9 @@
 import axios from "axios";
-import { GOOGLE_BACEND, SHEETS_BACEND } from "../../constants/apiEndpoints";
+import { SHEETS_BACEND } from "../../constants/apiEndpoints";
 import {
-  FetchAuthURLResponse,
   ImportItemsIntoSheetsPayload,
   ImportItemsIntoSheetsResponse,
 } from "./endpointTypes";
-
-export const fetchAuthURL = () =>
-  axios.get<FetchAuthURLResponse>(`${GOOGLE_BACEND}/auth-url`);
 
 export const importItemsToSheets = (payload: ImportItemsIntoSheetsPayload) =>
   axios.post<ImportItemsIntoSheetsResponse>(

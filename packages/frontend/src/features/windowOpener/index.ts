@@ -1,9 +1,17 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getAuthURL as getRedditAuthURL } from "../reddit";
-import { getAuthURL as getNotionAuthURL } from "../notion";
-import { getAuthURL as getSheetsAuthURL } from "../sheets";
-import { getAuthURL as getSpotifyAuthURL } from "../spotify";
-import { getAuthURL as getTwitterAuthURL } from "../twitter";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
+import { SmsApp } from "../../app/smsSlice";
+import { ThunkAPI } from "../../app/store";
+import { root } from "../../constants/apiEndpoints";
+
+export const getAuthURL = createAsyncThunk<
+  string,
+  SmsApp,
+  ThunkAPI
+>("social/authURL", async (app) => {
+  const response = await axios.get<{ url: string }>(`${root}/auth-url?app=${app}`);
+  return response.data.url;
+});
 
 export const windowSlice = createSlice({
   name: "windowOpener",
@@ -26,23 +34,7 @@ export const windowSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getRedditAuthURL.fulfilled, (state, action) => {
-        state.isOpened = true;
-        state.target = action.payload;
-      })
-      .addCase(getNotionAuthURL.fulfilled, (state, action) => {
-        state.isOpened = true;
-        state.target = action.payload;
-      })
-      .addCase(getSheetsAuthURL.fulfilled, (state, action) => {
-        state.isOpened = true;
-        state.target = action.payload;
-      })
-      .addCase(getSpotifyAuthURL.fulfilled, (state, action) => {
-        state.isOpened = true;
-        state.target = action.payload;
-      })
-      .addCase(getTwitterAuthURL.fulfilled, (state, action) => {
+      .addCase(getAuthURL.fulfilled, (state, action) => {
         state.isOpened = true;
         state.target = action.payload;
       });

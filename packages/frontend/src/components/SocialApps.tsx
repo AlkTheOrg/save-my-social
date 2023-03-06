@@ -12,11 +12,8 @@ import {
   getAppInfo,
   getExportableTargetsOfCurApp,
 } from "../features/socialApp/socialAppConstants";
+import { getAuthURL } from "../features/windowOpener";
 import "../styles/SocialApps.scss";
-import {
-  AppToAuthURLGetterMapping,
-  appToAuthURLGetterMapping,
-} from "../util/thunkMappings";
 
 type Props = {
   onAppClick: (...args: unknown[]) => void;
@@ -37,9 +34,7 @@ const SocialApps: FC<Props> = ({ onAppClick, isDisabled }) => {
       dispatch(toggleConfirmModal());
     }
 
-    if (appToAuthURLGetterMapping[appName as keyof AppToAuthURLGetterMapping]) {
-      dispatch(appToAuthURLGetterMapping[appName as keyof AppToAuthURLGetterMapping]());
-    }
+    dispatch(getAuthURL(appName));
 
     if (curSelectionContext === "exportFrom") {
       dispatch(setExportFrom(appName as ExportFrom));

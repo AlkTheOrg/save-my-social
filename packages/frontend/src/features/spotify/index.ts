@@ -4,16 +4,7 @@ import { ThunkAPI } from "../../app/store";
 import { prepareBlobURL } from "../../util";
 import { UrlAndFileNameThunkResponse } from "../types";
 import { MappedTrackItem } from "./endpointTypes";
-import {
-  fetchAuthURL,
-  fetchPlaylists,
-  fetchPlaylistTracks,
-} from "./spotifyApiService";
-
-export const getAuthURL = createAsyncThunk("spotify/authURL", async () => {
-  const response = await fetchAuthURL();
-  return response.data.url;
-});
+import { fetchPlaylists, fetchPlaylistTracks } from "./spotifyApiService";
 
 const recursivelyCollectTracks = async (
   tracks: MappedTrackItem[],

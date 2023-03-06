@@ -3,17 +3,9 @@ import { FeaturesOfSocialAppExport, FeaturesOfSpotifyExport } from "../types";
 import { setMessage } from "../../app/smsSlice";
 import { ThunkAPI } from "../../app/store";
 import { ImportItemsToNotionPayload } from "./endpointTypes";
-import {
-  fetchAuthURL,
-  importItemsToNotion,
-} from "./notionApiService";
+import { importItemsToNotion } from "./notionApiService";
 import { fetchPlaylists } from "../spotify/spotifyApiService";
 import { getImportStartedText } from "../spotify";
-
-export const getAuthURL = createAsyncThunk("notion/authURL", async () => {
-  const response = await fetchAuthURL();
-  return response.data.url;
-});
 
 const recursivelyImportToNotion = async (
   exportProps: FeaturesOfSocialAppExport,

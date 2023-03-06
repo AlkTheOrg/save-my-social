@@ -1,9 +1,5 @@
 export type GetPlaylistsResponse = string[];
 
-export type FetchAuthURLResponse = {
-  url: string,
-};
-
 export type MappedTrackItem = {
     id: string,
     name: string,
