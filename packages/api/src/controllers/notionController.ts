@@ -6,6 +6,7 @@ import { Request, Response } from 'express';
 import { Client } from '@notionhq/client';
 import {
   encodeURIOptions,
+  errorHasStatusProperty,
   getAppExportFeatureKey,
   getWindowAccessTokenInfoPosterHTML,
   getWindowErrorPosterHTML,
@@ -226,7 +227,10 @@ const importItems = async (
     });
   } catch (err) {
     console.log(err);
-    res.status(err.status || 500).send(err);
+    if (errorHasStatusProperty(err)) {
+      res.status((err as { status: number }).status || 500).send(err);
+    }
+    res.status(500).send(err);
   }
 };
 

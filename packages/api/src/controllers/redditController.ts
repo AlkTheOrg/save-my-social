@@ -5,6 +5,7 @@ import { setAccessToken } from '../lib/accessTokenManager.js';
 import {
   concatWithEmptySpace,
   encodeURIOptions,
+  errorHasStatusProperty,
   getWindowAccessTokenInfoPosterHTML,
   getWindowErrorPosterHTML,
 } from '../lib/index.js';
@@ -82,7 +83,10 @@ const getSavedModels = async (req: CustomRequestWithAT<ReqBodyWithItemAfter>, re
     res.send(result);
   } catch (err) {
     console.log(err);
-    res.status(err.status || 500).send(err);
+    if (errorHasStatusProperty(err)) {
+      res.status((err as { status: number }).status || 500).send(err);
+    }
+    res.status(500).send(err);
   }
 };
 

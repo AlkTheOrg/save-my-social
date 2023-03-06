@@ -89,3 +89,7 @@ export const getAppExportFeatureKey = (
   // if featureKey is null or an unsupported feature, it will considered invalid
   return featureKey;
 };
+
+export const errorHasStatusProperty = (err: unknown) => {
+  return err && typeof err === 'object' && 'status' in err;
+}

@@ -3,7 +3,7 @@ dotenv.config();
 import { Request, Response } from 'express';
 import { CustomRequestWithAT, ScopeVariables } from './types.js';
 import { TwitterApi } from 'twitter-api-v2';
-import { htmlPage } from '../lib/index.js';
+import { errorHasStatusProperty, htmlPage } from '../lib/index.js';
 import { getAccessToken, setAccessToken } from '../lib/accessTokenManager.js';
 import { fetchBookmarks } from '../lib/twitter/index.js';
 
@@ -94,7 +94,10 @@ const getBookmarks = async (req: CustomRequestWithAT<{ pagination_token?: string
     res.send(result);
   } catch (err) {
     console.log(err);
-    res.status(err.status || 500).send(err);
+    if (errorHasStatusProperty(err)) {
+      res.status((err as { status: number }).status || 500).send(err);
+    }
+    res.status(500).send(err);
   }
 }
 
