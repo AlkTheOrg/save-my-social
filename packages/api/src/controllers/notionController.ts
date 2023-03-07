@@ -15,6 +15,7 @@ import {
 import {
   AccessTokenResponse,
   CustomRequestWithAT,
+  ExportFrom,
   FeaturesOfRedditExport,
   FeaturesOfSpotifyExport,
   FeaturesOfTwitterExport,
@@ -49,11 +50,12 @@ const options: OTTReqNotionOptions = {
   state: NOTION_STATE as string,
 };
 
+export const generateNotionRedirectUrl = () => {
+  return 'https://api.notion.com/v1/oauth/authorize?' + encodeURIOptions({ ...options });
+};
+
 const redirectUrl = (_: Request, res: Response) => {
-  const url =
-    'https://api.notion.com/v1/oauth/authorize?' +
-    encodeURIOptions({ ...options });
-  res.send({ url });
+  res.send({ url: generateNotionRedirectUrl() });
 };
 
 const login = (_: Request, res: Response) => {
@@ -127,7 +129,7 @@ const importItems = async (
     const exportType = `${appName}_${featureKey}`;
 
     // get the socialAppToDBProp mapping value
-    const appDBProps = socialAppToDBPropsMapping[appName][exportType];
+    const appDBProps = socialAppToDBPropsMapping[appName as ExportFrom][exportType];
     if (!appDBProps) {
       sendMsgResponse(res, 400, `"${featureKey}" is an invalid feature to export from "${appName}".`);
       return;

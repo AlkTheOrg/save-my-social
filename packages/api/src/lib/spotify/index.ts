@@ -1,9 +1,7 @@
 import {
   FetchPlaylistTracksReponse,
-  GetPlaylistReponse,
-  GetPlaylistTracksResponse,
   MappedTrackItem,
-  Playlist,
+  SpotifyApi,
   TrackItem,
 } from './types.js';
 
@@ -53,17 +51,17 @@ const spotifyTrackMapper = (item: TrackItem): MappedTrackItem => {
 //   images: playlist.images.map((image) => image.url).join('|'),
 // });
 
-export const getPlaylist = (spotifyApi, id: string): Promise<GetPlaylistReponse> => spotifyApi.getPlaylist(id);
+export const getPlaylist = (spotifyApi: SpotifyApi, id: string) => spotifyApi.getPlaylist(id);
 
 export const getPlaylistIDs = async (
-  spotifyApi,
+  spotifyApi: SpotifyApi,
   limit = 50,
   offset = 0,
 ): Promise<string[]> => {
   const {
     body: { items, next },
   } = await spotifyApi.getUserPlaylists({ limit, offset });
-  const ids = [...(items as Array<Playlist>)].map((p) => p.id);
+  const ids = [...items].map((p) => p.id);
   if (next) {
     return [
       ...ids,
@@ -73,13 +71,11 @@ export const getPlaylistIDs = async (
 };
 
 export const fetchPlaylistTracks = async (
-  spotifyApi,
-  playlistId,
+  spotifyApi: SpotifyApi,
+  playlistId: string,
   offset = 0,
 ): Promise<FetchPlaylistTracksReponse> => {
-  const {
-    body: { items, next },
-  }: GetPlaylistTracksResponse = await spotifyApi.getPlaylistTracks(
+  const { body: { items, next } } = await spotifyApi.getPlaylistTracks(
     playlistId,
     { limit: 100, offset },
   );

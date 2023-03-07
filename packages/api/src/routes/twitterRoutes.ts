@@ -9,6 +9,7 @@ router.get( '/accessTokenIsSet', twitterController.accessTokenIsSet);
 router.post(
   '/bookmarks',
   passAppAccessToken,
+  // @ts-ignore
   twitterController.getBookmarks
 );
 

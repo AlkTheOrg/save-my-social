@@ -17,6 +17,24 @@ export type Title = Array<{
   text: { content: string };
 }>;
 
+export type PagePropCreators = {
+  title: (title: string) => DBPageTitleProp;
+  number: (number: number | null) => DBPageNumberProp;
+  rich_text: (text: string) => DBPageRichTextProp;
+  checkbox: (isChecked: boolean) => DBPageCheckboxProp;
+  select: (option: string) => DBPageSelectProp;
+  url: (url: string) => DBPageURLProp;
+};
+
+export type DbPropCreators = {
+  title: () => TitleProp;
+  number: (numberFormat: NumberFormat) => NumberProp;
+  rich_text: () => RichTextProp;
+  checkbox: () => CheckBoxProp;
+  select: (options: SelectOptions) => SelectProp;
+  url: () => URLProp;
+};
+
 // prop types for creating a db
 export type DBPropTypeName =
   | 'title'

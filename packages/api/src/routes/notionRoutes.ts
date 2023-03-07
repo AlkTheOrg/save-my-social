@@ -8,6 +8,7 @@ router.get('/logged', notionController.logged);
 router.post(
   '/importItems',
   passAppAccessToken,
+  // @ts-ignore
   notionController.importItems,
 );
 

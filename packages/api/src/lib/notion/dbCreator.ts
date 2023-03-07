@@ -2,6 +2,7 @@ import { Client } from '@notionhq/client';
 import {
   CheckBoxProp,
   CreateDBPropArguments,
+  DbPropCreators,
   DBPropType,
   DBPropTypeName,
   NumberFormat,
@@ -27,10 +28,7 @@ const DBCreator = () => {
     text: { content: title },
   }]);
 
-  const propCreators: Record<
-    DBPropTypeName,
-    (args: undefined | NumberFormat | SelectOptions) => DBPropType
-  > = {
+  const propCreators: DbPropCreators = {
     title: (): TitleProp => ({
       type: 'title',
       title: {},
@@ -62,6 +60,7 @@ const DBCreator = () => {
   };
 
   const createDBProp = ({ type, key, args }: CreateDBPropArguments) => ({
+    //@ts-ignore
     [key]: propCreators[type](args),
   });
 

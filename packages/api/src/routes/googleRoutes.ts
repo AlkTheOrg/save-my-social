@@ -8,6 +8,7 @@ router.use('/logged', googleController.logged);
 router.post(
   '/sheets/importItems',
   passAppAccessToken,
+  // @ts-ignore
   googleController.importItemsToSheets
 );
 

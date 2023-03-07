@@ -1,15 +1,13 @@
+//* DEFINE NEW TYPES WITH "ZOD" AS MUCH AS POSSIBLE
 import { Request } from 'express';
+import { z } from 'zod';
 
 export interface RequestWithAT extends Request {
   accessToken: string
 }
 
-export interface CustomRequest<T> extends Request {
+export interface CustomRequestWithAT<T> extends RequestWithAT {
   body: T
-}
-
-export interface CustomRequestWithAT<T> extends CustomRequest<T> {
-  accessToken: string
 }
 
 export type ScopeVariables = string[];
@@ -62,16 +60,11 @@ export interface AccessTokenResponse {
   scope: string,
 }
 
-export type SmsApp =
-  | "reddit"
-  | "spotify"
-  | "twitter"
-  | "youtube"
-  | "notion"
-  | "sheets"
-  | "download";
+export const SmsApp = z.enum(['reddit', 'spotify', 'twitter', 'notion', 'sheets', 'youtube', 'download']);
+export type SmsApp = z.infer<typeof SmsApp>;
 
-export type ActiveApp = Exclude<SmsApp, "download" | "youtube">;
+export const ActiveApp = z.enum(['reddit', 'spotify', 'twitter', 'notion', 'sheets']);
+export type ActiveApp = z.infer<typeof ActiveApp>;
 
 export type ExportFrom = Exclude<
   SmsApp,

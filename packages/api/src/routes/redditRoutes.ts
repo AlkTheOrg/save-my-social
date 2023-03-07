@@ -8,6 +8,7 @@ router.get('/logged', redditController.logged);
 router.post(
   '/savedModels',
   passAppAccessToken,
+  // @ts-ignore
   redditController.getSavedModels,
 );
 

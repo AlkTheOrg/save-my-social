@@ -3,16 +3,15 @@ import { ProcessedSavedChildren } from '../reddit/types.js';
 import { MappedTrackItem } from '../spotify/types.js';
 import { TweetResponse } from '../twitter/types.js';
 import {
-  DBPropTypeName,
   DBPageCheckboxProp,
   DBPageNumberProp,
   DBPageRichTextProp,
   DBPageSelectProp,
   DBPageTitleProp,
   ParentDBID,
-  DBPagePropType,
   CreateDBPagePropArguments,
   DBPageURLProp,
+  PagePropCreators,
 } from './types.js';
 
 const PageCreator = () => {
@@ -21,10 +20,7 @@ const PageCreator = () => {
     type: 'database_id',
   });
 
-  const propCreators: Record<
-    DBPropTypeName,
-    (value: string | number | null | boolean) => DBPagePropType
-  > = {
+  const propCreators: PagePropCreators = {
     title: (title: string): DBPageTitleProp => ({
       title: [
         {
@@ -64,6 +60,7 @@ const PageCreator = () => {
     key,
     value,
   }: CreateDBPagePropArguments) => ({
+    //@ts-ignore
     [key]: propCreators[type](value),
   });
 

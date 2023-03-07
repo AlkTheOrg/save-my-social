@@ -1,4 +1,4 @@
-import { default as axios } from 'axios';
+import { AxiosRequestHeaders, default as axios } from 'axios';
 import { AccessTokenReqConfig } from '../../controllers/types.js';
 import { AuthHeaders, FetchSavedModelsResponse, ProcessedSavedChildren, SavedChildren } from './types.js';
 
@@ -77,7 +77,7 @@ export async function getSavedModelsRecursive(
   }
 }
 
-export const getMe = async (headers) => {
+export const getMe = async (headers: AxiosRequestHeaders) => {
   const {
     data: {
       subreddit: { url }, // can also return display_name, display_name_prefixed, name

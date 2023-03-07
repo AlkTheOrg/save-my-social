@@ -98,3 +98,17 @@ export type GetPlaylistReponse = {
     uri: string,
   }
 };
+
+export type SpotifyApi = {
+  getPlaylist: (id: string) => Promise<GetPlaylistReponse>;
+  getPlaylistTracks: (playlistId: string, options: {
+    limit: number,
+    offset?: number,
+  }) => Promise<GetPlaylistTracksResponse>;
+  getUserPlaylists: (options: { limit: number, offset?: number, }) => {
+    body: {
+      items: Array<Playlist>,
+      next: unknown,
+    }
+  };
+}

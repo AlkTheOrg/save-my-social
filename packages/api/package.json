@@ -1,6 +1,8 @@
 {
   "name": "sms-api",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "main": "src/main.ts",
+  "typings": "src/main.ts",
   "private": true,
   "description": "Save your social",
   "type": "module",
@@ -8,6 +10,7 @@
     "node": ">= 16.13 <17"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.13",
     "@types/express": "^4.17.13",
     "@types/jest": "~27.5",
     "@types/node": "~16",
@@ -45,6 +48,7 @@
     "@googleapis/sheets": "^3.0.2",
     "@googleapis/youtube": "^6.0.0",
     "@notionhq/client": "^2.2.2",
+    "@trpc/server": "^10.14.0",
     "axios": "^0.27.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
@@ -53,6 +57,7 @@
     "spotify-web-api-node": "^5.0.2",
     "ts-node": "^10.9.1",
     "tslib": "~2.4",
-    "twitter-api-v2": "^1.12.5"
+    "twitter-api-v2": "^1.12.5",
+    "zod": "^3.21.0"
   }
 }

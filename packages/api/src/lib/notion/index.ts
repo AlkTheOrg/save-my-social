@@ -100,7 +100,7 @@ const createPagesFromRedditModels = async (
 
 export const createPagesFromRedditExportProps = async (
   notion: Client,
-  redditAccessToken,
+  redditAccessToken: string,
   dbID: string,
   exportProps: FeaturesOfRedditExport,
 ): CreatePagesFromRedditExportPropsResponse => {
@@ -134,7 +134,7 @@ const createPagesFromTweets = async (
 
 export const createPagesFromTwitterExportProps = async (
   notion: Client,
-  twitterAccessToken,
+  twitterAccessToken: string,
   dbID: string,
   exportProps: FeaturesOfTwitterExport,
 ): CreatePagesFromTwitterExportPropsResponse => {
