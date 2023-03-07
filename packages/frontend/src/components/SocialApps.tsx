@@ -34,7 +34,9 @@ const SocialApps: FC<Props> = ({ onAppClick, isDisabled }) => {
       dispatch(toggleConfirmModal());
     }
 
-    dispatch(getAuthURL(appName));
+    if (appName !== "download") {
+      dispatch(getAuthURL(appName));
+    }
 
     if (curSelectionContext === "exportFrom") {
       dispatch(setExportFrom(appName as ExportFrom));
