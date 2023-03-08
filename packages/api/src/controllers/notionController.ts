@@ -129,6 +129,7 @@ const importItems = async (
     const exportType = `${appName}_${featureKey}`;
 
     // get the socialAppToDBProp mapping value
+    // @ts-ignore
     const appDBProps = socialAppToDBPropsMapping[appName as ExportFrom][exportType];
     if (!appDBProps) {
       sendMsgResponse(res, 400, `"${featureKey}" is an invalid feature to export from "${appName}".`);
@@ -159,7 +160,7 @@ const importItems = async (
 
     const response = {
       dbID: db.id,
-      dbURL: db.url,
+      dbURL: (db as unknown as { url: string }).url,
       numOfImportedItems: 0,
       newExportProps: {},
       totalNumOfItems: -1, // -1 means unknown
