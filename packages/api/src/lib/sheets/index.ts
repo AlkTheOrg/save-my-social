@@ -1,3 +1,4 @@
+//@ts-ignore
 import SpotifyWebApi from 'spotify-web-api-node';
 import { sheets_v4 } from 'googleapis';
 import { FeaturesOfRedditExport, FeaturesOfSpotifyExport, FeaturesOfTwitterExport } from '../../controllers/types.js';

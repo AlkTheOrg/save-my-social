@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { ActiveApp,  FeaturesOfSocialAppExport } from "../controllers/types.js";
+import { ActiveApp, FeaturesOfSocialAppExport } from "../controllers/types.js";
 
 const htmlHead = (title = 'Authorization') => `
 <head>
@@ -81,6 +81,7 @@ export const getAppExportFeatureKey = (
   exportProps: FeaturesOfSocialAppExport,
   appName: ActiveApp
 ): string | null => {
+  // @ts-ignore
   const propertiesOfAppExport = exportProps[appName];
   const featureKey = 
     Object.keys(propertiesOfAppExport).length < 1

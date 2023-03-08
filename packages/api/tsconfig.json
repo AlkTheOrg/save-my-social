@@ -24,8 +24,7 @@
     "outDir": "build",
     "rootDir": ".",
     "sourceMap": true,
-    "strictNullChecks": true,
-    // "strict": true,
+    "strict": true,
     "lib": [
       "DOM",
       "ES2015"

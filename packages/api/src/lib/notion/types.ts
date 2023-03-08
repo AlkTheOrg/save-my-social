@@ -106,13 +106,6 @@ export type SelectColor =
 export type SelectOptions = Array<{ name: string; color: SelectColor }>;
 export type SelectProp = { type: 'select'; select: { options: SelectOptions } };
 export type URLProp = { type: 'url'; url: EmptyObject };
-export type DBPropType =
-  | TitleProp
-  | NumberProp
-  | RichTextProp
-  | CheckBoxProp
-  | SelectProp
-  | URLProp
 
 export type CreateDBPropArguments =
   | {

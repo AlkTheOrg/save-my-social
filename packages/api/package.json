@@ -1,8 +1,8 @@
 {
   "name": "sms-api",
   "version": "1.0.0",
-  "main": "src/main.ts",
-  "typings": "src/main.ts",
+  "main": "src/main",
+  "typings": "src/main",
   "private": true,
   "description": "Save your social",
   "type": "module",

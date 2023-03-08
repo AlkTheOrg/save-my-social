@@ -3,8 +3,6 @@ import {
   CheckBoxProp,
   CreateDBPropArguments,
   DbPropCreators,
-  DBPropType,
-  DBPropTypeName,
   NumberFormat,
   NumberProp,
   ParentPageID,
