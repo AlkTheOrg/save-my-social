@@ -28,13 +28,17 @@ const twitterClient = new TwitterApi({
   clientSecret: TWITTER_SECRET,
 })
 
-const redirectUrl = (_: Request, res: Response) => {
+export const generateTwitterRedirectUrl = () => {
   const { url, codeVerifier } = twitterClient.generateOAuth2AuthLink(
     TWITTER_REDIRECT_URI as string,
     { scope: scopeVariables, state: TWITTER_STATE },
   );
   codeVerifiers.push(codeVerifier);
-  res.send({ url });
+  return url;
+}
+
+const redirectUrl = (_: Request, res: Response) => {
+  res.send({ url: generateTwitterRedirectUrl() });
 }
 
 const login = (_: Request, res: Response) => {

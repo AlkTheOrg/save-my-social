@@ -45,10 +45,10 @@ const options: OTTReqOptions = {
   state: SPOTIFY_STATE as string,
 };
 
+export const generateSpotifyRedirectUrl = () => 'https://accounts.spotify.com/authorize?' + encodeURIOptions(options);
+
 const redirectUrl = (_: Request, res: Response) => {
-  const url =
-    'https://accounts.spotify.com/authorize?' + encodeURIOptions(options);
-  res.send({ url });
+  res.send({ url: generateSpotifyRedirectUrl() });
 };
 
 const login = (_: Request, res: Response) => {

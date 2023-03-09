@@ -35,9 +35,10 @@ const options: OTTReqOptions = {
 
 const uriEncodedOptions = encodeURIOptions(options);
 
+export const generateRedditRedirectUrl = () => `https://www.reddit.com/api/v1/authorize?${uriEncodedOptions}`;
+
 const redirectUrl = (_: Request, res: Response) => {
-  const url = `https://www.reddit.com/api/v1/authorize?${uriEncodedOptions}`;
-  res.send({ url });
+  res.send({ url: generateRedditRedirectUrl() });
 };
 
 const login = (_: Request, res: Response) => {

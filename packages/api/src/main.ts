@@ -1,7 +1,10 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import AuthRoutes from './routes/authRoutes.js';
+import * as trpcExpress from "@trpc/server/adapters/express";
 import cors from 'cors';
+import { appRouter } from './trpc-server.js';
+export type AppRouter = typeof appRouter;
 
 dotenv.config();
 
@@ -16,6 +19,12 @@ app.use(
 const port = process.env.PORT || 5000;
 
 app.use(AuthRoutes);
+app.use(
+  "/api/trpc",
+  trpcExpress.createExpressMiddleware({
+    router: appRouter,
+  })
+);
 app.use((_: Request, res: Response) =>
   res.status(404).send({ error: "Couldn't find this page" }),
 );

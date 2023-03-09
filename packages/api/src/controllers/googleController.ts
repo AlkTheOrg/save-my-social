@@ -32,22 +32,23 @@ const oauth2Client = new google.auth.OAuth2(
   GOOGLE_REDIRECT_URI,
 );
 
-const redirectUrl = (_: Request, res: Response) => {
-  const scopes: ScopeVariables = [
-    // 'https://www.googleapis.com/auth/youtube',
-    'https://www.googleapis.com/auth/spreadsheets',
-  ];
+const scopes: ScopeVariables = [
+  // 'https://www.googleapis.com/auth/youtube',
+  'https://www.googleapis.com/auth/spreadsheets',
+];
+
+export const generateGoogleRedirectUrl = () => {
   const url = oauth2Client.generateAuthUrl({
     scope: scopes,
   });
-  res.send({ url });
+  return url;
+}
+
+const redirectUrl = (_: Request, res: Response) => {
+  res.send({ url: generateGoogleRedirectUrl() });
 };
 
 const login = (_: Request, res: Response) => {
-  const scopes: ScopeVariables = [
-    // 'https://www.googleapis.com/auth/youtube',
-    'https://www.googleapis.com/auth/spreadsheets',
-  ];
   const url = oauth2Client.generateAuthUrl({
     scope: scopes,
   });
