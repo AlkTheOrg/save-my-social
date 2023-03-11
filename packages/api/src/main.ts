@@ -20,7 +20,7 @@ const port = process.env.PORT || 5000;
 
 app.use(AuthRoutes);
 app.use(
-  "/api/trpc",
+  "/trpc",
   trpcExpress.createExpressMiddleware({
     router: appRouter,
   })
