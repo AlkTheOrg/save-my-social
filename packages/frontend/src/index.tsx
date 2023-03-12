@@ -8,10 +8,13 @@ import App from "./App";
 const container = document.getElementById("root")!;
 const root = createRoot(container);
 
+const isDevMode = false;
+const Wrapper = isDevMode ? React.StrictMode : React.Fragment;
+
 root.render(
-  <React.StrictMode>
+  <Wrapper>
     <Provider store={setupStore()}>
       <App />
-    </Provider>
-  </React.StrictMode>,
+    </Provider>,
+  </Wrapper>,
 );

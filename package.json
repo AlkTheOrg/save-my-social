@@ -5,13 +5,16 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "concurrently \"wsrun --parallel dev\""
+    "start": "concurrently \"wsrun --parallel dev\"",
+    "test": "concurrently \"wsrun --parallel test\"",
+    "prepare": "husky install"
   },
   "workspaces": [
     "packages/*"
   ],
   "devDependencies": {
     "concurrently": "^5.2.0",
-    "wsrun": "^5.2.0"
+    "wsrun": "^5.2.0",
+    "husky": "^8.0.0"
   }
 }
