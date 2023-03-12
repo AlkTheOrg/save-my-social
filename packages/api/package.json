@@ -1,8 +1,6 @@
 {
   "name": "sms-api",
-  "version": "1.0.0",
-  "main": "src/main",
-  "typings": "src/main",
+  "version": "0.0.9",
   "private": true,
   "description": "Save your social",
   "type": "module",
@@ -48,7 +46,6 @@
     "@googleapis/sheets": "^3.0.2",
     "@googleapis/youtube": "^6.0.0",
     "@notionhq/client": "^2.2.2",
-    "@trpc/server": "^10.14.0",
     "axios": "^0.27.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",

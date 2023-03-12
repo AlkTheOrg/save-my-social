@@ -1,6 +1,6 @@
 {
   "name": "save-my-social",
-  "version": "1.0.0",
+  "version": "0.0.9",
   "main": "index.js",
   "license": "MIT",
   "private": true,

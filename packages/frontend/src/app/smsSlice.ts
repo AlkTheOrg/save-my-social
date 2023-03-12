@@ -29,10 +29,7 @@ export type SmsApp =
   | "sheets"
   | "download";
 
-export type ExportFrom = Exclude<
-  SmsApp,
-    "notion" | "sheets" | "download"
->;
+export type ExportFrom = Exclude<SmsApp, "notion" | "sheets" | "download">;
 export type ExportTo = SmsApp;
 
 export type SelectionContext = "exportFrom" | "exportTo";
@@ -153,6 +150,56 @@ export const smsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    const thunks = [
+      importItemsToNotion,
+      importItemsToSheets,
+      getSavedModels,
+      getTwitterBookmarks,
+      getPlaylists,
+      importSpotifyPlaylistsToNotion,
+      importSpotifyPlaylistsToSheets,
+    ];
+    thunks.forEach((thunk) => {
+      builder
+        .addCase(thunk.pending, (state) => {
+          state.isError = false;
+          state.isLoading = true;
+        })
+        .addCase(thunk.rejected, (state, result) => {
+          state.isLoading = false;
+          state.isError = true;
+          state.message = result.error.message || "Something went wrong";
+          toast.error(state.message);
+        });
+    });
+
+    [
+      importItemsToNotion.fulfilled,
+      importItemsToSheets.fulfilled,
+      importSpotifyPlaylistsToSheets.fulfilled,
+      importSpotifyPlaylistsToNotion.fulfilled,
+    ].forEach((fullfilledThunk) => {
+      builder.addCase(fullfilledThunk, (state, { payload }) => {
+        state.isLoading = false;
+        state.curStep += 1;
+        state.finalURL = payload;
+      });
+    });
+
+    [
+      getSavedModels.fulfilled,
+      getTwitterBookmarks.fulfilled,
+      getPlaylists.fulfilled,
+    ].forEach((fulfilledThunk) => {
+      builder.addCase(fulfilledThunk, (state, { payload }) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.curStep += 1;
+        state.finalURL = payload.url;
+        state.finalFileName = payload.fileName;
+      });
+    });
+
     builder
       .addCase(getAuthURL.fulfilled, (state) => {
         state.isLoading = false;
@@ -167,117 +214,6 @@ export const smsSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = "Error on getting the Auth URL.";
-      })
-      .addCase(importItemsToNotion.pending, (state) => {
-        state.isError = false;
-        state.isLoading = true;
-      })
-      .addCase(importItemsToNotion.fulfilled, (state, { payload }) => {
-        state.isLoading = false;
-        state.curStep += 1;
-        state.finalURL = payload;
-      })
-      .addCase(importItemsToNotion.rejected, (state, result) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = result.error.message || "Something went wrong";
-        toast.error(state.message);
-      })
-      .addCase(getSavedModels.pending, (state) => {
-        state.isError = false;
-        state.isLoading = true;
-      })
-      .addCase(getSavedModels.fulfilled, (state, result) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.curStep += 1;
-        state.finalURL = result.payload.url;
-        state.finalFileName = result.payload.fileName;
-      })
-      .addCase(getSavedModels.rejected, (state, result) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = result.error.message || "Something went wrong";
-        toast.error(state.message);
-      })
-      .addCase(getTwitterBookmarks.pending, (state) => {
-        state.isError = false;
-        state.isLoading = true;
-      })
-      .addCase(getTwitterBookmarks.fulfilled, (state, result) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.curStep += 1;
-        state.finalURL = result.payload.url;
-        state.finalFileName = result.payload.fileName;
-      })
-      .addCase(getTwitterBookmarks.rejected, (state, result) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = result.error.message || "Something went wrong";
-        toast.error(state.message);
-      })
-      .addCase(getPlaylists.pending, (state) => {
-        state.isError = false;
-        state.isLoading = true;
-      })
-      .addCase(getPlaylists.fulfilled, (state, result) => {
-        state.isLoading = false;
-        state.isError = false;
-        state.curStep += 1;
-        state.finalURL = result.payload.url;
-        state.finalFileName = result.payload.fileName;
-      })
-      .addCase(getPlaylists.rejected, (state, result) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = result.error.message || "Something went wrong";
-        toast.error(state.message);
-      })
-      .addCase(importItemsToSheets.pending, (state) => {
-        state.isError = false;
-        state.isLoading = true;
-      })
-      .addCase(importItemsToSheets.fulfilled, (state, { payload }) => {
-        state.isLoading = false;
-        state.curStep += 1;
-        state.finalURL = payload;
-      })
-      .addCase(importItemsToSheets.rejected, (state, result) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = result.error.message || "Something went wrong";
-        toast.error(state.message);
-      })
-      .addCase(importSpotifyPlaylistsToSheets.pending, (state) => {
-        state.isError = false;
-        state.isLoading = true;
-      })
-      .addCase(importSpotifyPlaylistsToSheets.fulfilled, (state, { payload }) => {
-        state.isLoading = false;
-        state.curStep += 1;
-        state.finalURL = payload;
-      })
-      .addCase(importSpotifyPlaylistsToSheets.rejected, (state, result) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = result.error.message || "Something went wrong";
-        toast.error(state.message);
-      })
-      .addCase(importSpotifyPlaylistsToNotion.pending, (state) => {
-        state.isError = false;
-        state.isLoading = true;
-      })
-      .addCase(importSpotifyPlaylistsToNotion.fulfilled, (state, { payload }) => {
-        state.isLoading = false;
-        state.curStep += 1;
-        state.finalURL = payload;
-      })
-      .addCase(importSpotifyPlaylistsToNotion.rejected, (state, result) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = result.error.message || "Something went wrong";
-        toast.error(state.message);
       });
   },
 });
