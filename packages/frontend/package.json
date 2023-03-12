@@ -7,15 +7,6 @@
     "@babel/plugin-syntax-flow": "^7.14.5",
     "@babel/plugin-transform-react-jsx": "^7.14.901",
     "@reduxjs/toolkit": "^1.8.3",
-    "@testing-library/dom": "^7.21.4",
-    "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.3.0",
-    "@testing-library/user-event": "^14.2.1",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^17.0.45",
-    "@types/react": "^18.0.15",
-    "@types/react-dom": "^18.0.6",
-    "@types/testing-library__jest-dom": "^5.14.5",
     "axios": "^0.27.2",
     "papaparse": "^5.3.2",
     "react": "^18.2.0",
@@ -24,7 +15,6 @@
     "react-scripts": "5.0.1",
     "react-toastify": "^9.1.1",
     "sass": "^1.53.0",
-    "typescript": "^4.7.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -51,6 +41,15 @@
     "@babel/preset-env": "^7.20.2",
     "@babel/preset-react": "^7.18.6",
     "@babel/preset-typescript": "^7.21.0",
+    "@testing-library/dom": "^7.21.4",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^14.2.1",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^17.0.45",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "@types/testing-library__jest-dom": "^5.14.5",
     "@types/papaparse": "^5.3.5",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.30.6",
@@ -63,7 +62,8 @@
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "jest": "~28.1",
-    "jest-environment-jsdom": "^29.4.3"
+    "jest-environment-jsdom": "^29.4.3",
+    "typescript": "^4.7.4"
   },
   "jest": {
     "moduleNameMapper": {
