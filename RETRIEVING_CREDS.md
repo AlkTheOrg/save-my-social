@@ -70,6 +70,7 @@ These credentials are necessary for setting up an authorization flow that enable
 - Get your client id and secret
 - Open `packages/api/.env` file
 - Paste the client id and secret into their respective places:
+    ```
     GOOGLE_CLIENT_ID="123myclientid456here"
     GOOGLE_SECRET="123mysecretid456here"
     ```
@@ -92,6 +93,7 @@ These credentials are necessary for setting up an authorization flow that enable
 - Go to top. Copy the `OAuth client ID` and `OAuth client secret`
 - Open `packages/api/.env` file
 - Paste the client id and secret into their respective places:
+    ```
     NOTION_CLIENT_ID="123myclientid456here"
     NOTION_SECRET="123mysecretid456here"
     ```
