@@ -30,6 +30,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'pnpm'
     - run: pnpm install && pnpm --filter sms-api --filter sms-frontend install
-    - run: pnpm ci --if-present
-    - run: pnpm run build --if-present
     - run: pnpm test
