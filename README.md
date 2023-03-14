@@ -24,12 +24,30 @@ Into:
     - Rename `packages/api/.env-default` to `.env`
     - Follow [this](RETRIEVING_CREDS.md) guide to add credentials for the apps that you will be exporting or importing data
     - Save the file. If you update this file, you need to restart the app first if it is already running
-- Open terminal and `cd` into the project's path (where this README file is located)
+- Open a terminal and `cd` into the project's path (where this README file is located)
 - Run `pnpm install && pnpm --filter sms-api --filter sms-frontend install`
 - Run `pnpm run start`
-- Wait until a new tab is opened in your browser
+- Wait until you see below outputs in your terminal:
+    ```
+    sms-api
+    .
+    .
+    .
+     | Server is running on port 5000
+
+    sms-frontend
+    .
+    .
+    .
+     | You can now view sms-frontend in the browser.
+     |
+     |   Local:            http://localhost:3000
+     |   On Your Network:  http://192.168.141.1:3000
+    ```
+- A new tab should be opened in your browser. If not, open http://loclahost:3000
 - Selecting an app will open an authorization window, so allow app to open a new popup
-- If you encounter an error, please open an issue with the error log from your console or the network response
+- If you encounter an error please check at least one of the folowings before opening an issue: Browser console, network response, terminal.
+- When you log in with Notion, you will be asked to grant access to at least one Notion page. Any new pages the app creates will be added to the page that was last edited.
 
 ## Development
 - Always use `pnpm`

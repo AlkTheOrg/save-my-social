@@ -43,11 +43,13 @@ const TabTrap: FC<Props> = ({ children, isActive }) => {
       wrapperDiv?.addEventListener("keydown", handleKeyDown);
 
       const firstFocusableElement = getFirstFocusableElement(trapWrapperRef.current);
-      // setTimeout(() => (firstFocusableElement as HTMLElement)?.focus(), 100);
+      // to disable auto click after TabTrap's focus. Why did e.preventDefault not work?
+      // setTimeout(() => (firstFocusableElement as HTMLElement)?.focus(), 150);
       (firstFocusableElement as HTMLElement)?.focus();
 
       return () => {
         wrapperDiv?.removeEventListener("keydown", handleKeyDown);
+        // setTimeout(() => prevFocusedElem?.focus(), 150);
         prevFocusedElem?.focus();
       };
     }
