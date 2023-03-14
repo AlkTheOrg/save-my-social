@@ -5,3 +5,6 @@ html {
   of writing-modes. */
   writing-mode: horizontal-tb !important;
 }
+
+button { outline-color: transparent; }
+// button, a { &:focus-visible { outline: 1px solid blueviolet; } }
