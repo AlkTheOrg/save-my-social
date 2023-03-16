@@ -1,4 +1,4 @@
-# Save My Social &middot; ![Github Action](https://github.com/AlkTheOrg/save-my-social/actions/workflows/node.js.yml/badge.svg)
+# Save My Social &middot; ![Github Action](https://github.com/AlkTheOrg/save-my-social/actions/workflows/node.js.yml/badge.svg) &middot; [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
 
 **Easily and securely automate the export of your sensitive data while ensuring 100% privacy.**
 
@@ -56,3 +56,6 @@ Into:
 - Switched to Zod recently. Try to write new types with it
 - If adding support for a new app, write its importers/exporters in a reusable way
 - Make `isDevMode` `true` in `index.tsx`.
+
+[cc-by-nc-sa]: http://creativecommons.org/licenses/by-nc-sa/4.0/
+[cc-by-nc-sa-shield]: https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg

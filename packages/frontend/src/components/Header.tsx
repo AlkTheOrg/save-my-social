@@ -10,7 +10,7 @@ const Header = (): JSX.Element => {
         </a>
         <div className="links">
           <a
-            href="https://github.com/AlkTheOrg/save-my-social#save-my-social--"
+            href="https://github.com/AlkTheOrg/save-my-social#save-my-social----"
             target="_blank"
             rel="noreferrer"
           >
