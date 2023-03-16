@@ -1,4 +1,4 @@
-# Save My Social &middot; ![Github Action](https://github.com/AlkTheOrg/save-my-social/actions/workflows/node.js.yml/badge.svg) &middot; [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
+# Save My Social &middot; ![Github Action](https://github.com/AlkTheOrg/save-my-social/actions/workflows/node.js.yml/badge.svg) [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
 
 **Easily and securely automate the export of your sensitive data while ensuring 100% privacy.**
 
@@ -45,7 +45,7 @@ Into:
      |   On Your Network:  http://192.168.141.1:3000
     ```
 - A new tab should be opened in your browser. If not, open http://loclahost:3000
-- Selecting an app will open an authorization window, so allow app to open a new popup
+- An authorization window will be opened after selecting an app, so allow app to open a new popup
 - If you encounter an error please check at least one of the folowings before opening an issue: Browser console, network response, terminal.
 - When you log in with Notion, you will be asked to grant access to at least one Notion page. Any new pages the app creates will be added to the page that was last edited.
 
