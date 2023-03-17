@@ -44,7 +44,7 @@ Into:
      |   Local:            http://localhost:3000
      |   On Your Network:  http://192.168.141.1:3000
     ```
-- A new tab should be opened in your browser. If not, open http://loclahost:3000
+- A new tab should be opened in your browser. If not, open http://localhost:3000
 - An authorization window will be opened after selecting an app, so allow app to open a new popup
 - If you encounter an error please check at least one of the folowings before opening an issue: Browser console, network response, terminal.
 - When you log in with Notion, you will be asked to grant access to at least one Notion page. Any new pages the app creates will be added to the page that was last edited.
