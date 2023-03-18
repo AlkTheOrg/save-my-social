@@ -232,6 +232,7 @@ const importItems = async (
     console.log(err);
     if (errorHasStatusProperty(err)) {
       res.status((err as { status: number }).status || 500).send(err);
+      return;
     }
     res.status(500).send(err);
   }

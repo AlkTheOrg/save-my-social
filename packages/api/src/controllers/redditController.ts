@@ -85,6 +85,7 @@ const getSavedModels = async (req: CustomRequestWithAT<ReqBodyWithItemAfter>, re
     console.log(err);
     if (errorHasStatusProperty(err)) {
       res.status((err as { status: number }).status || 500).send(err);
+      return;
     }
     res.status(500).send(err);
   }
