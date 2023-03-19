@@ -21,7 +21,7 @@ const MainStep = (): JSX.Element => {
   const [isSocialAppsModalOpen, setIsSocialAppsModalOpen] = useState(false);
   const dispatch = useAppDispatch();
   const {
-    exportFrom, exportTo, isLoading, isError, message, areTokensSet,
+    exportFrom, exportTo, isLoading, isError, message, areTokensSet, curSelectionContext,
   } = useAppSelector(
     (state) => state.sms,
   );
@@ -110,7 +110,11 @@ const MainStep = (): JSX.Element => {
       <Modal
         isOpen={isSocialAppsModalOpen}
         onClose={() => setIsSocialAppsModalOpen(false)}
-        heading={exportFrom ? "Select Export To" : "Select Export From"}
+        heading={
+          curSelectionContext === "exportTo"
+            ? "Select Export To"
+            : "Select Export From"
+        }
       >
         <SocialApps
           onAppClick={() => setIsSocialAppsModalOpen(false)}
