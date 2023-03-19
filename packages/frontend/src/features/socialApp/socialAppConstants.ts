@@ -16,7 +16,7 @@ type AppInfo = {
 };
 const appInfoMapping: Record<SmsApp, AppInfo> = {
   "": { title: "Empty", appName: "" },
-  reddit: { title: "Reddit Bookmarks", appName: "reddit" },
+  reddit: { title: "Reddit Saved", appName: "reddit" },
   spotify: { title: "Spotify Playlists", appName: "spotify" },
   twitter: { title: "Twitter Bookmarks", appName: "twitter" },
   youtube: {
