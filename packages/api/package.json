@@ -45,7 +45,7 @@
     "@googleapis/drive": "^3.0.1",
     "@googleapis/sheets": "^3.0.2",
     "@googleapis/youtube": "^6.0.0",
-    "@notionhq/client": "^2.2.2",
+    "@notionhq/client": "^2.2.3",
     "axios": "^0.27.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
