@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 import { setMessage } from "../../app/smsSlice";
 import { ThunkAPI } from "../../app/store";
 import { prepareBlobURL } from "../../util";
@@ -12,7 +13,7 @@ export const getSavedModels = createAsyncThunk<
   ThunkAPI
 >(
   "reddit/getSavedModels",
-  async (_, { dispatch }) => {
+  async (_, { dispatch, rejectWithValue }) => {
     const recursivelyCollectItems = async (
       items: SavedModel[],
       lastItemID = "",
@@ -40,11 +41,18 @@ export const getSavedModels = createAsyncThunk<
       }
     };
 
-    const items = [] as SavedModel[];
-    await recursivelyCollectItems(items);
-    const fileName = "reddit_items.json";
-    const url = prepareBlobURL(items, "application/json");
+    try {
+      const items = [] as SavedModel[];
+      await recursivelyCollectItems(items);
+      const fileName = "reddit_items.json";
+      const url = prepareBlobURL(items, "application/json");
 
-    return { url, fileName };
+      return { url, fileName };
+    } catch (_err) {
+      const error = _err as AxiosError;
+      return rejectWithValue({
+        msg: (error.response?.data as { msg: string })?.msg || error.message,
+      });
+    }
   },
 );

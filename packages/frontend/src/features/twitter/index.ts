@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 import { setMessage } from "../../app/smsSlice";
 import { ThunkAPI } from "../../app/store";
 import { prepareBlobURL } from "../../util";
@@ -12,7 +13,7 @@ export const getTwitterBookmarks = createAsyncThunk<
   ThunkAPI
 >(
   "twitter/getTwitterBookmarks",
-  async (_, { dispatch }) => {
+  async (_, { dispatch, rejectWithValue }) => {
     const recursivelyCollectItems = async (
       items: TweetResponse[],
       paginationToken?: string,
@@ -39,33 +40,17 @@ export const getTwitterBookmarks = createAsyncThunk<
       }
     };
 
-    const items = [] as TweetResponse[];
-    await recursivelyCollectItems(items);
-    const fileName = "twitter_bookmarks.json";
-    const url = prepareBlobURL(items, "application/json");
-    return { url, fileName };
+    try {
+      const items = [] as TweetResponse[];
+      await recursivelyCollectItems(items);
+      const fileName = "twitter_bookmarks.json";
+      const url = prepareBlobURL(items, "application/json");
+      return { url, fileName };
+    } catch (_err) {
+      const error = _err as AxiosError;
+      return rejectWithValue({
+        msg: (error.response?.data as { msg: string })?.msg || error.message,
+      });
+    }
   },
 );
-
-/* export const checkIfTwitterAccessTokenIsSet = createAsyncThunk<
-  "Yes" | "No" | "NotTwitter", // return type
-  void,
-  ThunkAPI
->(
-  "twitter/checkIfAccessTokenIsSet",
-  async (_, { getState, dispatch }) => {
-    const { exportFrom, exportTo } = getState().sms;
-    if (
-      (!exportTo && exportFrom === "twitter") // if twitter is selected as the first app
-      || (exportTo && exportTo === "twitter") // if selected as second
-    ) {
-      const response = await accessTokenIsSet();
-      if (response.data) {
-        dispatch(setToken("true"));
-        return "Yes";
-      }
-      return "No";
-    }
-    return "NotTwitter";
-  },
-); */

@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 import { FeaturesOfSocialAppExport, FeaturesOfSpotifyExport } from "../types";
 import { setMessage } from "../../app/smsSlice";
 import { ThunkAPI } from "../../app/store";
@@ -70,21 +71,27 @@ export const importItems = createAsyncThunk<
   ThunkAPI
 >(
   "notion/importItems",
-  async (initialExportProps, { dispatch }) => {
+  async (initialExportProps, { dispatch, rejectWithValue }) => {
     const beforeImport = (totalFetchedAmount: number) => dispatch(setMessage(
       `Importing items from ${totalFetchedAmount} to ${totalFetchedAmount + 100}`,
     ));
-    const res = await recursivelyImportToNotion(
-      initialExportProps,
-      beforeImport,
-      () => {},
-      undefined,
-      "",
-      0,
-      -1, // no multiple recursive calls here
-    );
-
-    return res.url;
+    try {
+      const res = await recursivelyImportToNotion(
+        initialExportProps,
+        beforeImport,
+        () => {},
+        undefined,
+        "",
+        0,
+        -1, // no multiple recursive calls here
+      );
+      return res.url;
+    } catch (_err) {
+      const error = _err as AxiosError;
+      return rejectWithValue({
+        msg: (error.response?.data as { msg: string })?.msg || error.message,
+      });
+    }
   },
 );
 
@@ -94,7 +101,7 @@ export const importSpotifyPlaylistsToNotion = createAsyncThunk<
   ThunkAPI
 >(
   "notion/importSpotifyPlaylistsToNotion",
-  async (initialExportProps, { dispatch }) => {
+  async (initialExportProps, { dispatch, rejectWithValue }) => {
     const { data: playlistIds } = await fetchPlaylists();
     const numOfPlaylists = playlistIds.length;
 
@@ -114,32 +121,39 @@ export const importSpotifyPlaylistsToNotion = createAsyncThunk<
     let dbURL = "";
     let lastEditedPageId = "";
 
-    // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < playlistIds.length; i++) {
-      const id = playlistIds[i];
-      const exportProps: FeaturesOfSpotifyExport = {
-        spotify: {
-          playlist: {
-            ...initialExportProps.spotify.playlist,
-            id,
+    try {
+      // eslint-disable-next-line no-plusplus
+      for (let i = 0; i < playlistIds.length; i++) {
+        const id = playlistIds[i];
+        const exportProps: FeaturesOfSpotifyExport = {
+          spotify: {
+            playlist: {
+              ...initialExportProps.spotify.playlist,
+              id,
+            },
           },
-        },
-      };
+        };
 
-      // eslint-disable-next-line no-await-in-loop
-      const res = await recursivelyImportToNotion(
-        exportProps,
-        beforeImport,
-        () => {},
-        undefined,
-        "",
-        0,
-        i,
-        lastEditedPageId,
-      );
-      dbURL = res.url;
-      lastEditedPageId = res.lastEditedPageId || "";
+        // eslint-disable-next-line no-await-in-loop
+        const res = await recursivelyImportToNotion(
+          exportProps,
+          beforeImport,
+          () => {},
+          undefined,
+          "",
+          0,
+          i,
+          lastEditedPageId,
+        );
+        dbURL = res.url;
+        lastEditedPageId = res.lastEditedPageId || "";
+      }
+      return dbURL;
+    } catch (_err) {
+      const error = _err as AxiosError;
+      return rejectWithValue({
+        msg: (error.response?.data as { msg: string })?.msg || error.message,
+      });
     }
-    return dbURL;
   },
 );

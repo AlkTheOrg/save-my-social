@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 import { setMessage } from "../../app/smsSlice";
 import { ThunkAPI } from "../../app/store";
 import { getImportStartedText } from "../spotify";
@@ -68,23 +69,30 @@ export const importItems = createAsyncThunk<
   ThunkAPI
 >(
   "sheets/importItems",
-  async (initialExportProps, { dispatch }) => {
+  async (initialExportProps, { dispatch, rejectWithValue }) => {
     const beforeImport = (totalFetchedAmount: number) => dispatch(setMessage(
       `Importing items from ${totalFetchedAmount} to ${totalFetchedAmount + 100}`,
     ));
 
-    const res = await recursivelyImportToSheets(
-      initialExportProps,
-      beforeImport,
-      () => {},
-      undefined,
-      "",
-      "",
-      0,
-      -1, // no multiple recursive calls here
-    );
+    try {
+      const res = await recursivelyImportToSheets(
+        initialExportProps,
+        beforeImport,
+        () => {},
+        undefined,
+        "",
+        "",
+        0,
+        -1, // no multiple recursive calls here
+      );
 
-    return res.url;
+      return res.url;
+    } catch (_err) {
+      const error = _err as AxiosError;
+      return rejectWithValue({
+        msg: (error.response?.data as { msg: string })?.msg || error.message,
+      });
+    }
   },
 );
 
@@ -94,7 +102,7 @@ export const importSpotifyPlaylistsToSheets = createAsyncThunk<
   ThunkAPI
 >(
   "sheets/importSpotifyPlaylistsToSheets",
-  async (initialExportProps, { dispatch }) => {
+  async (initialExportProps, { dispatch, rejectWithValue }) => {
     const { data: playlistIds } = await fetchPlaylists();
     const numOfPlaylists = playlistIds.length;
 
@@ -113,32 +121,39 @@ export const importSpotifyPlaylistsToSheets = createAsyncThunk<
 
     let spreadsheetURL = "";
     let lastSpreadsheetID = "";
-    // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < playlistIds.length; i++) {
-      const id = playlistIds[i];
-      const exportProps: FeaturesOfSpotifyExport = {
-        spotify: {
-          playlist: {
-            ...initialExportProps.spotify.playlist,
-            id,
+    try {
+      // eslint-disable-next-line no-plusplus
+      for (let i = 0; i < playlistIds.length; i++) {
+        const id = playlistIds[i];
+        const exportProps: FeaturesOfSpotifyExport = {
+          spotify: {
+            playlist: {
+              ...initialExportProps.spotify.playlist,
+              id,
+            },
           },
-        },
-      };
+        };
 
-      // eslint-disable-next-line no-await-in-loop
-      const res = await recursivelyImportToSheets(
-        exportProps,
-        beforeImport,
-        () => {},
-        undefined,
-        lastSpreadsheetID,
-        "",
-        0,
-        i,
-      );
-      spreadsheetURL = res.url;
-      lastSpreadsheetID = res.spreadsheetId;
+        // eslint-disable-next-line no-await-in-loop
+        const res = await recursivelyImportToSheets(
+          exportProps,
+          beforeImport,
+          () => {},
+          undefined,
+          lastSpreadsheetID,
+          "",
+          0,
+          i,
+        );
+        spreadsheetURL = res.url;
+        lastSpreadsheetID = res.spreadsheetId;
+      }
+      return spreadsheetURL;
+    } catch (_err) {
+      const error = _err as AxiosError;
+      return rejectWithValue({
+        msg: (error.response?.data as { msg: string })?.msg || error.message,
+      });
     }
-    return spreadsheetURL;
   },
 );

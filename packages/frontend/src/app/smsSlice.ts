@@ -168,7 +168,9 @@ export const smsSlice = createSlice({
         .addCase(thunk.rejected, (state, result) => {
           state.isLoading = false;
           state.isError = true;
-          state.message = result.error.message || "Something went wrong";
+          state.message = (result.payload as { msg: string })?.msg
+            || result.error.message
+            || "Something went wrong";
           toast.error(state.message);
         });
     });

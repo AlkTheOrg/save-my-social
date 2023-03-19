@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { AxiosError } from "axios";
 import { setMessage } from "../../app/smsSlice";
 import { ThunkAPI } from "../../app/store";
 import { prepareBlobURL } from "../../util";
@@ -37,7 +38,7 @@ export const getPlaylists = createAsyncThunk<
   UrlAndFileNameThunkResponse,
   void,
   ThunkAPI
->("spotify/getPlaylists", async (_, { dispatch }) => {
+>("spotify/getPlaylists", async (_, { dispatch, rejectWithValue }) => {
   const { data: playlistIds } = await fetchPlaylists();
 
   const beforeFetch = (tracksLen: number) =>
@@ -55,20 +56,27 @@ export const getPlaylists = createAsyncThunk<
       ),
     );
 
-  // const playlists: Record<string, MappedTrackItem[]> = {};
-  const playlists = [] as Array<Record<string, MappedTrackItem[]>>;
-  for (let i = 0; i < playlistIds.length; i += 1) {
-    const id = playlistIds[i];
-    const tracks = [] as MappedTrackItem[];
-    // eslint-disable-next-line no-await-in-loop
-    await recursivelyCollectTracks(tracks, id, beforeFetch, afterFetch);
-    playlists.push({ [id]: tracks });
+  try {
+    // const playlists: Record<string, MappedTrackItem[]> = {};
+    const playlists = [] as Array<Record<string, MappedTrackItem[]>>;
+    for (let i = 0; i < playlistIds.length; i += 1) {
+      const id = playlistIds[i];
+      const tracks = [] as MappedTrackItem[];
+      // eslint-disable-next-line no-await-in-loop
+      await recursivelyCollectTracks(tracks, id, beforeFetch, afterFetch);
+      playlists.push({ [id]: tracks });
+    }
+
+    const fileName = "spotify_playlists.json";
+    const url = prepareBlobURL(playlists, "application/json");
+
+    return { url, fileName };
+  } catch (_err) {
+    const error = _err as AxiosError;
+    return rejectWithValue({
+      msg: (error.response?.data as { msg: string })?.msg || error.message,
+    });
   }
-
-  const fileName = "spotify_playlists.json";
-  const url = prepareBlobURL(playlists, "application/json");
-
-  return { url, fileName };
 });
 
 export const getImportStartedText = (
