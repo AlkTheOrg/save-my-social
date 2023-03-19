@@ -50,6 +50,7 @@ Into:
 - When you log in with Notion, you will be asked to grant access to at least one Notion page. Any new pages the app creates will be added to the page that was last edited.
 
 ## Development
+- Tech: React, Redux, Typescript, Zod, Node.js, Express.js
 - Always use `pnpm`
 - `pnpm install && pnpm --filter sms-api --filter sms-frontend install`
 - `pnpm run start`
