@@ -40,6 +40,8 @@ These credentials are necessary for setting up an authorization flow that enable
 ## Spotify
 - Go to https://developer.spotify.com/dashboard/login
 - Login and `Create an App`
+- Edit settings
+- Add http://localhost:5000/spotify/logged into `Redirect URIs`
 - Copy the `Client ID` and `Client Secret`
 - Open `packages/api/.env` file
 - Paste the client id and secret into their respective places:
