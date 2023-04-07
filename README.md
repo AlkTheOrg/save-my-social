@@ -17,7 +17,7 @@ Into:
 - Local as a JSON file.
 
 ## Running the App
-- Install [Node.JS](https://nodejs.org/en/download/) (at least v16)
+- Install [Node.JS](https://nodejs.org/en/download/) (versions from 16.13 to 18.15)
 - Install [pnpm](https://pnpm.io/installation)
 - Clone the repo (or download, but using git will allow you to pull new changes easily)
 - Provide your api credentials:
