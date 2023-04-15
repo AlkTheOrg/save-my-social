@@ -1,5 +1,7 @@
 # Save My Social &middot; ![Github Action](https://github.com/AlkTheOrg/save-my-social/actions/workflows/node.js.yml/badge.svg) [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
 
+<a href="https://patreon.com/AlkTheOrg"><img src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3DAlkTheOrg%26type%3Dpatrons&style=for-the-badge" /></a>
+
 **Easily and securely automate the export of your sensitive data while ensuring 100% privacy.**
 
 Unfortunately the app is not deployed to web in order to make it both free and secure. So you need to [run the app by yourself](#running-the-app).
