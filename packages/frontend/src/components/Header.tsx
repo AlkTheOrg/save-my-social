@@ -22,6 +22,15 @@ const Header = (): JSX.Element => {
           <a href="https://github.com/AlkTheOrg" target="_blank" rel="noreferrer">
             <img id="github" src="logos/github.svg" alt="GitHub" />
           </a>
+          <a
+            href="https://www.patreon.com/AlkTheOrg"
+            id="donate"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img src="logos/heart.svg" alt="Donate Link" />
+            <span>Donate</span>
+          </a>
         </div>
       </div>
     </header>

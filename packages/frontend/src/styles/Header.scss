@@ -38,6 +38,26 @@
     img {
       inline-size: $iconInlineSize;
     }
+    
+    #donate {
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      color: white;
+      background-color: #FF69B4;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      img {
+        margin-right: 10px;
+        svg { width: 20px; }
+      }
+      &:hover {
+        background-color: #FF9AD5;
+      }
+    }
   }
 
   @media screen and (max-width: 1250px) {
